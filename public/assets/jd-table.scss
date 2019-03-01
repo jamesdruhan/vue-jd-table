@@ -1,0 +1,1959 @@
+@import './jd-table-vars.scss';
+
+// -----------------
+// JD-Table Styling.
+// -----------------
+.JD-Table
+{
+    position                : relative;
+    min-width               : 320px;
+    width                   : 100%;
+    background-color        : $jdTable_BaseBGColour;
+    color                   : $jdTable_BaseTextColour;
+    font-size               : $jdTable_BaseFontSize;
+    font-weight             : $jdTable_BaseFontWeight;
+    display                 : flex;
+    flex-direction          : column;
+    justify-content         : center;
+    align-items             : center;
+    align-content           : center;
+    align-self              : center;
+    z-index                 : 1;
+    overflow                : hidden;
+    transition              : max-width 0.2s cubic-bezier(.05,.52,.48,1);
+    box-sizing              : content-box;
+    -webkit-font-smoothing  : antialiased;
+    -moz-osx-font-smoothing : grayscale;
+
+    // -----------------------
+    // Maximized Table Styling
+    // -----------------------
+    &.maximized
+    {
+        height           : 100%;
+        min-height       : 100%;
+        max-height       : 100%;
+        position         : fixed;
+        top              : 0;
+        left             : 0;
+        padding          : $jdTable_MaximizedPadding;
+        z-index          : 9998;
+        box-sizing       : border-box;
+        background-color : $jdTable_MaximizedBackgroundColour;
+
+        .layerHighlight
+        {
+            min-width  : 320px;
+        }
+
+        .layerControl
+        {
+            min-width  : 320px;
+        }
+
+        .layerOption
+        {
+            min-width  : 320px;
+        }
+
+        .layerContent
+        {
+            display     : flex;
+            overflow-x  : auto;
+            min-width   : 320px;
+            flex-grow   : 0;
+            flex-shrink : 1;
+
+            .table
+            {
+                .body
+                {
+                    height      : 100%;
+                    flex-grow   : 0;
+                    flex-shrink : 1;
+                }
+            }
+        }
+
+        .layerFooter
+        {
+            min-width  : 320px;
+        }
+
+        .layerPopup
+        {
+            border-radius : 0;
+
+            &.fullFrameZone
+            {
+                padding : 3rem;
+            }
+        }
+
+        .layerTitle
+        {
+            padding-top : 0;
+            min-width   : 320px;
+        }
+    }
+
+    // ---------
+    // 100% Body. Applied when dataHeight is not provided.
+    // ---------
+    &.fullBody
+    {
+        height     : 100%;
+        min-height : 100%;
+        max-height : 100%;
+
+        .layerContent
+        {
+            display    : flex;
+            overflow-x : auto;
+
+            .table
+            {
+                .body
+                {
+                    height : 100%;
+                }
+            }
+        }
+    }
+
+    // ----------------------
+    // Title Layer (Optional)
+    // ----------------------
+    .layerTitle
+    {
+        font-size       : $jdTable_BaseFontSize * 2;
+        padding-top     : 1.2rem;
+        padding-bottom  : 1.2rem;
+        font-weight     : 500;
+        width           : 100%;
+        display         : flex;
+        justify-content : center;
+    }
+
+    // ----------------------
+    // Table highlight layer.
+    // ----------------------
+    .layerHighlight
+    {
+        position                : relative;
+        width                   : 100%;
+        height                  : $jdTable_HighLightHeight;
+        min-height              : $jdTable_HighLightHeight;
+        background-color        : $jdTable_HighLightBackgroundColour;
+        border-top-left-radius  : $jdTable_BaseCornerRadius;
+        border-top-right-radius : $jdTable_BaseCornerRadius;
+        z-index                 : 99;
+    }
+
+    // -----------------------------------------------------------------
+    // Table control layer. Search and other controls are rendered here.
+    // -----------------------------------------------------------------
+    .layerControl
+    {
+        position         : relative;
+        width            : 100%;
+        height           : $jdTable_ControlHeight;
+        min-height       : $jdTable_ControlHeight;
+        min-height       : $jdTable_ControlHeight;
+        max-height       : $jdTable_ControlHeight;
+        background-color : $jdTable_ControlBackgroundColour;
+        color            : $jdTable_ControlTextColour;
+        display          : flex;
+        flex-wrap        : nowrap;
+        flex-direction   : row;
+        align-items      : center;
+        justify-content  : space-between;
+        z-index          : 99;
+
+        .controlSearch
+        {
+            position           : relative;
+            height             : 100%;
+            width              : 2rem;
+            display            : flex;
+            flex-wrap          : nowrap;
+            flex-direction     : row;
+            flex-grow          : 0;
+            flex-shrink        : 1;
+            overflow           : hidden;
+            transition         : all 0.5s ease;
+            -webkit-transition : all 0.5s ease;
+            -moz-transition    : all 0.5s ease;
+            -o-transition      : all 0.5s ease;
+
+            input
+            {
+                width       : 100%;
+                max-width   : 10rem;
+                height      : 100%;
+                box-shadow  : none;
+                border      : none;
+                background  : transparent;
+                flex-grow   : 0;
+                flex-shrink : 1;
+
+                &:focus
+                {
+                    outline : none;
+                }
+
+                &::-ms-clear {
+                    display : none;
+                }
+
+                &::-webkit-search-decoration, &::-webkit-search-cancel-button, &::-webkit-search-results-button, &::-webkit-search-results-decoration
+                {
+                    display: none;
+                }
+            }
+
+            &.searching
+            {
+                width            : 14rem;
+                color            : $jdTable_ControlTextHoverColour;
+                background-color : $jdTable_ControlBackgroundHoverColour;
+
+                @media only screen and ( max-width: 375px )
+                {
+                    width : 100%;
+                }
+            }
+        }
+
+        .controlFeature
+        {
+            position       : relative;
+            height         : 100%;
+            display        : flex;
+            align-items    : center;
+            margin-left    : auto;
+            flex-wrap      : nowrap;
+            flex-direction : row;
+
+            @media only screen and ( max-width: 375px )
+            {
+                &.searching
+                {
+                    display : none;
+                }
+            }
+        }
+
+        .controlItem
+        {
+            height                : 100%;
+            cursor                : pointer;
+            color                 : $jdTable_ControlTextColour;
+            display               : inline-block;
+            width                 : 2rem;
+            min-width             : 2rem;
+            user-select           : none;
+            -webkit-touch-callout : none;
+            -webkit-user-select   : none;
+            -moz-user-select      : none;
+            -ms-user-select       : none;
+
+            i
+            {
+                width           : 2rem;
+                min-width       : 2rem;
+                height          : 100%;
+                display         : flex;
+                justify-content : center;
+                align-items     : center;
+            }
+
+            &.active
+            {
+                i
+                {
+                    animation : activeFeature 1.5s infinite;
+                }
+
+                @keyframes activeFeature
+                {
+                    0%   { color : #FFFFFF  }
+                    100% { color : lighten( $jdTable_BaseThemeBackgroundColour, 15% );  }
+                }
+            }
+
+            &:hover
+            {
+                color            : $jdTable_ControlTextHoverColour;
+                background-color : $jdTable_ControlBackgroundHoverColour;
+
+                &:active
+                {
+                    color : $jdTable_ControlTextActiveColour;
+                }
+            }
+
+            &.selected
+            {
+                color            : $jdTable_ControlTextActiveColour;
+                background-color : $jdTable_ControlBackgroundHoverColour;
+
+                &:active
+                {
+                    color : $jdTable_ControlTextColour;
+                }
+            }
+
+            &.clearSearch
+            {
+                color : $jdTable_BaseDangerColour;
+            }
+
+            &.search
+            {
+                color : $jdTable_ControlBackgroundColour;
+            }
+
+            &.noSelect
+            {
+                cursor : default;
+
+                &:hover
+                {
+                    &:active
+                    {
+                        color : $jdTable_ControlBackgroundColour;
+                    }
+                }
+
+            }
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // Options layer. Used when specific features are selected.
+    // ----------------------------------------------------------------
+    .layerOption
+    {
+        width    : 100%;
+        position : relative;
+
+        .optionDropdown
+        {
+            background-color           : $jdTable_ControlBackgroundHoverColour;
+            width                      : 310px;
+            right                      : 5px;
+            top                        : -1px;
+            position                   : absolute;
+            z-index                    : 80;
+            padding                    : 0.5rem 0rem;
+            box-sizing                 : border-box;
+            transition                 : all 0.3s cubic-bezier(.05,.52,.48,1);
+            display                    : flex;
+            flex-direction             : column;
+            overflow-y                 : auto;
+            overflow-x                 : hidden;
+            -webkit-box-shadow         : 0px 2px 4px 1px rgba(0,0,0,0.54);
+            -moz-box-shadow            : 0px 2px 4px 1px rgba(0,0,0,0.54);
+            box-shadow                 : 0px 2px 4px 1px rgba(0,0,0,0.54);
+            border-bottom-right-radius : $jdTable_BaseCornerRadius;
+            border-bottom-left-radius  : $jdTable_BaseCornerRadius;
+
+            .dropdownHeader
+            {
+                align-items    : center;
+                padding-top    : 0.5rem;
+                padding-bottom : 1rem;
+                font-size      : $jdTable_BaseFontSize * 1.5;
+                text-transform : uppercase;
+                color          : $jdTable_BaseTextColour;
+                font-weight    : $jdTable_BaseFontWeight + 200;
+                align-self     : center;
+
+                &.subHeader
+                {
+                    padding-top : 1rem;
+                    font-size   : $jdTable_BaseFontSize * 1.3;
+                }
+
+                &.smallHeader
+                {
+                    font-size      : $jdTable_BaseFontSize * 0.9;
+                    font-weight    : $jdTable_BaseFontWeight;
+                    font-style     : italic;
+                    text-transform : none;
+                    padding-top    : 0rem;
+                }
+            }
+
+            .dropdownItem
+            {
+                display         : flex;
+                flex-direction  : row;
+                align-items     : center;
+                justify-content : center;
+                height          : 2rem;
+                min-height      : 2rem;
+                width           : 100%;
+
+                .columnVisibility
+                {
+                    padding-left  : 1rem;
+                    padding-right : 1rem;
+                    color         : darken( $jdTable_BaseSuccessColour, 5% );
+
+                    .notVisible
+                    {
+                        color : $jdTable_BaseDangerColour;
+                    }
+                }
+
+                .columnTitle
+                {
+                    padding-right : 1rem;
+                    width         : 100%;
+                    overflow      : hidden;
+                    text-overflow : ellipsis;
+                    white-space   : nowrap;
+                }
+
+                &:hover
+                {
+                    background-color : #FFFFFF;
+                }
+
+                &.selected
+                {
+                    background-color : $jdTable_ControlBackgroundColour;
+                    color            : $jdTable_ControlTextColour;
+
+                    &:hover
+                    {
+                        background-color : $jdTable_ControlBackgroundColour;
+                    }
+                }
+            }
+
+            .dropdownInput
+            {
+                position         : relative;
+                height           : 2rem;
+                min-height       : 2rem;
+                display          : flex;
+                align-items      : center;
+                margin           : 0rem 1rem 0.5rem 1rem;
+                border           : 1px solid $jdTable_BaseThemeBackgroundColour;
+                border-left      : 5px solid $jdTable_BaseThemeBackgroundColour;
+                outline          : none;
+                box-sizing       : border-box;
+                font-size        : $jdTable_BaseFontSize * 0.85;
+                font-weight      : $jdTable_BaseFontWeight + 100;
+                background-color : $jdTable_BaseBGColour;
+                align-items      : center;
+
+                .label
+                {
+                    width                 : 100%;
+                    height                : 100%;
+                    display               : flex;
+                    align-items           : center;
+                    -webkit-touch-callout : none;
+                    -webkit-user-select   : none;
+                    -moz-user-select      : none;
+                    -ms-user-select       : none;
+                    user-select           : none;
+
+                    span
+                    {
+                        white-space   : nowrap;
+                        overflow      : hidden;
+                        text-overflow : ellipsis;
+                        margin-left   : 0.5rem;
+                        margin-right  : 2rem;
+                    }
+                }
+
+                ul
+                {
+                    position         : absolute;
+                    max-height       : 12rem;
+                    overflow-x       : hidden;
+                    overflow-y       : auto;
+                    top              : 100%;
+                    left             : -1px;
+                    right            : -1px;
+                    list-style       : none;
+                    padding          : 0rem;
+                    margin           : 0rem;
+                    border           : 1px solid lighten($jdTable_BaseThemeBackgroundColour, 30%);
+                    background-color : $jdTable_BaseBGColour;
+                    box-sizing       : border-box;
+                    z-index          : 9998;
+
+                    li
+                    {
+                        overflow              : hidden;
+                        white-space           : nowrap;
+                        text-overflow         : ellipsis;
+                        padding               : 0.2rem;
+                        -webkit-touch-callout : none;
+                        -webkit-user-select   : none;
+                        -khtml-user-select    : none;
+                        -moz-user-select      : none;
+                        -ms-user-select       : none;
+                        user-select           : none;
+
+                        &:hover
+                        {
+                            background-color : $jdTable_ContentCellHighlightBackgroundColour;
+                            color            : $jdTable_ContentCellHighlightTextColour;
+                        }
+                    }
+                }
+
+                input
+                {
+                    width            : 100%;
+                    font-family      : inherit;
+                    border           : none;
+                    font-size        : $jdTable_BaseFontSize * 0.85;
+                    font-weight      : $jdTable_BaseFontWeight + 100;
+                    background-color : $jdTable_BaseBGColour;
+                    outline          : none;
+                    box-sizing       : border-box;
+                }
+
+                &.addPadding
+                {
+                    padding : 0rem 0.5rem;
+                }
+
+                .removeIcon
+                {
+                    position  : absolute;
+                    right     : 0.5rem;
+                    top       : 0.35rem;
+                    color     : $jdTable_BaseDangerColour;
+                    font-size : $jdTable_BaseFontSize * 1.5;
+                }
+
+                &.disabled
+                {
+                    border           : 1px solid darken( $jdTable_ControlBackgroundHoverColour, 30% );
+                    border-left      : 5px solid darken( $jdTable_ControlBackgroundHoverColour, 30% );
+                }
+
+                &.carrot:after
+                {
+                    content      : "";
+                    width        : 0;
+                    height       : 0;
+                    position     : absolute;
+                    right        : 0.5rem;
+                    top          : 50%;
+                    margin-top   : -3px;
+                    border-width : 6px 6px 0 6px;
+                    border-style : solid;
+                    border-color : $jdTable_BaseThemeBackgroundColour transparent;
+                }
+            }
+
+            .dropdownRow
+            {
+                display         : flex;
+                flex-direction  : row;
+                align-items     : center;
+                justify-content : center;
+                height          : 2rem;
+                min-height      : 2rem;
+                padding         : 0rem 1rem;
+                align-items     : center;
+
+                &.separate
+                {
+                    justify-content : space-between;
+                }
+
+                button
+                {
+                    width : 5rem;
+                }
+            }
+
+            .errorMessage
+            {
+                color         : $jdTable_BaseDangerColour;
+                font-size     : $jdTable_BaseFontSize * 0.85;
+                margin-bottom : 0.5rem;
+                text-align    : center;
+                font-weight   : $jdTable_BaseFontWeight + 100;
+            }
+        }
+    }
+
+    // -------------------------------------------------
+    // Table content layer. Data rows are rendered here.
+    // -------------------------------------------------
+    .layerContent
+    {
+        position         : relative;
+        width            : 100%;
+        height           : 100%;
+        background-color : $jdTable_BaseBGColour;
+        color            : $jdTable_BaseTextColour;
+        display          : block;
+        box-sizing       : border-box;
+        overflow-y       : hidden;
+        z-index          : 50;
+
+        .rowView
+        {
+            position         : absolute;
+            top              : 0px;
+            left             : 0px;
+            width            : 100%;
+            height           : 100%;
+            display          : flex;
+            align-items      : center;
+            justify-content  : center;
+            background-color : rgba(0, 0, 0, 0.2);
+            z-index          : 99;
+            padding          : 1rem;
+            box-sizing       : border-box;
+        }
+
+        .table
+        {
+            position       : relative;
+            width          : 100%;
+            height         : 100%;
+            display        : flex;
+            flex-direction : column;
+            flex-wrap      : nowrap;
+
+            .head
+            {
+                position         : relative;
+                width            : 100%;
+                overflow         : hidden;
+                box-sizing       : border-box;
+                display          : flex;
+                flex-direction   : row;
+                background-color : $jdTable_ControlBackgroundColour;
+
+                .cell
+                {
+                    position                : relative;
+                    display                 : flex;
+                    flex-direction          : row;
+                    align-items             : center;
+                    box-sizing              : border-box;
+                    font-size               : $jdTable_BaseFontSize;
+                    padding                 : 0.2rem 0.5rem;
+                    flex-grow               : 1;
+                    -webkit-touch-callout   : none;
+                    -webkit-user-select     : none;
+                    -moz-user-select        : none;
+                    -ms-user-select         : none;
+                    user-select             : none;
+                    border-top              : 4px solid darken( $jdTable_BaseThemeBackgroundColour, 10% );
+                    border-top-left-radius  : 5px;
+                    border-top-right-radius : 5px;
+                    background-color        : $jdTable_BaseThemeBackgroundColour;
+                    color                   : $jdTable_BaseThemeFontColour;
+                    border-right            : 1px solid darken( $jdTable_BaseThemeBackgroundColour, 10% );
+
+                    .cellText
+                    {
+                        display        : flex;
+                        flex-direction : row;
+                        width          : 100%;
+                        align-items    : center;
+                        justify-content: space-between;
+                    }
+
+                    .hoverSort
+                    {
+                        display : none;
+                    }
+
+                    &.hoverAssist
+                    {
+                        background-color : $jdTable_ContentCellHighlightBackgroundColour;
+                    }
+
+                    &:first-child
+                    {
+                        border-top-left-radius : 0px;
+                    }
+
+                    &.scrollBuffer
+                    {
+                        &:last-child
+                        {
+                            margin-right : 17px;
+                        }
+                    }
+
+                    &.sort
+                    {
+                        cursor : pointer;
+
+                        &:hover
+                        {
+                            border-top       : 4px solid darken( $jdTable_BaseBGColour, 40% );
+                            background-color : $jdTable_BaseBGColour;
+                            color            : $jdTable_BaseTextColour;
+                            font-weight      : $jdTable_BaseFontWeight + 100;
+
+                            .hoverSort
+                            {
+                                display : block;
+                                color   : $jdTable_BaseTextColour;
+                            }
+                        }
+                    }
+                }
+
+                // Body scroll bar header correction.
+                .scrollFix
+                {
+                    width     : 19px;
+                    min-width : 19px;
+                    max-width : 19px;
+                    border-top-right-radius : 0px;
+                    border-right            : none;
+                    border-top              : 4px solid darken( $jdTable_BaseThemeBackgroundColour, 10% );
+                    box-sizing              : border-box;
+                    position                : relative;
+                    display                 : flex;
+                    background-color        : $jdTable_BaseThemeBackgroundColour;
+                    border-left : none;
+                }
+
+
+                .resize
+                {
+                    position   : absolute;
+                    height     : 100%;
+                    width      : 8px;
+                    display    : block;
+                    cursor     : w-resize;
+                    right      : -5px;
+                    top        : 0;
+                    z-index    : 10;
+                    overflow   : hidden;
+
+                    &.selected
+                    {
+                        width : 500px;
+                        right : -250px;
+                    }
+                }
+            }
+
+            .body
+            {
+                position         : relative;
+                width            : 100%;
+                display          : block;
+                overflow-x       : hidden;
+                background-color : $jdTable_ContentBodyBackgroundColour;
+                z-index          : 50;
+                background       : repeating-linear-gradient( 45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px );
+
+                .row
+                {
+                    position         : relative;
+                    z-index          : 50;
+				    background-color : $jdTable_BaseBGColour;
+
+                    &:hover
+                    {
+                        background-color : $jdTable_ContentCellHighlightBackgroundColour !important;
+                        color            : $jdTable_ContentCellHighlightTextColour;
+                    }
+
+                    &.zebra:nth-child(even)
+                    {
+                        background-color : darken( $jdTable_BaseBGColour, 5% );
+                    }
+
+                    .cell
+                    {
+                        position      : relative;
+                        font-size     : ( $jdTable_BaseFontSize * 0.9 );
+                        display       : block;
+                        white-space   : nowrap;
+                        text-overflow : ellipsis;
+                        overflow      : hidden;
+
+                        &.rowFlex
+                        {
+                            display     : flex;
+                            height      : 100%;
+                            align-items : center;
+                            white-space : inherit;
+                            min-height  : inherit;
+                        }
+
+                        // Fixes a bug in IE11 where min-height + flexbox breaks align-items: center.
+                        &:after
+                        {
+                            display    : block;
+                            content    : '';
+                            min-height : inherit;
+                            font-size  : 0;
+                        }
+                    }
+                }
+
+                .virtualBody
+                {
+                    position   : absolute;
+                    opacity    : 0;
+                    top        : 0;
+                    left       : 0;
+                    width      : 1px;
+                    background : transparent;
+                }
+            }
+
+            .row
+            {
+                width          : 100%;
+                height         : 100%;
+                display        : flex;
+                align-items    : center;
+                flex-direction : row;
+                cursor         : pointer;
+
+                .cell
+                {
+                    width           : 100%;
+                    box-sizing      : border-box;
+                    display         : flex;
+                    align-items     : center;
+                    flex-grow       : 1;
+                    padding-left    : 0.5rem;
+                    overflow-wrap   : break-word;
+                    word-wrap       : break-word;
+                    word-break      : break-all;
+                    word-break      : break-word;
+                    -ms-word-break  : break-all;
+                    hyphens         : auto;
+                    -ms-hyphens     : auto;
+                    -moz-hyphens    : auto;
+                    -webkit-hyphens : auto;
+                }
+            }
+        }
+    }
+
+    // ------------------------------------------------
+    // Table footer layer. Pagination is rendered here.
+    // ------------------------------------------------
+    .layerFooter
+    {
+        position                   : relative;
+        width                      : 100%;
+        height                     : $jdTable_FooterHeight;
+        min-height                 : $jdTable_FooterHeight;
+        background-color           : $jdTable_FooterBackgroundColour;
+        color                      : $jdTable_FooterTextColour;
+        display                    : flex;
+        flex-wrap                  : nowrap;
+        flex-direction             : row;
+        align-items                : center;
+        justify-content            : center;
+        border-bottom-left-radius  : $jdTable_BaseCornerRadius;
+        border-bottom-right-radius : $jdTable_BaseCornerRadius;
+        z-index                    : 99;
+        font-size                  : $jdTable_BaseFontSize * 0.9;
+        user-select                : none;
+        -webkit-touch-callout      : none;
+        -webkit-user-select        : none;
+        -moz-user-select           : none;
+        -ms-user-select            : none;
+
+        .resultRows
+        {
+            font-size : $jdTable_BaseFontSize * 0.85;
+        }
+
+        .pagination
+        {
+            width           : 100%;
+            display         : flex;
+            flex-wrap       : nowrap;
+            flex-direction  : row;
+            align-items     : center;
+            justify-content : space-between;
+            height          : 100%;
+
+            .paginationDirection
+            {
+                display         : flex;
+                justify-content : center;
+                cursor          : pointer;
+                height          : 100%;
+                align-items     : center;
+
+                &.left
+                {
+                    position         : absolute;
+                    top              : 0;
+                    left             : 0;
+                    background-color : $jdTable_FooterBackgroundColour;
+                    border-bottom-left-radius  : $jdTable_BaseCornerRadius;
+                }
+
+                &.right
+                {
+                    position                   : absolute;
+                    top                        : 0;
+                    right                      : 0;
+                    background-color           : $jdTable_FooterBackgroundColour;
+                    border-bottom-right-radius : $jdTable_BaseCornerRadius;
+                }
+
+                &.disabled
+                {
+                    cursor : no-drop;
+
+                    i
+                    {
+                        &:hover
+                        {
+                            background-color : $jdTable_FooterBackgroundColour;
+                        }
+
+                        &:active
+                        {
+                            background-color : $jdTable_FooterBackgroundColour;
+                        }
+                    }
+                }
+
+                i
+                {
+                    display         : flex;
+                    align-items     : center;
+                    width           : 3rem;
+                    height          : 100%;
+                    justify-content : center;
+
+                    &:hover
+                    {
+                        background-color : lighten( $jdTable_FooterBackgroundColour, 15% );
+                    }
+
+                    &:active
+                    {
+                        background-color : lighten( $jdTable_FooterBackgroundColour, 25% );
+                    }
+
+                    &.start
+                    {
+                        border-bottom-left-radius  : $jdTable_BaseCornerRadius;
+                    }
+
+                    &.end
+                    {
+                        border-bottom-right-radius : $jdTable_BaseCornerRadius;
+                    }
+                }
+            }
+
+            .paginationRows
+            {
+                position: absolute;
+                background-color: #494949;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                overflow      : hidden;
+                text-overflow : ellipsis;
+                white-space   : nowrap;
+                font-size     : $jdTable_BaseFontSize * 0.8;
+                padding       : 0rem 1rem;
+                top : 0;
+                left : 50%;
+                transform : translateX(-50%);
+            }
+
+            .paginationArea
+            {
+                width : 100%;
+                display         : flex;
+                flex-direction  : row;
+                align-items     : center;
+                justify-content : space-around;
+
+                .paginationList
+                {
+                    display         : flex;
+                    flex-direction  : row;
+                    align-items     : center;
+                    justify-content : center;
+                    height          : 100%;
+
+                    .paginationPage
+                    {
+                        display         : flex;
+                        align-items     : center;
+                        justify-content : center;
+                        padding         : 0rem 0.3rem;
+                        height          : 100%;
+                        box-sizing      : border-box;
+                        font-size       : $jdTable_BaseFontSize * 0.8;
+
+                        span
+                        {
+                            border     : 1px solid lighten( $jdTable_FooterBackgroundColour, 15% );
+                            padding    : 0.2rem 0.4rem;
+                            min-width  : 1.5rem;
+                            text-align : center;
+                            box-sizing : border-box;
+                        }
+
+                        &.addHover
+                        {
+                            &:hover
+                            {
+                                cursor : pointer;
+
+                                span
+                                {
+                                    background-color : lighten( $jdTable_FooterBackgroundColour, 15% );
+                                    color            : $jdTable_FooterTextColour;
+                                }
+                            }
+                        }
+
+                        &.selected
+                        {
+                            span
+                            {
+                                background-color : lighten( $jdTable_FooterBackgroundColour, 15% );
+                            }
+
+                            &:hover
+                            {
+                                cursor : default !important;
+
+                                span
+                                {
+                                    background-color : lighten( $jdTable_FooterBackgroundColour, 15% ) !important;
+                                    color            : $jdTable_FooterTextColour !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------
+    // Filter feature layer. Filter options are rendered here.
+    // -------------------------------------------------------
+    .layerPopup
+    {
+        position         : absolute;
+        top              : 0px;
+        left             : 0px;
+        width            : 100%;
+        height           : 100%;
+        display          : flex;
+        align-items      : center;
+        justify-content  : center;
+        background-color : $jdTable_MaximizedBackgroundColour;
+        border-radius    : $jdTable_BaseCornerRadius;
+
+        &.fullFrame
+        {
+            z-index : 9998;
+        }
+
+        &.contentFrame
+        {
+            z-index : 50;
+        }
+
+        &.fullFrameZone
+        {
+            width      : 100%;
+            box-sizing : border-box;
+            padding    : 1rem;
+        }
+
+        .errorMessage
+        {
+            display          : flex;
+            flex-direction   : column;
+            align-items      : center;
+            padding          : 1rem;
+            border-radius    : $jdTable_BaseCornerRadius;
+            background-color : $jdTable_BaseBGColour;
+            color            : $jdTable_BaseDangerColour;
+            font-size        : $jdTable_BaseFontSize * 1.3;
+        }
+
+        &.filterOverride
+        {
+            z-index          : 85;
+        }
+
+        &.fullOverride
+        {
+            z-index          : 999;
+        }
+
+        .noDataFrame
+        {
+            display          : flex;
+            flex-direction   : column;
+            align-items      : center;
+            padding          : 1rem;
+
+            .title
+            {
+                font-size      : $jdTable_BaseFontSize * 1.3;
+                font-weight    : $jdTable_BaseFontWeight + 100;
+                text-transform : uppercase;
+            }
+
+            .filters
+            {
+                margin-top : 1rem;
+            }
+        }
+
+        .quickView
+        {
+            position         : relative;
+            min-width        : 314px;
+            max-width        : 600px;
+            display          : flex;
+            flex-direction   : column;
+            align-items      : center;
+            border-radius    : $jdTable_BaseCornerRadius;
+            background-color : $jdTable_HighLightBackgroundColour;
+            box-sizing       : border-box;
+            overflow         : hidden;
+            box-shadow       : 0 1px 4px rgba(0, 0, 0, .6);
+
+            .quickViewHighlight_1
+            {
+                width                   : 100%;
+                height                  : $jdTable_HighLightHeight * 0.75;
+                background-color        : $jdTable_HighLightBackgroundColour;
+                border-top-right-radius : $jdTable_BaseCornerRadius;
+                border-top-left-radius  : $jdTable_BaseCornerRadius;
+            }
+
+            .quickViewHighlight_2
+            {
+                width            : 100%;
+                height           : $jdTable_HighLightHeight * 1.5;
+                background-color : $jdTable_BaseThemeBackgroundColour;
+            }
+
+            .quickViewControl
+            {
+                width                 : 100%;
+                height                : $jdTable_ControlHeight;
+                background-color      : $jdTable_ControlBackgroundColour;
+                display               : flex;
+                flex-direction        : row;
+                justify-content       : space-between;
+                align-items           : center;
+                color                 : $jdTable_ControlTextColour;
+                user-select           : none;
+                -webkit-touch-callout : none;
+                -webkit-user-select   : none;
+                -moz-user-select      : none;
+                -ms-user-select       : none;
+
+                .controlAction
+                {
+                    font-size       : $jdTable_BaseFontSize;
+                    display         : flex;
+                    justify-content : center;
+                    width           : $jdTable_ControlHeight * 0.8;
+                    cursor          : pointer;
+                    height          : 100%;
+                    align-items     : center;
+
+                    &:hover
+                    {
+                        background-color : lighten( $jdTable_ControlBackgroundColour, 15% );
+                    }
+                }
+
+                .controlTitle
+                {
+                    text-transform : uppercase;
+                    font-size      : $jdTable_BaseFontSize * 1.3;
+                }
+            }
+
+            .quickViewContent
+            {
+                width      : 100%;
+                max-height : 320px;
+                overflow   : auto;
+                background : repeating-linear-gradient( 45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px );
+
+                .contentRow
+                {
+                    display          : flex;
+                    flex-direction   : column;
+                    width            : 100%;
+                    background-color : $jdTable_BaseBGColour;
+
+                    .rowTitle
+                    {
+                        display          : flex;
+                        align-items      : center;
+                        font-size        : $jdTable_BaseFontSize * 1.1;
+                        font-weight      : $jdTable_BaseFontWeight + 200;
+                        word-break       : break-all;
+                        padding          : 0.5rem 1rem;
+                        background-color : darken( $jdTable_BaseBGColour, 10% );
+                    }
+
+                    .rowData
+                    {
+                        display     : flex;
+                        align-items : center;
+                        min-height  : 2rem;
+                        padding     : 0.5rem 1rem;
+                        word-break  : break-all;
+                    }
+                }
+            }
+
+            .quickViewFooter
+            {
+                width                      : 100%;
+                display                    : flex;
+                flex-direction             : row;
+                justify-content            : space-between;
+                align-items                : center;
+                height                     : $jdTable_FooterHeight;
+                background-color           : $jdTable_FooterBackgroundColour;
+                color                      : $jdTable_FooterTextColour;
+                border-bottom-right-radius : $jdTable_BaseCornerRadius;
+                border-bottom-left-radius  : $jdTable_BaseCornerRadius;
+                font-size                  : $jdTable_BaseFontSize * 0.9;
+                user-select                : none;
+                -webkit-touch-callout      : none;
+                -webkit-user-select        : none;
+                -moz-user-select           : none;
+                -ms-user-select            : none;
+
+                .footerDirection
+                {
+                    display         : flex;
+                    justify-content : center;
+                    width           : 5rem;
+                    cursor          : pointer;
+                    height          : 100%;
+                    align-items     : center;
+
+                    &:hover
+                    {
+                        background-color : lighten( $jdTable_FooterBackgroundColour, 15% );
+                    }
+
+                    &:active
+                    {
+                        background-color : lighten( $jdTable_FooterBackgroundColour, 25% );
+                    }
+
+                    &.previous
+                    {
+                        border-bottom-left-radius  : $jdTable_BaseCornerRadius;
+                    }
+
+                    &.next
+                    {
+                        border-bottom-right-radius : $jdTable_BaseCornerRadius;
+                    }
+                }
+
+                .footerItem
+                {
+                    font-size : $jdTable_BaseFontSize * 0.85;
+                }
+            }
+        }
+    }
+}
+
+// ----------
+// JD-Helpers
+// ----------
+
+.JD-Reset
+{
+    *
+    {
+        box-sizing: border-box;
+    }
+
+    ::before, ::after
+    {
+        box-sizing: inherit;
+    }
+
+    html
+    {
+        line-height: 1.15; /* 1 */
+        -webkit-text-size-adjust: 100%; /* 2 */
+        -webkit-tap-highlight-color: transparent; /* 3*/
+    }
+
+    body
+    {
+        margin: 0;
+    }
+
+    main
+    {
+        display: block;
+    }
+
+    p,
+    table,
+    blockquote,
+    address,
+    pre,
+    iframe,
+    form,
+    figure,
+    dl
+    {
+        margin: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6
+    {
+        font-size: inherit;
+        line-height: inherit;
+        font-weight: inherit;
+        margin: 0;
+    }
+
+    ul,
+    ol
+    {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    dt
+    {
+        font-weight: bold;
+    }
+
+    dd
+    {
+        margin-left: 0;
+    }
+
+    hr
+    {
+        box-sizing: content-box; /* 1 */
+        height: 0; /* 1 */
+        overflow: visible; /* 2 */
+        border: 0;
+        border-top: 1px solid;
+        margin: 0;
+        clear: both;
+    }
+
+    pre {
+        font-family: monospace, monospace; /* 1 */
+        font-size: inherit; /* 2 */
+    }
+
+    address
+    {
+        font-style: inherit;
+    }
+
+    a
+    {
+        background-color: transparent;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    abb
+    [title] {
+        border-bottom: none; /* 1 */
+        text-decoration: underline; /* 2 */
+        text-decoration: underline dotted; /* 2 */
+    }
+
+    b,
+    &strong
+    {
+        font-weight: bolder;
+    }
+
+    code,
+    kbd,
+    samp
+    {
+        font-family: monospace, monospace; /* 1 */
+        font-size: inherit; /* 2 */
+    }
+
+    small
+    {
+        font-size: 80%;
+    }
+
+    sub,
+    sup
+    {
+        ont-size: 75%;
+        line-height: 0;
+        position: relative;
+        vertical-align: baseline;
+    }
+
+    sub
+    {
+        bottom: -0.25em;
+    }
+
+    sup
+    {
+        top: -0.5em;
+    }
+
+    img
+    {
+        border-style: none;
+        vertical-align: bottom;
+    }
+
+    embed,
+    object,
+    iframe
+    {
+        border: 0;
+        vertical-align: bottom;
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea
+    {
+        vertical-align: middle;
+        color: inherit;
+        font: inherit;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        outline: 0;
+    }
+
+    select
+    {
+        -webkit-appearance: none;
+        appearance: none;
+        border-radius: 0;
+    }
+
+    button,
+    input
+    {
+        overflow: visible;
+    }
+
+    button,
+    select
+    {
+        text-transform: none;
+    }
+
+    button,
+    [type='button'],
+    [type='reset'],
+    [type='submit']
+    {
+        cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    button[disabled],
+    [type='button'][disabled],
+    [type='reset'][disabled],
+    [type='submit'][disabled]
+    {
+        cursor: default;
+    }
+
+    button::-moz-focus-inner,
+    [type='button']::-moz-focus-inner,
+    [type='reset']::-moz-focus-inner,
+    [type='submit']::-moz-focus-inner
+    {
+        border-style: none;
+        padding: 0;
+    }
+
+    button:-moz-focusring,
+    [type='button']:-moz-focusring,
+    [type='reset']:-moz-focusring,
+    [type='submit']:-moz-focusring
+    {
+        outline: 1px dotted ButtonText;
+    }
+
+    fieldset
+    {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+    }
+
+    legend
+    {
+        color: inherit; /* 2 */
+        display: table; /* 1 */
+        max-width: 100%; /* 1 */
+        padding: 0; /* 3 */
+        white-space: normal; /* 1 */
+    }
+
+    progress
+    {
+        vertical-align: baseline;
+    }
+
+    textarea
+    {
+        overflow: auto;
+    }
+
+    [type='checkbox'],
+    [type='radio']
+    {
+        box-sizing: border-box; /* 1 */
+        padding: 0; /* 2 */
+    }
+
+    [type='number']::-webkit-inner-spin-button,
+    [type='number']::-webkit-outer-spin-button
+    {
+        height: auto;
+    }
+
+    [type='search']
+    {
+        -webkit-appearance: textfield; /* 1 */
+        outline-offset: -2px; /* 2 */
+    }
+
+    [type='search']::-webkit-search-decoration
+    {
+        -webkit-appearance: none;
+    }
+
+    ::-webkit-file-upload-button
+    {
+        -webkit-appearance: button; /* 1 */
+        font: inherit; /* 2 */
+    }
+
+    ::-webkit-input-placeholder
+    {
+        font: inherit;
+    }
+
+    :-ms-input-placeholder
+    {
+        font: inherit;
+    }
+
+    ::-ms-input-placeholder
+    {
+        font: inherit;
+    }
+
+    ::placeholder
+    {
+        font: inherit;
+    }
+
+    label[for]
+    {
+        cursor: pointer;
+    }
+
+    details
+    {
+        display: block;
+    }
+
+    summary
+    {
+        display: list-item;
+    }
+
+    table
+    {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    caption
+    {
+        text-align: left;
+    }
+
+    td,
+    th
+    {
+        vertical-align: top;
+    }
+
+    th
+    {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    template
+    {
+        display: none;
+    }
+
+    [hidden]
+    {
+        display: none;
+    }
+}
+
+.JD-Clickable
+{
+    cursor : pointer;
+}
+
+.JD-NoneSelectable
+{
+    user-select           : none;
+    -webkit-touch-callout : none;
+    -webkit-user-select   : none;
+    -moz-user-select      : none;
+    -ms-user-select       : none;
+}
+
+// ---------
+// JD-Loader
+// ---------
+
+.JD-Loader
+{
+    display          : flex;
+    flex-direction   : column;
+    align-items      : center;
+    padding          : 1rem;
+    padding-top      : 1.5rem;
+    border-radius    : 0.5rem;
+
+    .loadingText
+    {
+        margin-top  : 0.6rem;
+        font-weight : 500;
+    }
+
+    // ------------------------------------------------------
+    // CSS Credit: https://github.com/epicmaxco/epic-spinners
+    // ------------------------------------------------------
+
+    .fulfilling-square-spinner , .fulfilling-square-spinner *
+    {
+        box-sizing : border-box;
+    }
+
+    .fulfilling-square-spinner
+    {
+        height    : 50px;
+        width     : 50px;
+        position  : relative;
+        border    : 4px solid $jdTable_ControlTextActiveColour;
+        animation : fulfilling-square-spinner-animation 4s infinite ease;
+    }
+
+    .fulfilling-square-spinner .spinner-inner
+    {
+        vertical-align   : top;
+        display          : inline-block;
+        background-color : $jdTable_ControlTextActiveColour;
+        width            : 100%;
+        opacity          : 1;
+        animation        : fulfilling-square-spinner-inner-animation 4s infinite ease-in;
+    }
+
+    @keyframes fulfilling-square-spinner-animation
+    {
+        0%
+        {
+            transform : rotate( 0deg );
+        }
+
+        25%
+        {
+            transform : rotate( 180deg );
+        }
+
+        50%
+        {
+            transform : rotate( 180deg );
+        }
+
+        75%
+        {
+            transform : rotate( 360deg );
+        }
+
+        100%
+        {
+            transform : rotate( 360deg );
+        }
+    }
+
+    @keyframes fulfilling-square-spinner-inner-animation
+    {
+        0%
+        {
+            height : 0%;
+        }
+
+        25%
+        {
+            height : 0%;
+        }
+
+        50%
+        {
+            height : 100%;
+        }
+
+        75%
+        {
+            height : 100%;
+        }
+
+        100%
+        {
+            height : 0%;
+        }
+    }
+}
+
+// ---------------
+// JD-Table Button
+// ---------------
+
+.JD-Button
+{
+    position           : relative;
+    margin             : 0.5rem 0rem !important;
+    width              : auto;
+    height             : 1.8rem;
+    overflow           : hidden !important;
+    border-width       : 0;
+    outline            : none !important;
+    border-radius      : 2px !important;
+    box-shadow         : 0 1px 4px rgba(0, 0, 0, .6);
+    background-color   : $jdTable_BaseThemeBackgroundColour;
+    color              : $jdTable_BaseThemeFontColour;
+    display            : flex;
+    justify-content    : center;
+    cursor             : pointer;
+    align-items        : center;
+    white-space        : nowrap;
+    overflow-wrap      : normal;
+    transition         : background-color .3s;
+    -webkit-transition : background-color .3s;
+    -moz-transition    : background-color .3s;
+    -o-transition      : background-color .3s;
+
+    &:hover
+    {
+        background-color : lighten( $jdTable_BaseThemeBackgroundColour, 10% );
+    }
+
+    &:focus
+    {
+        background-color : darken( $jdTable_BaseThemeBackgroundColour, 10% );
+    }
+
+    &:focus:hover
+    {
+        background-color : lighten( $jdTable_BaseThemeBackgroundColour, 10% );
+    }
+
+    &:before
+    {
+        content           : "";
+        position          : absolute;
+        top               : 50%;
+        left              : 50%;
+        display           : block;
+        width             : 0;
+        padding-top       : 0;
+        border-radius     : 100%;
+        background-color  : $jdTable_ControlBackgroundHoverColour;
+        opacity           : 0;
+        transform         : translate(-50%, -50%);
+        -webkit-transform : translate(-50%, -50%);
+        -moz-transform    : translate(-50%, -50%);
+        -ms-transform     : translate(-50%, -50%);
+        -o-transform      : translate(-50%, -50%);
+    }
+
+    &:active:before
+    {
+        width              : 120%;
+        padding-top        : 120%;
+        opacity            : 0.32;
+        transition         : width .2s ease-out, padding-top .2s ease-out;
+        -webkit-transition : width .2s ease-out, padding-top .2s ease-out;
+        -moz-transition    : width .2s ease-out, padding-top .2s ease-out;
+        -ms-transition     : width .2s ease-out, padding-top .2s ease-out;
+        -o-transition      : width .2s ease-out, padding-top .2s ease-out;
+    }
+
+    &:disabled
+    {
+        background-color : darken( $jdTable_BaseThemeBackgroundColour, 20% );
+        cursor           : not-allowed;
+        color            : darken( $jdTable_BaseThemeFontColour, 20% );
+    }
+
+    &.small
+    {
+        min-width : 3rem !important;
+    }
+
+    &.medium
+    {
+        min-width : 5rem !important;
+    }
+
+    &.large
+    {
+        min-width : 7rem !important;
+    }
+
+    &.danger
+    {
+        background-color : $jdTable_BaseDangerColour;
+        color            : #FFFFFF;
+
+        &:hover
+        {
+            background-color : darken( $jdTable_BaseDangerColour, 10% );
+        }
+
+        &:focus
+        {
+            background-color : lighten( $jdTable_BaseDangerColour, 10% )
+        }
+
+        &:focus:hover
+        {
+            background-color : darken( $jdTable_BaseDangerColour, 10% );
+        }
+
+        &:disabled
+        {
+            background-color : darken( $jdTable_BaseDangerColour, 20% );
+            color            : darken( #FFFFFF, 20% );
+            cursor           : not-allowed;
+        }
+    }
+
+    &.success
+    {
+        background-color : $jdTable_BaseSuccessColour;
+        color            : #FFFFFF;
+
+        &:hover
+        {
+            background-color : darken( $jdTable_BaseSuccessColour, 10% );
+        }
+
+        &:focus
+        {
+            background-color : lighten( $jdTable_BaseSuccessColour, 10% );
+        }
+
+        &:focus:hover
+        {
+            background-color : darken( $jdTable_BaseSuccessColour, 10% );
+        }
+
+        &:disabled
+        {
+            background-color : darken( $jdTable_BaseSuccessColour, 20% );
+            color            : darken( #FFFFFF, 20% );
+            cursor           : not-allowed;
+        }
+    }
+}
+
+// -----------------
+// VueJS Transitions
+// -----------------
+
+// General Fade In/Out
+.jdTableFade-enter-active, .jdTableFade-leave-active
+{
+	transition         : opacity 0.3s;
+    -webkit-transition : opacity 0.3s;
+    -moz-transition    : opacity 0.3s;
+    -o-transition      : opacity 0.3s;
+}
+
+.jdTableFade-enter, .jdTableFade-leave-to
+{
+	opacity : 0;
+}
+
+// Slides the element down (No Fade)
+.jdTableSlideDown-enter-active, .jdTableSlideDown-leave-active
+{
+    transition         : all 0.3s cubic-bezier(.05,.52,.48,1);
+    -webkit-transition : all 0.3s cubic-bezier(.05,.52,.48,1);
+    -moz-transition    : all 0.3s cubic-bezier(.05,.52,.48,1);
+    -o-transition      : all 0.3s cubic-bezier(.05,.52,.48,1);
+}
+
+.jdTableSlideDown-enter, .jdTableSlideDown-leave-to
+{
+    transform : translateY( -( $jdTable_HighLightHeight + $jdTable_ControlHeight ) );
+    opacity   : 0;
+}
+

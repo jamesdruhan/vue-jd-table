@@ -1,0 +1,37 @@
+// Base (General) Settings
+$jdTable_BaseBGColour      : #FFFFFF !default;
+$jdTable_BaseTextColour            : #252627 !default;
+$jdTable_BaseFontSize              : 0.9rem !default;
+$jdTable_BaseFontWeight            : 400 !default;
+$jdTable_BaseCornerRadius          : 0.5rem !default;
+$jdTable_BaseBorderColour          : #494949 !default;
+$jdTable_BaseThemeBackgroundColour : #C00 !default;
+$jdTable_BaseThemeFontColour       : #FFFFFF !default;
+$jdTable_BaseDangerColour          : #E53935 !default;
+$jdTable_BaseSuccessColour         : #3C903F !default;
+
+// Layer: Highlight
+$jdTable_HighLightBackgroundColour : $jdTable_BaseBorderColour !default;
+$jdTable_HighLightHeight           : 0.45rem !default;
+
+// Layer: Control
+$jdTable_ControlBackgroundColour      : #757575 !default;
+$jdTable_ControlBackgroundHoverColour : #E0E0E0 !default;
+$jdTable_ControlTextColour            : #FFFFFF !default;
+$jdTable_ControlTextHoverColour       : #494949 !default;
+$jdTable_ControlTextActiveColour      : $jdTable_BaseThemeBackgroundColour !default;
+$jdTable_ControlHeight                : 2.5rem !default;
+
+// Layer: Content
+$jdTable_ContentCellHighlightBackgroundColour : lighten( $jdTable_BaseThemeBackgroundColour, 25% ) !default;
+$jdTable_ContentCellHighlightTextColour       : #FFFFFF !default;
+$jdTable_ContentBodyBackgroundColour          : #F7F7F7 !default;
+
+// Layer: Footer
+$jdTable_FooterBackgroundColour : $jdTable_BaseBorderColour !default;
+$jdTable_FooterTextColour       : #FFFFFF !default;
+$jdTable_FooterHeight           : 2rem !default;
+
+// Feature Related
+$jdTable_MaximizedBackgroundColour : rgba(255, 255, 255, 0.6) !default;
+$jdTable_MaximizedPadding          : 1.2rem !default;

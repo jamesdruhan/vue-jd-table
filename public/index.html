@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+		<link rel="icon" href="./favicon.ico">
+
+		<title>JD-Table</title>
+
+		<!-- VueJS -->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+		<!-- JD-Table Component -->
+		<script type="text/javascript" src="./component.js"></script>
+
+		<link rel="stylesheet" href="app.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+		<style>
+			body
+			{
+				font-family : 'Roboto', sans-serif;
+			}
+		</style>
+	</head>
+
+	<body>
+		<noscript>
+			<strong>We're sorry but JD-Table doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+		</noscript>
+
+		<div id="app">
+			<JDTable
+					:option  = "tableOptions"
+					:loader  = "tableLoader"
+					:event   = "tableEvent"
+					@refresh = "refresh"
+			/>
+		</div>
+
+		<script type="text/javascript">
+			new Vue
+			({
+				el : '#app',
+
+				data ()
+				{
+					return {
+						tableOptions : {},
+
+						tableEvent  :
+						{
+							name : null,
+							data : null
+						},
+
+						tableLoader : false,
+
+						columns :
+						[
+							{
+								name       : 'column1',
+								title      : 'Column 1',
+								order      : 1,
+								type       : 'String',
+								filterable : true,
+								enabled    : true,
+								sort          : true,
+								sortDirection : 'asc'
+							},
+							{
+								name        : 'column2',
+								title       : 'Column 2',
+								order       : 2,
+								type        : 'String',
+								filterable  : true,
+								enabled     : true
+							},
+							{
+								name       : 'column3',
+								title      : 'Column 3',
+								order      : 3,
+								type       : 'String',
+								filterable : true,
+								enabled    : true
+							},
+							{
+								name       : 'column4',
+								title      : 'Column 4',
+								order      : 4,
+								type       : 'String',
+								filterable : true,
+								enabled    : true
+							}
+						]
+					}
+				},
+
+				created : function ()
+				{
+					this.tableOptions =
+					{
+						columns             : this.columns,
+
+						maxMinimize         : true,
+						refresh             : true,
+						search              : true,
+						columnSelect        : true,
+						resize              : true,
+						filter              : true,
+						export              : true,
+						columnSort          : true,
+						quickView           : true,
+
+						renderEngine          : 0,
+						responsiveFrame       : false,
+						responsiveTable       : true,
+						virtualEngineRowStart : 500,
+						frameWidth            : 800,
+						headerHeight          : 40,
+						dataHeight            : 400,
+						rowHeight             : 38,
+						paginationRowLimits   : [50, 75, 100],
+						paginationRowStart    : 50,
+						paginationRowAll      : false,
+						pageSideQuantity      : 5,
+
+						searchEngine        : 0,
+						forceSearchOpen     : true,
+
+						startMaximized      : false,
+						forceMaximized      : false,
+						rowZebra            : true,
+						rowFlex             : true,
+						resizeForceMinWidth : true,
+
+						highlight           : true,
+						controls            : true,
+						footer              : true,
+
+						title               : 'JD-Table'
+					};
+				},
+
+				mounted : function ()
+				{
+					this.sendData();
+				},
+
+				methods :
+				{
+					sendData : function ()
+					{
+						// Enable the table loader.
+						this.tableLoader = true;
+
+						var data = [];
+
+						for( var i = 0; i < 1000; i++ )
+						{
+							data.push
+							({
+								column1 : String(i),
+								column2 : String(i * i),
+								column3 : String(i + i),
+								column4 : String(i + i + i),
+							})
+						}
+
+						data = JSON.stringify( data );
+
+						this.tableEvent =
+						{
+							name    : 'sendData',
+							payload : JSON.parse( data )
+						}
+
+						// Disable the table loader.
+						this.tableLoader = false;
+					},
+
+					// Triggers a refresh of data.
+					refresh : function ()
+					{
+						this.sendData();
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

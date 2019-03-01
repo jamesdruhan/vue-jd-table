@@ -12,6 +12,10 @@
   ],
   "author": "James Druhan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesdruhan/vue-jd-table.git"
+  },
   "main": "dist/jd-table.umd.js",
   "module": "dist/jd-table.esm.js",
   "unpkg": "dist/jd-table.min.js",

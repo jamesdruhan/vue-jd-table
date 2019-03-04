@@ -9,7 +9,7 @@
 <p align="center">
     <a href="https://www.npmjs.com/package/vue-jd-table"><img src="https://img.shields.io/npm/dt/vue-jd-table.svg?style=flat-square"></a>
     <a href="https://www.npmjs.com/package/vue-jd-table"><img src="https://img.shields.io/npm/v/vue-jd-table.svg?style=flat-square"></a>
-    <a href="https://github.com/coderdiaz/vue-datasource/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square"></a>
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square">
 </p>
 
 ---

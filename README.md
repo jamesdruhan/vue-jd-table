@@ -19,6 +19,7 @@
 
 ## Requirements
 
+- Polyfill (IE 11)
 - Font Awesome (Free)
 
 ## Install
@@ -36,64 +37,110 @@ The following steps indicate how to initialize JDTable but not configure its req
 
 #### Single File Component
 ```
-    <template>
-        <div>
-            <JDTable></JDTable>
-        </div>
-    </template>
+<template>
+    <div>
+        <JDTable></JDTable>
+    </div>
+</template>
+
+<script>
+    import "@fortawesome/fontawesome-free/css/all.min.css";
+    import JDTable from 'vue-jd-table';
     
-    <script>
-        import "@fortawesome/fontawesome-free/css/all.min.css";
-        import JDTable from 'vue-jd-table';
+    export default
+    {
+        name : 'Component',
         
-        export default
+        components:
         {
-            name : 'Component',
-            
-            components:
-            {
-                JDTable
-            }
+            JDTable
         }
-    </script>
+    }
+</script>
+
+<style lang="scss">
+    // JD-Table SCSS Variable Overrides Here.
     
-    <style lang="scss">
-        // JD-Table SCSS Variable Overrides Here.
-        
-        @import "~vue-jd-table/dist/assets/jd-table.scss";
-    </style
+    @import "~vue-jd-table/dist/assets/jd-table.scss";
+</style
+```
+
+##### IE11 Support
+
+If you require IE11 support you need the polyfill the component. See Polyfill section.
+
+```
+import JDTable from 'vue-jd-table/src/jd-table.vue';
 ```
 
 #### Global Registration
 
 ```
-    import Vue from 'vue';
-    import "@fortawesome/fontawesome-free/css/all.min.css";
-    import JDTable from 'vue-jd-table';
-    import 'vue-jd-table/dist/jd-table.min.css';
-    
-    Vue.component('jdtable',JDTable);
-    
-    new Vue
-    ({
-    	...
-    }).$mount( '#app' );
+import Vue from 'vue';
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import JDTable from 'vue-jd-table';
+import 'vue-jd-table/dist/jd-table.min.css';
+
+Vue.component('jdtable',JDTable);
+
+new Vue
+({
+    ...
+}).$mount( '#app' );
 ```
+
+##### IE11 Support
+
+If you require IE11 support you need the polyfill the component. See Polyfill section.
 
 #### <script> Tag (Direct)
 
 ```
-    <script src="https://unpkg.com/vue"></script>
-    <script src="vue-jd-table/dist/jd-table.min.js"></script>
+<script src="https://unpkg.com/vue"></script>
+<script src="vue-jd-table/dist/jd-table.min.js"></script>
 
-    <div id="app">
-        <JDTable></JDTable>
-    </div>
+<div id="app">
+    <JDTable></JDTable>
+</div>
 
-    <script type="text/javascript">
-        new Vue
-        ({
-            el : '#app',
-        });
-    </script>
+<script type="text/javascript">
+    new Vue
+    ({
+        el : '#app',
+    });
+</script>
+```
+
+## Polyfill
+
+Take note that the build module for JDTable does not include Polyfill for IE 11 support. There are multiple ways to resolve this in your project. Typically build processes like Vue-CLI do NOT add polyfill's to your imported dependancies.
+
+### Polyfill Solution #1
+
+Rather then importing the component normally, import the .VUE file directly. If your project already includes polyfill's it will be processed normally.
+
+```
+import JDTable from 'vue-jd-table/src/jd-table.vue';
+```
+
+### Polyfill Solution #2
+
+Directly add polyfill's to your dependency's.
+
+babel.config.js
+```
+module.exports = {
+	presets:
+	[
+		['@vue/app',
+		{
+			polyfills :
+			[
+				'es6.promise',
+				'es6.object.assign',
+				'es6.function.name'
+			]
+		}]
+	]
+}
 ```

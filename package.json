@@ -1,6 +1,6 @@
 {
   "name": "vue-jd-table",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A VueJS v2.X component for displaying data in a table.",
   "keywords": [
     "vue",
@@ -50,7 +50,5 @@
     "vue": "^2.5.22",
     "vue-template-compiler": "^2.5.22"
   },
-  "dependencies": {
-    "rollup-plugin-polyfill": "^2.0.1"
-  }
+  "dependencies": {}
 }

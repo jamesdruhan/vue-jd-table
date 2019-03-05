@@ -48,10 +48,10 @@ const plugins =
 	copy
 	({
 		assets :
-			[
-				'./src/assets/jd-table.scss',
-				'./src/assets/jd-table-vars.scss'
-			]
+		[
+			'./src/assets/jd-table.scss',
+			'./src/assets/jd-table-vars.scss'
+		]
 	}),
 
 	// Locate modules using the Node resolution algorithm.

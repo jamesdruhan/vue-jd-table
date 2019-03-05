@@ -9,14 +9,22 @@
 
 		<title>JD-Table</title>
 
+		<!-- Polyfill -->
+		<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>
+
 		<!-- VueJS -->
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-		<!-- JD-Table Component -->
+		<!-- JD-Table Vue Component -->
 		<script type="text/javascript" src="./component.js"></script>
 
+		<!-- JD-Table Styles -->
 		<link rel="stylesheet" href="app.css">
+
+		<!-- Font Awesome (Free) -->
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+		<!-- Font -->
 		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
 		<style>
@@ -42,65 +50,64 @@
 		</div>
 
 		<script type="text/javascript">
-			new Vue
+			const app = new Vue
 			({
 				el : '#app',
 
-				data ()
+				data :
 				{
-					return {
-						tableOptions : {},
+					tableOptions : {},
 
-						tableEvent  :
+					tableEvent  :
+					{
+						name : null,
+						data : null
+					},
+
+					tableLoader : false,
+
+					columns :
+					[
 						{
-							name : null,
-							data : null
+							name       : 'column1',
+							title      : 'Column 1',
+							order      : 1,
+							type       : 'String',
+							filterable : true,
+							enabled    : true,
+							sort          : true,
+							sortDirection : 'asc'
 						},
-
-						tableLoader : false,
-
-						columns :
-						[
-							{
-								name       : 'column1',
-								title      : 'Column 1',
-								order      : 1,
-								type       : 'String',
-								filterable : true,
-								enabled    : true,
-								sort          : true,
-								sortDirection : 'asc'
-							},
-							{
-								name        : 'column2',
-								title       : 'Column 2',
-								order       : 2,
-								type        : 'String',
-								filterable  : true,
-								enabled     : true
-							},
-							{
-								name       : 'column3',
-								title      : 'Column 3',
-								order      : 3,
-								type       : 'String',
-								filterable : true,
-								enabled    : true
-							},
-							{
-								name       : 'column4',
-								title      : 'Column 4',
-								order      : 4,
-								type       : 'String',
-								filterable : true,
-								enabled    : true
-							}
-						]
-					}
+						{
+							name        : 'column2',
+							title       : 'Column 2',
+							order       : 2,
+							type        : 'String',
+							filterable  : true,
+							enabled     : true
+						},
+						{
+							name       : 'column3',
+							title      : 'Column 3',
+							order      : 3,
+							type       : 'String',
+							filterable : true,
+							enabled    : true
+						},
+						{
+							name       : 'column4',
+							title      : 'Column 4',
+							order      : 4,
+							type       : 'String',
+							filterable : true,
+							enabled    : true
+						}
+					]
 				},
 
 				created : function ()
 				{
+					// You don't have to configure all these settings (this is just an example).
 					this.tableOptions =
 					{
 						title               : 'JD-Table',

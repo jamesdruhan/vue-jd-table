@@ -1307,31 +1307,39 @@
 							// Returns a unique array of column names that are actively filtered.
 							const UNIQUE_FILTER_COLUMNS = () =>
 							{
-								return [ ...new Set( this.filters.active.map( ( filter ) => filter.column.name ) ) ];
+								let columnSet     = new Set( this.filters.active.map( ( filter ) => filter.column.name ) );
+								let uniqueColumns = [];
+
+								columnSet.forEach( ( column ) =>
+								{
+									uniqueColumns.push( column );
+								});
+
+								return uniqueColumns;
 							};
 
 							// Performs filter: Equals To (String Based).
 							const FILTER_EQUALS_TO = ( row, columnFilter ) =>
 							{
-								return ( String(row[columnFilter.column.name]).toLowerCase() === String(columnFilter.value).toLowerCase() );
+								return ( String( row[columnFilter.column.name]).toLowerCase() === String(columnFilter.value).toLowerCase() );
 							};
 
 							// Performs filter: Not Equals To (String Based).
 							const FILTER_NOT_EQUALS_TO = ( row, columnFilter ) =>
 							{
-								return ( String(row[columnFilter.column.name]).toLowerCase() !== String(columnFilter.value).toLowerCase() );
+								return ( String( row[columnFilter.column.name]).toLowerCase() !== String(columnFilter.value).toLowerCase() );
 							};
 
 							// Performs filter: Begins With (String Based).
 							const FILTER_BEGINS_WITH = ( row, columnFilter ) =>
 							{
-								return ( String(row[columnFilter.column.name]).toLowerCase().startsWith(String(columnFilter.value).toLowerCase()) );
+								return ( String( row[columnFilter.column.name]).toLowerCase().startsWith(String(columnFilter.value).toLowerCase()) );
 							};
 
 							// Performs filter: Contains (String Based).
 							const FILTER_CONTAINS = ( row, columnFilter ) =>
 							{
-								return ( String(row[columnFilter.column.name]).toLowerCase().includes(String(columnFilter.value).toLowerCase()) );
+								return ( String( row[columnFilter.column.name]).toLowerCase().includes(String(columnFilter.value).toLowerCase()) );
 							};
 
 							// Performs filter: Greater and Less/Equal To (Number Based).
@@ -1395,6 +1403,7 @@
 								// Stores numeric comparison values.
 								let greaterThanValue = null;
 								let lessThanValue    = null;
+
 
 								// Check for Greater/Equal To / Less/Equal To filters which should be grouped.
 								columnFilters.forEach( ( columnFilter ) =>

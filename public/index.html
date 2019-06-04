@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="./component.js"></script>
 
 		<!-- JD-Table Styles -->
-		<link rel="stylesheet" href="app.css">
+		<link rel="stylesheet" href="component.css">
 
 		<!-- Font Awesome (Free) -->
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -113,6 +113,13 @@
 						title               : 'JD-Table',
 						columns             : this.columns,
 
+						startBySearch                : true,
+						startBySearchMessage         : 'Use the search or filter features to limit and display data ..',
+						startBySearchArrowSearch     : true,
+						startBySearchArrowFilter     : true,
+						startBySearchArrowSearchText : 'Search Here!',
+						startBySearchArrowFilterText : 'Filter by Column',
+
 						maxMinimize         : true,
 						refresh             : true,
 						search              : true,
@@ -138,6 +145,7 @@
 
 						searchEngine        : 0,
 						forceSearchOpen     : true,
+						searchPlaceHolder   : 'Search ...',
 
 						startMaximized      : false,
 						forceMaximized      : false,

@@ -340,14 +340,15 @@
 
 			.filterArrow
 			{
-				position   : absolute;
-				top        : $jdTable_HighLightHeight + $jdTable_ControlHeight;
-				left       : 0.3rem;
-				background : lighten( $jdTable_BaseBorderColour, 50% );
-				border     : 1px solid $jdTable_BaseBorderColour;
-				padding    : 0.5rem;
-				color      : $jdTable_BaseTextColour;
-				animation  : bounce 2s infinite;
+				position      : absolute;
+				top           : $jdTable_HighLightHeight + $jdTable_ControlHeight;
+				left          : 0.3rem;
+				background    : lighten( $jdTable_BaseBorderColour, 50% );
+				border        : 1px solid $jdTable_BaseBorderColour;
+				padding       : 0.5rem;
+				color         : $jdTable_BaseTextColour;
+				animation     : bounce 2s infinite;
+				border-radius : 6px;
 
 				&:after, &:before
 				{
@@ -379,14 +380,15 @@
 
 			.searchArrow
 			{
-				position   : absolute;
-				top        : $jdTable_HighLightHeight + $jdTable_ControlHeight;
-				left       : 3.5rem;
-				background : lighten( $jdTable_BaseBorderColour, 50% );
-				border     : 1px solid $jdTable_BaseBorderColour;
-				padding    : 0.5rem;
-				color      : $jdTable_BaseTextColour;
-				animation  : bounce 2s infinite;
+				position      : absolute;
+				top           : $jdTable_HighLightHeight + $jdTable_ControlHeight;
+				left          : 3.5rem;
+				background    : lighten( $jdTable_BaseBorderColour, 50% );
+				border        : 1px solid $jdTable_BaseBorderColour;
+				padding       : 0.5rem;
+				color         : $jdTable_BaseTextColour;
+				animation     : bounce 2s infinite;
+				border-radius : 6px;
 
 				&:after, &:before
 				{

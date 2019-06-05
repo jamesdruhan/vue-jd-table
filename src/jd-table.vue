@@ -1,5 +1,6 @@
 <template>
 	<div class="JD-Reset JD-Table" :class="frameClasses" :style="frameStyles">
+
 		<div v-if="setting.title !== null" class="layerTitle">{{ setting.title }}</div>
 
 		<!-- Layer: Highlight -->
@@ -15,12 +16,12 @@
 					<i  class="fas fa-search"></i>
 
 					<!-- Control: Get Started with Search Reminder -->
-					<div v-if="setting.startBySearchArrowSearch" class="searchArrow">
+					<div v-if="setting.startBySearchArrowSearch && !status.processingData && !loader" class="searchArrow">
 					{{ setting.startBySearchArrowSearchText }}
 				</div>
 				</span>
 
-				<input v-show="feature.searching" @keyup.enter="performSearch" v-model="search.text" type="search" ref="searchField" :placeholder="setting.searchPlaceHolder ? setting.searchPlaceHolder : 'Search Here ..'">
+				<input v-show="feature.searching" @keyup.enter="performSearch" v-model="search.text" type="search" ref="searchField" :placeholder="setting.searchPlaceHolder ? setting.searchPlaceHolder : 'Search Here ..'" :disabled="status.processingData">
 
 				<span v-show="!search.searching" @click="performSearch" class="controlItem search" title="Perform Search">
 					<i  class="fas fa-angle-right"></i>
@@ -55,9 +56,9 @@
 					<i class="fas fa-filter" title="Filter"></i>
 
 					<!-- Control: Get Started with Filter Reminder -->
-					<div v-if="setting.startBySearchArrowFilter" class="filterArrow">
-				{{ setting.startBySearchArrowFilterText }}
-			</div>
+					<div v-if="setting.startBySearchArrowFilter && !filters.show && !status.processingData && !loader" class="filterArrow">
+						{{ setting.startBySearchArrowFilterText }}
+					</div>
 				</span>
 
 				<!-- Feature: Export -->

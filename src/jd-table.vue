@@ -720,6 +720,15 @@
 		// Default     : NULL
 		// Description : The placeholder text for the search input box.
 		//
+		// Prop        : option.filterEngine
+		// Value       : [NUMBER]
+		// Default     : 0
+		// Description : Sets the filter engine that will be used when filter is performed.
+		//
+		// -----
+		// | 0 | : JD-Table will filter the data that it has available to it.
+		// | 1 | : JD-Table will emit a filter event to the parent so it can manage how filter is performed.
+		// -----
 		//
 		// Prop        : option.startMaximized
 		// Value       : [BOOLEAN]
@@ -1671,6 +1680,22 @@
 							this.status.tableError = 'Error: searchResults event issue. Payload is null or improperly formatted.';
 						}
 					}
+
+					// Process request to clear current table data.
+					if ( !this.status.tableError && name === 'clearData' )
+					{
+						// Stop any processing messaging.
+						this.status.processingData = false;
+
+						// Make the table NOT ready.
+						this.status.tableReady = false;
+
+						// Reset scroll positions.
+						this.resetScroll();
+
+						// Clean the view.
+						this.view = [];
+					}
 				},
 
 				// Renders the correct view based on the data and rendering engine setting.
@@ -2274,6 +2299,10 @@
 				// Resets the scroll position to the top left of the table body.
 				resetScroll : function ()
 				{
+					// Reset the render positions.
+					this.rendering.triggerTopPositionPX    = null;
+					this.rendering.triggerBottomPositionPX = null;
+
 					// This prevents the triggering of the onScroll function for body.
 					this.rendering.resettingScroll = true;
 
@@ -2598,19 +2627,26 @@
 						this.filters.beingBuilt.option = null;
 						this.filters.beingBuilt.value  = null;
 
-						// Reset the render positions.
-						this.rendering.triggerTopPositionPX    = null;
-						this.rendering.triggerBottomPositionPX = null;
-
 						// Reset the scroll position to top/left.
 						this.resetScroll();
 
-						// Process the data through filters/search.
-						this.processData().then( () =>
+						// filterEngine = 1 | Filtering is performed externally (emitted).
+						if ( this.setting.filterEngine === 1 )
 						{
-							// Render the new view.
-							this.renderView();
-						});
+							this.$emit( 'filter', this.componentState );
+						}
+						// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
+						else
+						{
+							this.resetScroll();
+
+							// Process the data through filters/search.
+							this.processData().then( () =>
+							{
+								// Render the new view.
+								this.renderView();
+							});
+						}
 					}
 				},
 
@@ -2623,12 +2659,23 @@
 
 					this.filters.active.splice( index, 1 );
 
-					// Process the data through filters/search.
-					this.processData().then( () =>
+					// filterEngine = 1 | Filtering is performed externally (emitted).
+					if ( this.setting.filterEngine === 1 )
 					{
-						// Render the new view.
-						this.renderView();
-					})
+						this.$emit( 'filter', this.componentState );
+					}
+					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
+					else
+					{
+						this.resetScroll();
+
+						// Process the data through filters/search.
+						this.processData().then( () =>
+						{
+							// Render the new view.
+							this.renderView();
+						});
+					}
 				},
 
 				// Clears all active filters and being built.
@@ -2645,12 +2692,21 @@
 					// Clear active.
 					this.filters.active = [];
 
-					// Process the data through filters/search.
-					this.processData().then( () =>
+					// filterEngine = 1 | Filtering is performed externally (emitted).
+					if ( this.setting.filterEngine === 1 )
 					{
-						// Render the new view.
-						this.renderView();
-					})
+						this.$emit( 'filter', this.componentState );
+					}
+					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
+					else
+					{
+						// Process the data through filters/search.
+						this.processData().then( () =>
+						{
+							// Render the new view.
+							this.renderView();
+						});
+					}
 				},
 
 				// Changes the column visibility.
@@ -2736,12 +2792,12 @@
 					this.search.text      = '';
 					this.search.searching = false;
 
-					// If search/filter is required, clear necessary data.
-					if ( this.setting.startBySearch )
+					// Emit search event.
+					if ( this.setting.searchEngine === 1 )
 					{
-						this.view              = [];
-						this.status.tableReady = false;
+						this.$emit('clearSearch', this.componentState );
 					}
+					// Perform search using JD-Table.
 					else
 					{
 						this.resetScroll();
@@ -2750,7 +2806,7 @@
 						{
 							this.renderView();
 						});
-					}
+					}1
 				},
 
 				// Called when user clicks on a data row. Accepts the index of the data on the this.data.
@@ -2863,6 +2919,7 @@
 							searchEngine        : 0,
 							forceSearchOpen     : false,
 							searchPlaceHolder   : null,
+							filterEngine        : 0,
 
 							// Settings
 							startMaximized      : false,

@@ -423,7 +423,8 @@
 						searching      : false,
 						mobileSize     : false,
 						isIE11         : false,
-						tableScroll    : false
+						tableScroll    : false,
+						lastAction     : null,
 					},
 
 				view : [],
@@ -1148,7 +1149,10 @@
 					// Emits a refresh event.
 					const REFRESH = () =>
 					{
-						this.$emit( 'refresh', this.componentState );
+						// Update the last action performed.
+						this.status.lastAction = 'Refresh';
+
+						this.$emit( 'JDTableEvent', this.componentState );
 					};
 
 					// Show/Hide the filtering view.
@@ -2093,6 +2097,9 @@
 				// Changes how many rows can appear per page.
 				changePageRows : function ( rows )
 				{
+					// Update the last action performed.
+					this.status.lastAction = 'PaginationPageLimitChange';
+
 					if ( this.rendering.pagination.currentSelectedPageRowOption !== rows )
 					{
 						if ( rows === 'All' )
@@ -2108,7 +2115,16 @@
 
 						this.rendering.pagination.changingRows = false;
 
-						this.renderView();
+						// Emit pagination event.
+						if ( this.setting.searchEngine === 1 || this.setting.filterEngine === 1 )
+						{
+							this.$emit( 'JDTableEvent', this.componentState );
+						}
+						// Update the view.
+						else
+						{
+							this.renderView();
+						}
 					}
 				},
 
@@ -2573,6 +2589,9 @@
 				// Adds the built filter to be applied to the table.
 				addFilter : function ()
 				{
+					// Update the last action performed.
+					this.status.lastAction = 'AddFilter';
+
 					// Manage column error.
 					if ( this.filters.beingBuilt.column === null || typeof( this.filters.beingBuilt.column ) !== 'object' )
 					{
@@ -2633,7 +2652,7 @@
 						// filterEngine = 1 | Filtering is performed externally (emitted).
 						if ( this.setting.filterEngine === 1 )
 						{
-							this.$emit( 'filter', this.componentState );
+							this.$emit( 'JDTableEvent', this.componentState );
 						}
 						// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
 						else
@@ -2653,6 +2672,9 @@
 				// Removes a filter from the active list.
 				removeFilter : function ( index )
 				{
+					// Update the last action performed.
+					this.status.lastAction = 'RemoveFilter';
+
 					// Reset any error that may exist.
 					this.filters.error     = false;
 					this.filters.errorText = '';
@@ -2662,7 +2684,7 @@
 					// filterEngine = 1 | Filtering is performed externally (emitted).
 					if ( this.setting.filterEngine === 1 )
 					{
-						this.$emit( 'filter', this.componentState );
+						this.$emit( 'JDTableEvent', this.componentState );
 					}
 					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -2679,7 +2701,11 @@
 				},
 
 				// Clears all active filters and being built.
-				clearAllFilters : function () {
+				clearAllFilters : function ()
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'ClearFilter';
+
 					// Clear being built.
 					this.filters.beingBuilt.column = null;
 					this.filters.beingBuilt.option = null;
@@ -2695,7 +2721,7 @@
 					// filterEngine = 1 | Filtering is performed externally (emitted).
 					if ( this.setting.filterEngine === 1 )
 					{
-						this.$emit( 'filter', this.componentState );
+						this.$emit( 'JDTableEvent', this.componentState );
 					}
 					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -2753,6 +2779,9 @@
 				// Performs the search action.
 				performSearch : function ()
 				{
+					// Update the last action performed.
+					this.status.lastAction = 'ApplySearch';
+
 					if ( !this.search.text )
 					{
 						if ( this.search.searching )
@@ -2769,7 +2798,7 @@
 						{
 							this.search.searching = true;
 
-							this.$emit('search', this.componentState );
+							this.$emit( 'JDTableEvent', this.componentState );
 						}
 						// Perform search using JD-Table.
 						else
@@ -2789,13 +2818,17 @@
 				// Clears the search.
 				clearSearch : function ()
 				{
-					this.search.text      = '';
-					this.search.searching = false;
+					// Update the last action performed.
+					this.status.lastAction = 'ClearSearch';
+
+					// Clear search data.
+					this.search.text       = '';
+					this.search.searching  = false;
 
 					// Emit search event.
 					if ( this.setting.searchEngine === 1 )
 					{
-						this.$emit('clearSearch', this.componentState );
+						this.$emit( 'JDTableEvent', this.componentState );
 					}
 					// Perform search using JD-Table.
 					else
@@ -2806,7 +2839,7 @@
 						{
 							this.renderView();
 						});
-					}1
+					}
 				},
 
 				// Called when user clicks on a data row. Accepts the index of the data on the this.data.
@@ -3489,9 +3522,14 @@
 				componentState : function ()
 				{
 					return {
-						searchApplied : this.search.searching,
-						searchText    : this.search.text,
-						filterApplied : this.filters.active,
+						searchApplied     : this.search.searching,
+						searchText        : this.search.text,
+						filterApplied     : this.filters.active,
+						pageLimit         : this.rendering.pagination.currentSelectedPageRowOption,
+						currentPage       : this.rendering.pagination.currentPage,
+						currentStartIndex : this.rendering.pagination.currentStartIndex,
+						currentEndIndex   : this.rendering.pagination.currentEndIndex,
+						lastAction        : this.status.lastAction
 					}
 				}
 			},

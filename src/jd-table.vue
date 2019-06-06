@@ -779,17 +779,17 @@
 		//
 		// EVENT ----
 		//
-		// Prop        : event.name
+		// Prop        : tableEvent.name
 		// Value       : [STRING]
 		// Default     : ''
 		// Description : Name of event you want to trigger on JD-Table.
 		//
-		// Prop        : event.payload
+		// Prop        : tableEvent.payload
 		// Value       : [ANY]
 		// Default     : NULL
 		// Description : Optional payload for the event.
 		//
-		// Prop        : eventTrigger
+		// Prop        : tableEventTrigger
 		// Value       : [BOOLEAN]
 		// Default     : FALSE
 		// Description : Triggers the stored event in event.name/payload to execute.
@@ -802,7 +802,7 @@
 						default : () => ({})
 					},
 
-				event :
+				tableEvent :
 					{
 						type    : Object,
 						default : () =>
@@ -812,7 +812,7 @@
 							})
 					},
 
-				eventTrigger :
+				tableEventTrigger :
 					{
 						type    : Boolean,
 						default : false
@@ -1152,7 +1152,7 @@
 						// Update the last action performed.
 						this.status.lastAction = 'Refresh';
 
-						this.$emit( 'JDTableEvent', this.componentState );
+						this.$emit( 'appEvent', this.componentState );
 					};
 
 					// Show/Hide the filtering view.
@@ -1606,12 +1606,12 @@
 					// Process the data sent to JD-Table.
 					if ( !this.status.tableError && name === 'sendData' )
 					{
-						if ( this.event.payload !== null && this.event.payload.constructor.name === 'Array' )
+						if ( this.tableEvent.payload !== null && this.tableEvent.payload.constructor.name === 'Array' )
 						{
-							if ( this.event.payload.length > 0 )
+							if ( this.tableEvent.payload.length > 0 )
 							{
 								// Assign the data to the component.
-								this.data = this.event.payload;
+								this.data = this.tableEvent.payload;
 
 								// Reset scroll position.
 								this.resetScroll();
@@ -1642,24 +1642,24 @@
 					// Processes a Table Message event to JD-Table.
 					if ( name === 'displayMessage' )
 					{
-						if ( this.event.payload !== null )
+						if ( this.tableEvent.payload !== null )
 						{
-							this.status.tableMessage = this.event.payload;
+							this.status.tableMessage = this.tableEvent.payload;
 						}
 					}
 
 					// Process search external search results.
 					if ( !this.status.tableError && name === 'searchResults' )
 					{
-						if ( this.event.payload !== null && this.event.payload.constructor.name === 'Array' )
+						if ( this.tableEvent.payload !== null && this.tableEvent.payload.constructor.name === 'Array' )
 						{
 							// Clear the searching message.
 							this.status.searching = false;
 
-							if ( this.event.payload.length > 0 )
+							if ( this.tableEvent.payload.length > 0 )
 							{
 								// Assign the data to the component.
-								this.data = this.event.payload;
+								this.data = this.tableEvent.payload;
 
 								// Reset scroll position.
 								this.resetScroll();
@@ -2118,7 +2118,7 @@
 						// Emit pagination event.
 						if ( this.setting.searchEngine === 1 || this.setting.filterEngine === 1 )
 						{
-							this.$emit( 'JDTableEvent', this.componentState );
+							this.$emit( 'appEvent', this.componentState );
 						}
 						// Update the view.
 						else
@@ -2652,7 +2652,7 @@
 						// filterEngine = 1 | Filtering is performed externally (emitted).
 						if ( this.setting.filterEngine === 1 )
 						{
-							this.$emit( 'JDTableEvent', this.componentState );
+							this.$emit( 'appEvent', this.componentState );
 						}
 						// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
 						else
@@ -2684,7 +2684,7 @@
 					// filterEngine = 1 | Filtering is performed externally (emitted).
 					if ( this.setting.filterEngine === 1 )
 					{
-						this.$emit( 'JDTableEvent', this.componentState );
+						this.$emit( 'appEvent', this.componentState );
 					}
 					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -2721,7 +2721,7 @@
 					// filterEngine = 1 | Filtering is performed externally (emitted).
 					if ( this.setting.filterEngine === 1 )
 					{
-						this.$emit( 'JDTableEvent', this.componentState );
+						this.$emit( 'appEvent', this.componentState );
 					}
 					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -2798,7 +2798,7 @@
 						{
 							this.search.searching = true;
 
-							this.$emit( 'JDTableEvent', this.componentState );
+							this.$emit( 'appEvent', this.componentState );
 						}
 						// Perform search using JD-Table.
 						else
@@ -2828,7 +2828,7 @@
 					// Emit search event.
 					if ( this.setting.searchEngine === 1 )
 					{
-						this.$emit( 'JDTableEvent', this.componentState );
+						this.$emit( 'appEvent', this.componentState );
 					}
 					// Perform search using JD-Table.
 					else
@@ -3537,15 +3537,15 @@
 		watch :
 			{
 				// Watches for event triggers. This will run the event when the trigger is true.
-				eventTrigger : function ( to , from )
+				tableEventTrigger : function ( to , from )
 				{
-					if ( from === false && to === true && this.event.name )
+					if ( from === false && to === true && this.tableEvent.name )
 					{
-						this.processEvent( this.event.name );
+						this.processEvent( this.tableEvent.name );
 					}
 
 					// Reset the property.
-					this.eventTrigger = false;
+					this.tableEventTrigger = false;
 				}
 			}
 	}

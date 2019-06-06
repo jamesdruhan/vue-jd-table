@@ -16,7 +16,7 @@
 					<i  class="fas fa-search"></i>
 
 					<!-- Control: Get Started with Search Reminder -->
-					<div v-if="setting.startBySearchArrowSearch && !status.processingData && !loader" class="searchArrow">
+					<div v-if="gettingStarted && setting.startBySearchArrowSearch && !status.processingData && !loader" class="searchArrow">
 					{{ setting.startBySearchArrowSearchText }}
 				</div>
 				</span>
@@ -56,7 +56,7 @@
 					<i class="fas fa-filter" title="Filter"></i>
 
 					<!-- Control: Get Started with Filter Reminder -->
-					<div v-if="setting.startBySearchArrowFilter && !filters.show && !status.processingData && !loader" class="filterArrow">
+					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !filters.show && !status.processingData && !loader" class="filterArrow">
 						{{ setting.startBySearchArrowFilterText }}
 					</div>
 				</span>
@@ -760,6 +760,12 @@
 		// Value       : [ANY]
 		// Default     : NULL
 		// Description : Optional payload for the event.
+		//
+		// Prop        : eventTrigger
+		// Value       : [BOOLEAN]
+		// Default     : FALSE
+		// Description : Triggers the stored event in event.name/payload to execute.
+
 		props :
 			{
 				option :
@@ -776,6 +782,12 @@
 								name    : null,
 								payload : null
 							})
+					},
+
+				eventTrigger :
+					{
+						type    : Boolean,
+						default : false
 					},
 
 				loader :
@@ -3350,16 +3362,16 @@
 
 		watch :
 			{
-				// Watches for event changes.
-				'event.name' : function ( eventName )
+				// Watches for event triggers. This will run the event when the trigger is true.
+				eventTrigger : function ( to , from )
 				{
-					this.$nextTick().then( () =>
+					if ( from === false && to === true && this.event.name )
 					{
-						if ( eventName )
-						{
-							this.processEvent( eventName );
-						}
-					});
+						this.processEvent( this.event.name );
+					}
+
+					// Reset the property.
+					this.eventTrigger = false;
 				}
 			}
 	}

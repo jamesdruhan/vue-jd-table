@@ -329,12 +329,29 @@
 			</div>
 
 			<!-- Processing -->
-			<div v-if="status.processingData" class="layerPopup contentFrame">
+			<div v-if="status.processingData" class="layerPopup contentFrame JD-Loader">
 				<div class="fulfilling-square-spinner">
 					<div class="spinner-inner"></div>
 				</div>
 
 				<span class="loadingText">Processing Data</span>
+			</div>
+
+			<!-- Searching -->
+			<div v-if="status.searching" class="layerPopup contentFrame JD-Loader">
+				<div class="self-building-square-spinner">
+					<div class="square"></div>
+					<div class="square"></div>
+					<div class="square"></div>
+					<div class="square clear"></div>
+					<div class="square"></div>
+					<div class="square"></div>
+					<div class="square clear"></div>
+					<div class="square"></div>
+					<div class="square"></div>
+				</div>
+
+				<span class="loadingText">Searching ..</span>
 			</div>
 
 			<!-- Get Started Messaging -->
@@ -403,6 +420,7 @@
 						tableError     : null,
 						getStarted     : false,
 						processingData : false,
+						searching      : false,
 						mobileSize     : false,
 						isIE11         : false,
 						tableScroll    : false
@@ -1595,6 +1613,8 @@
 							else
 							{
 								this.view = [];
+
+								this.status.processingData = false;
 							}
 
 							// Set the table to ready.
@@ -1612,6 +1632,43 @@
 						if ( this.event.payload !== null )
 						{
 							this.status.tableMessage = this.event.payload;
+						}
+					}
+
+					// Process search external search results.
+					if ( !this.status.tableError && name === 'searchResults' )
+					{
+						if ( this.event.payload !== null && this.event.payload.constructor.name === 'Array' )
+						{
+							// Clear the searching message.
+							this.status.searching = false;
+
+							if ( this.event.payload.length > 0 )
+							{
+								// Assign the data to the component.
+								this.data = this.event.payload;
+
+								// Reset scroll position.
+								this.resetScroll();
+
+								// Process the data through filters/search.
+								this.processData().then( () =>
+								{
+									// Render the data.
+									this.renderView();
+								});
+							}
+							else
+							{
+								this.view = [];
+							}
+
+							// Set the table to ready.
+							this.status.tableReady = true;
+						}
+						else
+						{
+							this.status.tableError = 'Error: searchResults event issue. Payload is null or improperly formatted.';
 						}
 					}
 				},
@@ -2649,11 +2706,12 @@
 					}
 					else
 					{
+						this.status.searching = true;
+
 						// Emit search event.
 						if ( this.setting.searchEngine === 1 )
 						{
-							this.search.searching      = true;
-							this.status.processingData = true;
+							this.search.searching = true;
 
 							this.$emit('search', this.search.text );
 						}
@@ -2664,6 +2722,8 @@
 
 							this.processData().then( () =>
 							{
+								this.status.searching = false;
+
 								this.renderView();
 							});
 						}
@@ -2676,12 +2736,21 @@
 					this.search.text      = '';
 					this.search.searching = false;
 
-					this.resetScroll();
-
-					this.processData().then( () =>
+					// If search/filter is required, clear necessary data.
+					if ( this.setting.startBySearch )
 					{
-						this.renderView();
-					});
+						this.view              = [];
+						this.status.tableReady = false;
+					}
+					else
+					{
+						this.resetScroll();
+
+						this.processData().then( () =>
+						{
+							this.renderView();
+						});
+					}
 				},
 
 				// Called when user clicks on a data row. Accepts the index of the data on the this.data.

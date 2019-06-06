@@ -1139,7 +1139,7 @@
 					// Emits a refresh event.
 					const REFRESH = () =>
 					{
-						this.$emit('refresh');
+						this.$emit( 'refresh', this.componentState );
 					};
 
 					// Show/Hide the filtering view.
@@ -2713,7 +2713,7 @@
 						{
 							this.search.searching = true;
 
-							this.$emit('search', this.search.text );
+							this.$emit('search', this.componentState );
 						}
 						// Perform search using JD-Table.
 						else
@@ -3426,6 +3426,16 @@
 					}
 
 					return false;
+				},
+
+				// Represents the current state of data of the component. This is emitted to parent events.
+				componentState : function ()
+				{
+					return {
+						searchApplied : this.search.searching,
+						searchText    : this.search.text,
+						filterApplied : this.filters.active,
+					}
 				}
 			},
 

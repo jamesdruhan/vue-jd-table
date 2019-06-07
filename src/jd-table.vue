@@ -731,6 +731,16 @@
 		// | 1 | : JD-Table will emit a filter event to the parent so it can manage how filter is performed.
 		// -----
 		//
+		// Prop        : option.paginationEngine
+		// Value       : [NUMBER]
+		// Default     : 0
+		// Description : Sets the pagination engine that will be used when a pagination event is performed.
+		//
+		// -----
+		// | 0 | : JD-Table will perform pagination tasks using the data it has current assigned to JD-Table.
+		// | 1 | : JD-Table will emit a pagination event to the parent so that external actions like search/filtering can be performed with the pagination changes in mind.
+		// -----
+		//
 		// Prop        : option.startMaximized
 		// Value       : [BOOLEAN]
 		// Default     : False
@@ -1688,6 +1698,21 @@
 					// Process request to clear current table data.
 					if ( !this.status.tableError && name === 'clearData' )
 					{
+						// Clear data.
+						this.processedData = [];
+						this.data          = [];
+
+						// Reset pagination.
+						this.rendering.pagination.currentPage           = 1;
+						this.rendering.pagination.currentPageHightlight = null;
+						this.rendering.pagination.currentStartIndex     = null;
+						this.rendering.pagination.currentEndIndex       = null;
+						this.rendering.pagination.availablePages        = null;
+						this.rendering.pagination.currentPageRows       = this.rendering.pagination.currentSelectedPageRowOption;
+						this.rendering.pagination.changingRows          = false;
+						this.rendering.pagination.leftPages             = [];
+						this.rendering.pagination.rightPages            = [];
+
 						// Stop any processing messaging.
 						this.status.processingData = false;
 
@@ -2028,11 +2053,23 @@
 				{
 					if ( this.rendering.pagination.currentPage !== page )
 					{
+						// Update the last action performed.
+						this.status.lastAction = 'PaginationGoToSpecificPage';
+
 						// Increase the page.
 						this.rendering.pagination.currentPage = page;
 
-						// Re-render the view.
-						this.renderView();
+						// Emit pagination event.
+						if ( this.setting.paginationEngine === 1 )
+						{
+							this.$emit( 'eventFromJDTable', this.componentState );
+						}
+						// Update the view.
+						else
+						{
+							// Re-render the view.
+							this.renderView();
+						}
 					}
 				},
 
@@ -2044,24 +2081,48 @@
 					// Ensure not going beyond available pages.
 					if ( nextPage <= this.rendering.pagination.availablePages )
 					{
+						// Update the last action performed.
+						this.status.lastAction = 'PaginationGoToNextPage';
+
 						// Increase the page.
 						this.rendering.pagination.currentPage++;
 
-						// Re-render the view.
-						this.renderView();
+						// Emit pagination event.
+						if ( this.setting.paginationEngine === 1 )
+						{
+							this.$emit( 'eventFromJDTable', this.componentState );
+						}
+						// Update the view.
+						else
+						{
+							// Re-render the view.
+							this.renderView();
+						}
 					}
 				},
 
-				// Sends the current page of the paginated data to the last page.
+				// Changes to the last page (end of dataset).
 				paginationLast : function ()
 				{
 					if ( this.rendering.pagination.currentPage !== this.rendering.pagination.availablePages )
 					{
+						// Update the last action performed.
+						this.status.lastAction = 'PaginationGoToLastPage';
+
 						// Set the current page to the last.
 						this.rendering.pagination.currentPage = this.rendering.pagination.availablePages;
 
-						// Re-render the view.
-						this.renderView();
+						// Emit pagination event.
+						if ( this.setting.paginationEngine === 1 )
+						{
+							this.$emit( 'eventFromJDTable', this.componentState );
+						}
+						// Update the view.
+						else
+						{
+							// Re-render the view.
+							this.renderView();
+						}
 					}
 				},
 
@@ -2073,35 +2134,59 @@
 					// Ensure not going beyond available pages.
 					if ( previousPage >= 1 )
 					{
+						// Update the last action performed.
+						this.status.lastAction = 'PaginationGoToPreviousPage';
+
 						// Increase the page.
 						this.rendering.pagination.currentPage--;
 
-						// Re-render the view.
-						this.renderView();
+						// Emit pagination event.
+						if ( this.setting.paginationEngine === 1 )
+						{
+							this.$emit( 'eventFromJDTable', this.componentState );
+						}
+						// Update the view.
+						else
+						{
+							// Re-render the view.
+							this.renderView();
+						}
 					}
 				},
 
-				// Sends the current page of the paginated data to the first page.
+				// Changes to the first page (beginning of dataset).
 				paginationFirst : function ()
 				{
 					if ( this.rendering.pagination.currentPage !== 1 )
 					{
+						// Update the last action performed.
+						this.status.lastAction = 'PaginationGoToFirstPage';
+
 						// Set the current page to the last.
 						this.rendering.pagination.currentPage = 1;
 
-						// Re-render the view.
-						this.renderView();
+						// Emit pagination event.
+						if ( this.setting.paginationEngine === 1 )
+						{
+							this.$emit( 'eventFromJDTable', this.componentState );
+						}
+						// Update the view.
+						else
+						{
+							// Re-render the view.
+							this.renderView();
+						}
 					}
 				},
 
 				// Changes how many rows can appear per page.
 				changePageRows : function ( rows )
 				{
-					// Update the last action performed.
-					this.status.lastAction = 'PaginationPageLimitChange';
-
 					if ( this.rendering.pagination.currentSelectedPageRowOption !== rows )
 					{
+						// Update the last action performed.
+						this.status.lastAction = 'PaginationPageLimitChange';
+
 						if ( rows === 'All' )
 						{
 							this.rendering.pagination.currentPageRows = this.processedDataSize;
@@ -2116,7 +2201,7 @@
 						this.rendering.pagination.changingRows = false;
 
 						// Emit pagination event.
-						if ( this.setting.searchEngine === 1 || this.setting.filterEngine === 1 )
+						if ( this.setting.paginationEngine === 1 )
 						{
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
@@ -2589,9 +2674,6 @@
 				// Adds the built filter to be applied to the table.
 				addFilter : function ()
 				{
-					// Update the last action performed.
-					this.status.lastAction = 'AddFilter';
-
 					// Manage column error.
 					if ( this.filters.beingBuilt.column === null || typeof( this.filters.beingBuilt.column ) !== 'object' )
 					{
@@ -2630,6 +2712,9 @@
 					// If there are no errors, continue.
 					if ( !this.filters.error )
 					{
+						// Update the last action performed.
+						this.status.lastAction = 'AddFilter';
+
 						// Create a copy of the filter.
 						let filter =
 							{
@@ -2953,6 +3038,7 @@
 							forceSearchOpen     : false,
 							searchPlaceHolder   : null,
 							filterEngine        : 0,
+							paginationEngine    : 0,
 
 							// Settings
 							startMaximized      : false,
@@ -3543,9 +3629,6 @@
 					{
 						this.processEvent( this.eventFromApp.name );
 					}
-
-					// Reset the property.
-					this.eventFromAppTrigger = false;
 				}
 			}
 	}

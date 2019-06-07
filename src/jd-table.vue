@@ -354,6 +354,17 @@
 				<span class="loadingText">Searching ..</span>
 			</div>
 
+			<!-- Searching -->
+			<div v-if="status.updatingPage" class="layerPopup contentFrame JD-Loader">
+				<div class="looping-rhombuses-spinner">
+					<div class="rhombus"></div>
+					<div class="rhombus"></div>
+					<div class="rhombus"></div>
+				</div>
+
+				<span class="loadingText">Updating Page ..</span>
+			</div>
+
 			<!-- Get Started Messaging -->
 			<div v-if="!status.processingData && !loader && gettingStarted" class="layerPopup contentFrame">
 				<div class="tableMessage" v-html="setting.startBySearchMessage"></div>
@@ -420,6 +431,7 @@
 						tableError     : null,
 						getStarted     : false,
 						processingData : false,
+						updatingPage   : false,
 						searching      : false,
 						mobileSize     : false,
 						isIE11         : false,
@@ -461,7 +473,8 @@
 								changingRows                 : false,
 								leftPages                    : [],
 								rightPages                   : [],
-								currentSelectedPageRowOption : null
+								currentSelectedPageRowOption : null,
+								externalDataSize             : null
 							}
 					},
 
@@ -1661,15 +1674,21 @@
 					// Process search external search results.
 					if ( !this.status.tableError && name === 'searchResults' )
 					{
-						if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Array' )
+						if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Object' )
 						{
 							// Clear the searching message.
 							this.status.searching = false;
 
-							if ( this.eventFromApp.payload.length > 0 )
+							// Clear any page update messages.
+							this.status.updatingPage = false;
+
+							if ( this.eventFromApp.payload.data.length > 0 )
 							{
+								// Assign the results true length.
+								this.rendering.pagination.externalDataSize = this.eventFromApp.payload.count;
+
 								// Assign the data to the component.
-								this.data = this.eventFromApp.payload;
+								this.data = this.eventFromApp.payload.data;
 
 								// Reset scroll position.
 								this.resetScroll();
@@ -1712,6 +1731,7 @@
 						this.rendering.pagination.changingRows          = false;
 						this.rendering.pagination.leftPages             = [];
 						this.rendering.pagination.rightPages            = [];
+						this.rendering.pagination.externalDataSize      = null;
 
 						// Stop any processing messaging.
 						this.status.processingData = false;
@@ -1771,6 +1791,7 @@
 
 									this.renderViewAll();
 								}
+
 								// Render Pagination
 								if ( this.setting.renderEngine === 2 )
 								{
@@ -1913,6 +1934,13 @@
 						let pageView   = [];
 						let startIndex = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows ) - this.rendering.pagination.currentPageRows;
 						let endIndex   = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows );
+
+						// Correction for external data.
+						if ( this.rendering.pagination.externalDataSize )
+						{
+							startIndex = 0;
+							endIndex   = this.processedData.length;
+						}
 
 						// End index correction.
 						if ( endIndex > this.processedDataSize )
@@ -2062,6 +2090,8 @@
 						// Emit pagination event.
 						if ( this.setting.paginationEngine === 1 )
 						{
+							this.status.updatingPage = true;
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						// Update the view.
@@ -2090,6 +2120,8 @@
 						// Emit pagination event.
 						if ( this.setting.paginationEngine === 1 )
 						{
+							this.status.updatingPage = true;
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						// Update the view.
@@ -2115,6 +2147,8 @@
 						// Emit pagination event.
 						if ( this.setting.paginationEngine === 1 )
 						{
+							this.status.updatingPage = true;
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						// Update the view.
@@ -2143,6 +2177,8 @@
 						// Emit pagination event.
 						if ( this.setting.paginationEngine === 1 )
 						{
+							this.status.updatingPage = true;
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						// Update the view.
@@ -2168,6 +2204,8 @@
 						// Emit pagination event.
 						if ( this.setting.paginationEngine === 1 )
 						{
+							this.status.updatingPage = true;
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						// Update the view.
@@ -2198,11 +2236,22 @@
 
 						this.rendering.pagination.currentSelectedPageRowOption = rows;
 
-						this.rendering.pagination.changingRows = false;
+						this.rendering.pagination.currentPage           = 1;
+						this.rendering.pagination.currentPageHightlight = null;
+						this.rendering.pagination.currentStartIndex     = null;
+						this.rendering.pagination.currentEndIndex       = null;
+						this.rendering.pagination.availablePages        = null;
+						this.rendering.pagination.currentPageRows       = this.rendering.pagination.currentSelectedPageRowOption;
+						this.rendering.pagination.changingRows          = false;
+						this.rendering.pagination.leftPages             = [];
+						this.rendering.pagination.rightPages            = [];
+						this.rendering.pagination.externalDataSize      = null;
 
 						// Emit pagination event.
 						if ( this.setting.paginationEngine === 1 )
 						{
+							this.status.updatingPage = true;
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						// Update the view.
@@ -3060,6 +3109,12 @@
 				// Returns the total number of rows in the data.
 				processedDataSize : function ()
 				{
+					// Check if data is being fed from externally.
+					if ( this.rendering.pagination.externalDataSize )
+					{
+						return this.rendering.pagination.externalDataSize;
+					}
+
 					return this.processedData.length;
 				},
 

@@ -307,7 +307,7 @@
 			</div>
 
 			<!-- No Data Message -->
-			<div v-if="status.tableReady && !status.processingData && !loader && !isViewAvailable" class="layerPopup contentFrame">
+			<div v-if="noDataMessage" class="layerPopup contentFrame">
 				<div class="noDataFrame">
 					<div class="title">
 						No Data Available
@@ -334,7 +334,7 @@
 					<div class="spinner-inner"></div>
 				</div>
 
-				<span class="loadingText">Processing Data</span>
+				<span class="loadingText">Processing ..</span>
 			</div>
 
 			<!-- Searching -->
@@ -354,7 +354,7 @@
 				<span class="loadingText">Searching ..</span>
 			</div>
 
-			<!-- Searching -->
+			<!-- Updating -->
 			<div v-if="status.updatingPage" class="layerPopup contentFrame JD-Loader">
 				<div class="looping-rhombuses-spinner">
 					<div class="rhombus"></div>
@@ -362,11 +362,11 @@
 					<div class="rhombus"></div>
 				</div>
 
-				<span class="loadingText">Updating Page ..</span>
+				<span class="loadingText">Updating ..</span>
 			</div>
 
 			<!-- Get Started Messaging -->
-			<div v-if="!status.processingData && !loader && gettingStarted" class="layerPopup contentFrame">
+			<div v-if="gettingStarted" class="layerPopup contentFrame">
 				<div class="tableMessage" v-html="setting.startBySearchMessage"></div>
 			</div>
 
@@ -527,6 +527,16 @@
 		//
 		// OPTIONS ----
 		//
+		// Prop        : option.dataProvider
+		// Value       : [NUMBER]
+		// Default     : 0
+		// Description : Sets the manner of which data will be provided to JD-Table.
+		//
+		// -----
+		// | 0 | FULL    : All data will be provided as one single injection to the table. Search/filtering will be performed on that data by JD-Table.
+		// | 1 | REQUEST : All data will be provided via external requests for all data based actions (search, filtering, pagination, sorting, etc.).
+		// -----         : These data based actions will instead emit events to the parent app for processing.
+		//
 		// Prop        : option.columns
 		// Value       : [ARRAY]
 		// Default     : Empty
@@ -674,6 +684,12 @@
 		// Description : Indicates the amount of rows that if the data exceeds will trigger the virtual rendering engine.
 		//             : Only used when renderEngine is set to 0 (auto).
 		//
+		// Prop        : option.virtualEngineExternalChunkSize
+		// Value       : [NUMBER - MUST BE EVEN]
+		// Default     : 500
+		// Description : Indicates the amount of rows that will be sent to JD-Table when the renderEngine uses the virtualEngine pagination.
+		//             : When a user attempts to view rows beyond this value (@ min/max indexes) a request for more external data will be made.
+		//
 		// Prop        : option.frameWidth
 		// Value       : [NUMBER]
 		// Default     : Null
@@ -714,16 +730,6 @@
 		// Default     : 5
 		// Description : The number of page choices that will be available on either side of the row display on the footer. (pagination engine).
 		//
-		// Prop        : option.searchEngine
-		// Value       : [NUMBER]
-		// Default     : 0
-		// Description : Sets the search engine that will be used when search is performed.
-		//
-		// -----
-		// | 0 | : JD-Table will search the data that it has available to it.
-		// | 1 | : JD-Table will emit a search event to the parent so it can manage how search is performed.
-		// -----
-		//
 		// Prop        : option.forceSearchOpen
 		// Value       : [BOOLEAN]
 		// Default     : False
@@ -733,26 +739,6 @@
 		// Value       : [STRING]
 		// Default     : NULL
 		// Description : The placeholder text for the search input box.
-		//
-		// Prop        : option.filterEngine
-		// Value       : [NUMBER]
-		// Default     : 0
-		// Description : Sets the filter engine that will be used when filter is performed.
-		//
-		// -----
-		// | 0 | : JD-Table will filter the data that it has available to it.
-		// | 1 | : JD-Table will emit a filter event to the parent so it can manage how filter is performed.
-		// -----
-		//
-		// Prop        : option.paginationEngine
-		// Value       : [NUMBER]
-		// Default     : 0
-		// Description : Sets the pagination engine that will be used when a pagination event is performed.
-		//
-		// -----
-		// | 0 | : JD-Table will perform pagination tasks using the data it has current assigned to JD-Table.
-		// | 1 | : JD-Table will emit a pagination event to the parent so that external actions like search/filtering can be performed with the pagination changes in mind.
-		// -----
 		//
 		// Prop        : option.startMaximized
 		// Value       : [BOOLEAN]
@@ -1175,6 +1161,8 @@
 						// Update the last action performed.
 						this.status.lastAction = 'Refresh';
 
+						this.updateStatus( 'updatingPage', true );
+
 						this.$emit( 'eventFromJDTable', this.componentState );
 					};
 
@@ -1347,22 +1335,29 @@
 				// Processes the raw data through filters/search. This returns a promise.
 				processData : function ()
 				{
-					// Start processing visual.
-					this.status.processingData = true;
-
-					return new Promise( ( resolve, reject ) =>
+					let processDataPromise = new Promise( ( resolve, reject ) =>
 					{
-						// Timeout ensures processing message.
-						setTimeout( () => {
-							let processedData = this.data;
+						// External Data - Just copy to processedData.
+						if ( this.setting.dataProvider === 1 )
+						{
+							this.processedData = this.data;
 
-							// ---------
-							// SEARCHING
-							// ---------
-							//
-							// Search terms filter all of the data that JD-Table has. This means search happens before filtering.
-							if ( !this.setting.searchEngine )
+							resolve();
+						}
+						// Interal Data - Process through search/filter.
+						else
+						{
+							// Timeout ensures processing message.
+							setTimeout( () =>
 							{
+								let processedData = this.data;
+
+								// ---------
+								// SEARCHING
+								// ---------
+								//
+								// Search terms filter all of the data that JD-Table has. This means search happens before filtering.
+
 								// Clean the search term.
 								let searchTerm = this.search.text.trim().toLowerCase();
 
@@ -1406,221 +1401,223 @@
 									// Indicate that searching is NOT being done.
 									this.search.searching = false;
 								}
-							}
 
-							// ---------
-							// FILTERING
-							// ---------
-							//
-							// Filters are applied using the following rules:
-							// - Filters with the same column are grouped together and use the OR condition (excluding < and > which are AND)
-							// 	 - Filter #1: 'Column1' --> 'Equals To' --> 'John'
-							//   - Filter #2: 'Column1' --> 'Equals To' --> 'Peter'
-							//   - Applied: Show rows where 'Column1' --> 'Equals To' --> 'John' OR 'Peter'
-							// - Filters applied to different columns use AND condition.
-							//   - Filter #1: 'Column1' --> 'Equals To' --> 'John'
-							//   - Filter #2: 'Column2' --> 'Equals To' --> '$100.00'
-							//   - Applied: Show rows where 'Column1' --> 'Equals To' --> 'John' AND 'Column2' 'Equals To' --> '$100.00'
-							if ( this.filtering )
-							{
-								let tempData = [];
-
-								// Returns a unique array of column names that are actively filtered.
-								const UNIQUE_FILTER_COLUMNS = () =>
+								// ---------
+								// FILTERING
+								// ---------
+								//
+								// Filters are applied using the following rules:
+								// - Filters with the same column are grouped together and use the OR condition (excluding < and > which are AND)
+								// 	 - Filter #1: 'Column1' --> 'Equals To' --> 'John'
+								//   - Filter #2: 'Column1' --> 'Equals To' --> 'Peter'
+								//   - Applied: Show rows where 'Column1' --> 'Equals To' --> 'John' OR 'Peter'
+								// - Filters applied to different columns use AND condition.
+								//   - Filter #1: 'Column1' --> 'Equals To' --> 'John'
+								//   - Filter #2: 'Column2' --> 'Equals To' --> '$100.00'
+								//   - Applied: Show rows where 'Column1' --> 'Equals To' --> 'John' AND 'Column2' 'Equals To' --> '$100.00'
+								if ( this.filtering )
 								{
-									let columnSet     = new Set( this.filters.active.map( ( filter ) => filter.column.name ) );
-									let uniqueColumns = [];
+									let tempData = [];
 
-									columnSet.forEach( ( column ) =>
+									// Returns a unique array of column names that are actively filtered.
+									const UNIQUE_FILTER_COLUMNS = () =>
 									{
-										uniqueColumns.push( column );
-									});
+										let columnSet     = new Set( this.filters.active.map( ( filter ) => filter.column.name ) );
+										let uniqueColumns = [];
 
-									return uniqueColumns;
-								};
-
-								// Performs filter: Equals To (String Based).
-								const FILTER_EQUALS_TO = ( row, columnFilter ) =>
-								{
-									return ( String( row[columnFilter.column.name]).toLowerCase() === String(columnFilter.value).toLowerCase() );
-								};
-
-								// Performs filter: Not Equals To (String Based).
-								const FILTER_NOT_EQUALS_TO = ( row, columnFilter ) =>
-								{
-									return ( String( row[columnFilter.column.name]).toLowerCase() !== String(columnFilter.value).toLowerCase() );
-								};
-
-								// Performs filter: Begins With (String Based).
-								const FILTER_BEGINS_WITH = ( row, columnFilter ) =>
-								{
-									return ( String( row[columnFilter.column.name]).toLowerCase().startsWith(String(columnFilter.value).toLowerCase()) );
-								};
-
-								// Performs filter: Contains (String Based).
-								const FILTER_CONTAINS = ( row, columnFilter ) =>
-								{
-									return ( String( row[columnFilter.column.name]).toLowerCase().includes(String(columnFilter.value).toLowerCase()) );
-								};
-
-								// Performs filter: Greater and Less/Equal To (Number Based).
-								const FILTER_GREATER_LESS_THAN = ( row, columnName, greaterThanValue, lessThanValue ) =>
-								{
-									let columnNumber = Number( row[columnName] );
-
-									if ( greaterThanValue && lessThanValue )
-									{
-										if ( columnNumber >= greaterThanValue && columnNumber <= lessThanValue )
+										columnSet.forEach( ( column ) =>
 										{
-											return true;
-										}
-									}
+											uniqueColumns.push( column );
+										});
 
-									if ( greaterThanValue && !lessThanValue )
+										return uniqueColumns;
+									};
+
+									// Performs filter: Equals To (String Based).
+									const FILTER_EQUALS_TO = ( row, columnFilter ) =>
 									{
-										if ( columnNumber >= greaterThanValue )
+										return ( String( row[columnFilter.column.name]).toLowerCase() === String(columnFilter.value).toLowerCase() );
+									};
+
+									// Performs filter: Not Equals To (String Based).
+									const FILTER_NOT_EQUALS_TO = ( row, columnFilter ) =>
+									{
+										return ( String( row[columnFilter.column.name]).toLowerCase() !== String(columnFilter.value).toLowerCase() );
+									};
+
+									// Performs filter: Begins With (String Based).
+									const FILTER_BEGINS_WITH = ( row, columnFilter ) =>
+									{
+										return ( String( row[columnFilter.column.name]).toLowerCase().startsWith(String(columnFilter.value).toLowerCase()) );
+									};
+
+									// Performs filter: Contains (String Based).
+									const FILTER_CONTAINS = ( row, columnFilter ) =>
+									{
+										return ( String( row[columnFilter.column.name]).toLowerCase().includes(String(columnFilter.value).toLowerCase()) );
+									};
+
+									// Performs filter: Greater and Less/Equal To (Number Based).
+									const FILTER_GREATER_LESS_THAN = ( row, columnName, greaterThanValue, lessThanValue ) =>
+									{
+										let columnNumber = Number( row[columnName] );
+
+										if ( greaterThanValue && lessThanValue )
 										{
-											return true;
-										}
-									}
-
-									if ( !greaterThanValue && lessThanValue )
-									{
-										if ( columnNumber <= lessThanValue )
-										{
-											return true;
-										}
-									}
-
-									return false;
-								};
-
-								// Cycle through the unique column filters.
-								UNIQUE_FILTER_COLUMNS().forEach( ( columnName, index ) =>
-								{
-									// Will hold the data that will be filtered.
-									let dataToBeFiltered = [];
-
-									// Will hold the new set of filtered data.
-									let newFilteredData = [];
-
-									// On first pass (for the first column), use all the data available.
-									if ( index === 0 )
-									{
-										dataToBeFiltered = processedData;
-									}
-									// On second pass (next column) use existing filtered data.
-									else
-									{
-										dataToBeFiltered = tempData;
-									}
-
-									// Get all of the filters for the given column.
-									let columnFilters = this.filters.active.filter( ( filter ) =>
-									{
-										return filter.column.name === columnName;
-									});
-
-									// Stores numeric comparison values.
-									let greaterThanValue = null;
-									let lessThanValue    = null;
-
-
-									// Check for Greater/Equal To / Less/Equal To filters which should be grouped.
-									columnFilters.forEach( ( columnFilter ) =>
-									{
-										// Store greater then for
-										if ( columnFilter.option === 'Greater/Equal To' )
-										{
-											greaterThanValue = columnFilter.value;
+											if ( columnNumber >= greaterThanValue && columnNumber <= lessThanValue )
+											{
+												return true;
+											}
 										}
 
-										if ( columnFilter.option === 'Less/Equal To' )
+										if ( greaterThanValue && !lessThanValue )
 										{
-											lessThanValue = columnFilter.value;
+											if ( columnNumber >= greaterThanValue )
+											{
+												return true;
+											}
 										}
-									});
 
-									// For each row of data, check the column filter. If any single filter passes, add the row and move to the next.
-									dataToBeFiltered.forEach( ( row, index ) =>
+										if ( !greaterThanValue && lessThanValue )
+										{
+											if ( columnNumber <= lessThanValue )
+											{
+												return true;
+											}
+										}
+
+										return false;
+									};
+
+									// Cycle through the unique column filters.
+									UNIQUE_FILTER_COLUMNS().forEach( ( columnName, index ) =>
 									{
-										// Indicates if the row has been added to the newly filtered array.
-										let hasBeenPushed = false;
+										// Will hold the data that will be filtered.
+										let dataToBeFiltered = [];
 
-										// Process string based filters.
+										// Will hold the new set of filtered data.
+										let newFilteredData = [];
+
+										// On first pass (for the first column), use all the data available.
+										if ( index === 0 )
+										{
+											dataToBeFiltered = processedData;
+										}
+										// On second pass (next column) use existing filtered data.
+										else
+										{
+											dataToBeFiltered = tempData;
+										}
+
+										// Get all of the filters for the given column.
+										let columnFilters = this.filters.active.filter( ( filter ) =>
+										{
+											return filter.column.name === columnName;
+										});
+
+										// Stores numeric comparison values.
+										let greaterThanValue = null;
+										let lessThanValue    = null;
+
+
+										// Check for Greater/Equal To / Less/Equal To filters which should be grouped.
 										columnFilters.forEach( ( columnFilter ) =>
 										{
-											// FILTER: Equals To
-											if ( columnFilter.option === 'Equals To' )
+											// Store greater then for
+											if ( columnFilter.option === 'Greater/Equal To' )
 											{
-												if ( FILTER_EQUALS_TO( row, columnFilter ) )
-												{
-													newFilteredData.push( row );
-
-													hasBeenPushed = true;
-												}
+												greaterThanValue = columnFilter.value;
 											}
 
-											// FILTER: Contains
-											if ( !hasBeenPushed && columnFilter.option === 'Contains' )
+											if ( columnFilter.option === 'Less/Equal To' )
 											{
-												if ( FILTER_CONTAINS( row, columnFilter ) )
-												{
-													newFilteredData.push( row );
-
-													hasBeenPushed = true;
-												}
+												lessThanValue = columnFilter.value;
 											}
+										});
 
-											// FILTER: Not Equals To
-											if ( !hasBeenPushed && columnFilter.option === 'Not Equals To' )
+										// For each row of data, check the column filter. If any single filter passes, add the row and move to the next.
+										dataToBeFiltered.forEach( ( row, index ) =>
+										{
+											// Indicates if the row has been added to the newly filtered array.
+											let hasBeenPushed = false;
+
+											// Process string based filters.
+											columnFilters.forEach( ( columnFilter ) =>
 											{
-												if ( FILTER_NOT_EQUALS_TO( row, columnFilter ) )
+												// FILTER: Equals To
+												if ( columnFilter.option === 'Equals To' )
 												{
-													newFilteredData.push( row );
+													if ( FILTER_EQUALS_TO( row, columnFilter ) )
+													{
+														newFilteredData.push( row );
 
-													hasBeenPushed = true;
+														hasBeenPushed = true;
+													}
 												}
-											}
 
-											// FILTER: Begins With
-											if ( !hasBeenPushed && columnFilter.option === 'Begins With' )
+												// FILTER: Contains
+												if ( !hasBeenPushed && columnFilter.option === 'Contains' )
+												{
+													if ( FILTER_CONTAINS( row, columnFilter ) )
+													{
+														newFilteredData.push( row );
+
+														hasBeenPushed = true;
+													}
+												}
+
+												// FILTER: Not Equals To
+												if ( !hasBeenPushed && columnFilter.option === 'Not Equals To' )
+												{
+													if ( FILTER_NOT_EQUALS_TO( row, columnFilter ) )
+													{
+														newFilteredData.push( row );
+
+														hasBeenPushed = true;
+													}
+												}
+
+												// FILTER: Begins With
+												if ( !hasBeenPushed && columnFilter.option === 'Begins With' )
+												{
+													if ( FILTER_BEGINS_WITH( row, columnFilter ) )
+													{
+														newFilteredData.push( row );
+
+														hasBeenPushed = true;
+													}
+												}
+											});
+
+											// Check if there are numeric specific operations.
+											if ( greaterThanValue || lessThanValue )
 											{
-												if ( FILTER_BEGINS_WITH( row, columnFilter ) )
+												if ( FILTER_GREATER_LESS_THAN( row, columnName, greaterThanValue, lessThanValue ) )
 												{
 													newFilteredData.push( row );
-
-													hasBeenPushed = true;
 												}
 											}
 										});
 
-										// Check if there are numeric specific operations.
-										if ( greaterThanValue || lessThanValue )
-										{
-											if ( FILTER_GREATER_LESS_THAN( row, columnName, greaterThanValue, lessThanValue ) )
-											{
-												newFilteredData.push( row );
-											}
-										}
+										// Replace the tempData with the newly filtered data.
+										tempData = newFilteredData;
 									});
 
-									// Replace the tempData with the newly filtered data.
-									tempData = newFilteredData;
-								});
+									processedData = tempData;
+								}
 
-								processedData = tempData;
-							}
+								this.processedData = processedData;
 
-							this.processedData = processedData;
+								// Stop processing visual.
+								this.updateStatus( 'processingData', false );
 
-							// Stop processing visual.
-							this.status.processingData = false;
-
-							// End the promise.
-							resolve();
-						}, 75);
+								// End the promise.
+								resolve();
+							}, 75);
+						}
 					});
+
+					return processDataPromise;
 				},
 
 				// Processes the passed event.
@@ -1629,121 +1626,91 @@
 					// Process the data sent to JD-Table.
 					if ( !this.status.tableError && name === 'sendData' )
 					{
-						if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Array' )
+						let eventError = false;
+
+						// Clear any messaging/statuses.
+						this.updateStatus( null, null );
+
+						// Clear the current view.
+						this.view = [];
+
+						// Interal Data
+						if ( !this.setting.dataProvider )
 						{
-							if ( this.eventFromApp.payload.length > 0 )
+							if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Array' )
 							{
-								// Assign the data to the component.
-								this.data = this.eventFromApp.payload;
-
-								// Reset scroll position.
-								this.resetScroll();
-
-								// Process the data through filters/search.
-								this.processData().then( () =>
+								if ( this.eventFromApp.payload.length > 0 )
 								{
-									// Render the data.
-									this.renderView();
-								});
+									// Assign the data to the component.
+									this.data = this.eventFromApp.payload;
+
+									// Reset scroll position.
+									this.resetScroll();
+
+									// Process the data through filters/search.
+									this.processData().then( () =>
+									{
+										// Render the data.
+										this.renderView();
+									});
+								}
+								else
+								{
+									this.clearTable();
+								}
 							}
 							else
 							{
-								this.view = [];
-
-								this.status.processingData = false;
+								eventError = true;
 							}
-
-							// Set the table to ready.
-							this.status.tableReady = true;
 						}
-						else
+
+						// External Data
+						if ( this.setting.dataProvider === 1 )
+						{
+							if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Object' )
+							{
+								if ( this.eventFromApp.payload.data.length > 0 )
+								{
+									// Assign the results true length.
+									this.rendering.pagination.externalDataSize = this.eventFromApp.payload.count;
+
+									// Assign the current skip index.
+									this.rendering.pagination.externalSkipIndex = this.eventFromApp.payload.index;
+
+									// Assign the data to the component.
+									this.data = this.eventFromApp.payload.data;
+
+									// Reset scroll position.
+									this.resetScroll();
+
+									// Process the data through filters/search.
+									this.processData().then( () =>
+									{
+										// Render the data.
+										this.renderView();
+									});
+								}
+								else
+								{
+									this.clearTable();
+								}
+							}
+							else
+							{
+								eventError = true;
+							}
+						}
+
+						if ( eventError )
 						{
 							this.status.tableError = 'Error: sendData event issue. Payload is null or improperly formatted.';
 						}
-					}
-
-					// Processes a Table Message event to JD-Table.
-					if ( name === 'displayMessage' )
-					{
-						if ( this.eventFromApp.payload !== null )
+						else
 						{
-							this.status.tableMessage = this.eventFromApp.payload;
-						}
-					}
-
-					// Process search external search results.
-					if ( !this.status.tableError && name === 'searchResults' )
-					{
-						if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Object' )
-						{
-							// Clear the searching message.
-							this.status.searching = false;
-
-							// Clear any page update messages.
-							this.status.updatingPage = false;
-
-							if ( this.eventFromApp.payload.data.length > 0 )
-							{
-								// Assign the results true length.
-								this.rendering.pagination.externalDataSize = this.eventFromApp.payload.count;
-
-								// Assign the data to the component.
-								this.data = this.eventFromApp.payload.data;
-
-								// Reset scroll position.
-								this.resetScroll();
-
-								// Process the data through filters/search.
-								this.processData().then( () =>
-								{
-									// Render the data.
-									this.renderView();
-								});
-							}
-							else
-							{
-								this.view = [];
-							}
-
 							// Set the table to ready.
 							this.status.tableReady = true;
 						}
-						else
-						{
-							this.status.tableError = 'Error: searchResults event issue. Payload is null or improperly formatted.';
-						}
-					}
-
-					// Process request to clear current table data.
-					if ( !this.status.tableError && name === 'clearData' )
-					{
-						// Clear data.
-						this.processedData = [];
-						this.data          = [];
-
-						// Reset pagination.
-						this.rendering.pagination.currentPage           = 1;
-						this.rendering.pagination.currentPageHightlight = null;
-						this.rendering.pagination.currentStartIndex     = null;
-						this.rendering.pagination.currentEndIndex       = null;
-						this.rendering.pagination.availablePages        = null;
-						this.rendering.pagination.currentPageRows       = this.rendering.pagination.currentSelectedPageRowOption;
-						this.rendering.pagination.changingRows          = false;
-						this.rendering.pagination.leftPages             = [];
-						this.rendering.pagination.rightPages            = [];
-						this.rendering.pagination.externalDataSize      = null;
-
-						// Stop any processing messaging.
-						this.status.processingData = false;
-
-						// Make the table NOT ready.
-						this.status.tableReady = false;
-
-						// Reset scroll positions.
-						this.resetScroll();
-
-						// Clean the view.
-						this.view = [];
 					}
 				},
 
@@ -1751,7 +1718,7 @@
 				renderView : function ( renderPosition = 0 )
 				{
 					// Start processing visual.
-					this.status.processingData = true;
+					this.updateStatus( 'processingData', true );
 
 					// Timeout ensures processing message.
 					setTimeout( () =>
@@ -1809,7 +1776,7 @@
 						this.checkBodyScroll();
 
 						// Stop processing visual.
-						this.status.processingData = false;
+						this.updateStatus( 'processingData', false );
 					}, 80 );
 				},
 
@@ -1861,7 +1828,7 @@
 					// Determines if the renderPosition is near the end of the list.
 					const VIRTUAL_END_ZONE = ( position ) =>
 					{
-						return ( position >= ( this.processedDataSize - 1) || position >= (this.processedDataSize - VIRTUAL_BUFFER_SIZE() ) );
+						return ( position >= ( this.processedDataSize - 1 ) || position >= (this.processedDataSize - VIRTUAL_BUFFER_SIZE() ) );
 					};
 
 					let updatedView = [];
@@ -2088,9 +2055,9 @@
 						this.rendering.pagination.currentPage = page;
 
 						// Emit pagination event.
-						if ( this.setting.paginationEngine === 1 )
+						if ( this.setting.dataProvider === 1 )
 						{
-							this.status.updatingPage = true;
+							this.updateStatus( 'updatingPage', true );
 
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
@@ -2118,9 +2085,9 @@
 						this.rendering.pagination.currentPage++;
 
 						// Emit pagination event.
-						if ( this.setting.paginationEngine === 1 )
+						if ( this.setting.dataProvider === 1 )
 						{
-							this.status.updatingPage = true;
+							this.updateStatus( 'updatingPage', true );
 
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
@@ -2145,9 +2112,9 @@
 						this.rendering.pagination.currentPage = this.rendering.pagination.availablePages;
 
 						// Emit pagination event.
-						if ( this.setting.paginationEngine === 1 )
+						if ( this.setting.dataProvider === 1 )
 						{
-							this.status.updatingPage = true;
+							this.updateStatus( 'updatingPage', true );
 
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
@@ -2175,9 +2142,9 @@
 						this.rendering.pagination.currentPage--;
 
 						// Emit pagination event.
-						if ( this.setting.paginationEngine === 1 )
+						if ( this.setting.dataProvider === 1 )
 						{
-							this.status.updatingPage = true;
+							this.updateStatus( 'updatingPage', true );
 
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
@@ -2202,9 +2169,9 @@
 						this.rendering.pagination.currentPage = 1;
 
 						// Emit pagination event.
-						if ( this.setting.paginationEngine === 1 )
+						if ( this.setting.dataProvider === 1 )
 						{
-							this.status.updatingPage = true;
+							this.updateStatus( 'updatingPage', true );
 
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
@@ -2248,9 +2215,9 @@
 						this.rendering.pagination.externalDataSize      = null;
 
 						// Emit pagination event.
-						if ( this.setting.paginationEngine === 1 )
+						if ( this.setting.dataProvider === 1 )
 						{
-							this.status.updatingPage = true;
+							this.updateStatus( 'updatingPage', true );
 
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
@@ -2341,7 +2308,7 @@
 							if ( this.rendering.triggerTopPositionPX >= 0 )
 							{
 								// Show the processing message.
-								this.status.processingData = true;
+								this.updateStatus( 'processingData', true );
 
 								this.rendering.isScrolling = setTimeout( () =>
 								{
@@ -2356,7 +2323,7 @@
 							if ( this.rendering.triggerBottomPositionPX >= 0 )
 							{
 								// Show the processing message.
-								this.status.processingData = true;
+								this.updateStatus( 'processingData', true );
 
 								this.rendering.isScrolling = setTimeout( () =>
 								{
@@ -2783,12 +2750,12 @@
 						// Reset the scroll position to top/left.
 						this.resetScroll();
 
-						// filterEngine = 1 | Filtering is performed externally (emitted).
-						if ( this.setting.filterEngine === 1 )
+						// dataProvider = 1 | Filtering is performed externally (emitted).
+						if ( this.setting.dataProvider === 1 )
 						{
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
-						// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
+						// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 						else
 						{
 							this.resetScroll();
@@ -2815,12 +2782,12 @@
 
 					this.filters.active.splice( index, 1 );
 
-					// filterEngine = 1 | Filtering is performed externally (emitted).
-					if ( this.setting.filterEngine === 1 )
+					// dataProvider = 1 | Filtering is performed externally (emitted).
+					if ( this.setting.dataProvider === 1 )
 					{
 						this.$emit( 'eventFromJDTable', this.componentState );
 					}
-					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
+					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
 					{
 						this.resetScroll();
@@ -2852,12 +2819,12 @@
 					// Clear active.
 					this.filters.active = [];
 
-					// filterEngine = 1 | Filtering is performed externally (emitted).
-					if ( this.setting.filterEngine === 1 )
+					// dataProvider = 1 | Filtering is performed externally (emitted).
+					if ( this.setting.dataProvider === 1 )
 					{
 						this.$emit( 'eventFromJDTable', this.componentState );
 					}
-					// filterEngine = 0 | Filtering is performed on the data that exists in the JD-Table component.
+					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
 					{
 						// Process the data through filters/search.
@@ -2925,10 +2892,10 @@
 					}
 					else
 					{
-						this.status.searching = true;
+						this.updateStatus( 'searching', true );
 
 						// Emit search event.
-						if ( this.setting.searchEngine === 1 )
+						if ( this.setting.dataProvider === 1 )
 						{
 							this.search.searching = true;
 
@@ -2941,7 +2908,7 @@
 
 							this.processData().then( () =>
 							{
-								this.status.searching = false;
+								this.updateStatus( 'searching', false );
 
 								this.renderView();
 							});
@@ -2959,21 +2926,20 @@
 					this.search.text       = '';
 					this.search.searching  = false;
 
-					// Emit search event.
-					if ( this.setting.searchEngine === 1 )
-					{
-						this.$emit( 'eventFromJDTable', this.componentState );
-					}
-					// Perform search using JD-Table.
-					else
-					{
-						this.resetScroll();
+					this.resetScroll();
 
-						this.processData().then( () =>
+					this.processData().then( () =>
+					{
+						// Emit search event.
+						if ( this.setting.dataProvider === 1 )
+						{
+							this.$emit( 'eventFromJDTable', this.componentState );
+						}
+						else
 						{
 							this.renderView();
-						});
-					}
+						}
+					});
 				},
 
 				// Called when user clicks on a data row. Accepts the index of the data on the this.data.
@@ -3027,6 +2993,84 @@
 					printWindow.focus()
 					printWindow.print();
 					printWindow.close();
+				},
+
+				// Clears all data from table.
+				clearTable : function ()
+				{
+					// Clear data.
+					this.processedData = [];
+					this.data          = [];
+
+					// Clear Search
+					this.search.searching = false;
+					this.search.text      = "";
+
+					// Clear Filters
+					this.filters.active            = [];
+					this.filters.activeDropdown    = null;
+					this.filters.beingBuilt.column = null;
+					this.filters.beingBuilt.option = null;
+					this.filters.beingBuilt.value  = null;
+					this.filters.error             = false;
+					this.filters.errorText         = "";
+					this.filters.show              = false;
+
+					// Reset pagination.
+					this.rendering.pagination.currentPage             = 1;
+					this.rendering.pagination.currentPageHightlight   = null;
+					this.rendering.pagination.currentStartIndex       = null;
+					this.rendering.pagination.currentEndIndex         = null;
+					this.rendering.pagination.availablePages          = null;
+					this.rendering.pagination.currentPageRows         = this.rendering.pagination.currentSelectedPageRowOption;
+					this.rendering.pagination.changingRows            = false;
+					this.rendering.pagination.leftPages               = [];
+					this.rendering.pagination.rightPages              = [];
+					this.rendering.pagination.externalDataSize        = null;
+					this.rendering.pagination.rowBottomIndex          = 0;
+					this.rendering.pagination.rowTopIndex             = 0;
+					this.rendering.pagination.rowMiddleIndex          = 0;
+					this.rendering.pagination.triggerBottomPositionPX = 0;
+					this.rendering.pagination.triggerTopPositionPX    = 0;
+					this.rendering.pagination.virtualHeight           = 0;
+
+					// Selection
+					this.row.selectedIndex = null;
+
+					// Stop any processing messaging.
+					this.updateStatus( 'processingData', false );
+
+					// Make the table NOT ready.
+					this.status.tableReady = false;
+
+					// Reset scroll positions.
+					this.resetScroll();
+
+					// Clean the view.
+					this.view = [];
+				},
+
+				// Displays the appropriate table message based on component status.
+				updateStatus : function ( statusName, state )
+				{
+					this.status.searching      = false;
+					this.status.updatingPage   = false;
+					this.status.processingData = false;
+
+					if ( statusName === 'processingData' )
+					{
+						this.status.processingData = state;
+					}
+
+					if ( statusName === 'searching' )
+					{
+						this.status.searching      = state;
+					}
+
+					if ( statusName === 'updatingPage' )
+					{
+						this.status.updatingPage   = state;
+					}
 				}
 			},
 
@@ -3048,6 +3092,9 @@
 				{
 					return Object.assign (
 						{
+							// Data Provider
+							dataProvider : 0,
+
 							// Column Data
 							columns             : [],
 
@@ -3069,25 +3116,23 @@
 							quickView			         : true,
 
 							// Rendering
-							renderEngine          : 2,
-							responsiveFrame       : true,
-							responsiveTable       : true,
-							virtualEngineRowStart : 250,
-							frameWidth            : null,
-							headerHeight          : 40,
-							dataHeight            : null,
-							rowHeight             : 42,
-							paginationRowLimits   : [50, 750, 100],
-							paginationRowStart    : 50,
-							paginationRowAll      : true,
-							pageSideQuantity      : 5,
+							renderEngine                   : 2,
+							responsiveFrame                : true,
+							responsiveTable                : true,
+							virtualEngineRowStart          : 250,
+							virtualEngineExternalChunkSize : 500,
+							frameWidth                     : null,
+							headerHeight                   : 40,
+							dataHeight                     : null,
+							rowHeight                      : 42,
+							paginationRowLimits            : [50, 750, 100],
+							paginationRowStart             : 50,
+							paginationRowAll               : true,
+							pageSideQuantity               : 5,
 
 							// Search
-							searchEngine        : 0,
 							forceSearchOpen     : false,
 							searchPlaceHolder   : null,
-							filterEngine        : 0,
-							paginationEngine    : 0,
 
 							// Settings
 							startMaximized      : false,
@@ -3508,11 +3553,21 @@
 
 					if ( this.filters.beingBuilt.column.type === 'String' )
 					{
+						if ( this.setting.dataProvider === 1 )
+						{
+							return ['Equals To', 'Contains', 'Not Equals To'];
+						}
+
 						return ['Equals To', 'Contains', 'Not Equals To', 'Begins With'];
 					}
 
 					if ( this.filters.beingBuilt.column.type === 'Number' )
 					{
+						if ( this.setting.dataProvider === 1 )
+						{
+							return ['Equals To', 'Greater/Equal To', 'Less/Equal To', 'Contains', 'Not Equals To'];
+						}
+
 						return ['Equals To', 'Greater/Equal To', 'Less/Equal To', 'Contains', 'Not Equals To', 'Begins With'];
 					}
 				},
@@ -3648,9 +3703,23 @@
 				// Returns the status of the Getting Started message.
 				gettingStarted : function ()
 				{
-					if ( this.setting.startBySearch )
+					if ( !this.status.processingData && !this.loader && this.setting.startBySearch )
 					{
 						if ( !this.search.searching && this.filters.active.length === 0 )
+						{
+							return true;
+						}
+					}
+
+					return false;
+				},
+
+				// Returns the status for displaying the no data message.
+				noDataMessage : function ()
+				{
+					if ( this.status.tableReady && !this.status.processingData && !this.loader && !this.isViewAvailable )
+					{
+						if ( !this.gettingStarted )
 						{
 							return true;
 						}
@@ -3663,14 +3732,15 @@
 				componentState : function ()
 				{
 					return {
-						searchApplied     : this.search.searching,
-						searchText        : this.search.text,
-						filterApplied     : this.filters.active,
-						pageLimit         : this.rendering.pagination.currentSelectedPageRowOption,
-						currentPage       : this.rendering.pagination.currentPage,
-						currentStartIndex : this.rendering.pagination.currentStartIndex,
-						currentEndIndex   : this.rendering.pagination.currentEndIndex,
-						lastAction        : this.status.lastAction
+						currentVirtualMiddleIndex : this.rendering.rowMiddleIndex,
+						searchApplied             : this.search.searching,
+						searchText                : this.search.text,
+						filterApplied             : this.filters.active,
+						pageLimit                 : this.rendering.pagination.currentSelectedPageRowOption,
+						currentPage               : this.rendering.pagination.currentPage,
+						currentStartIndex         : this.rendering.pagination.currentStartIndex,
+						currentEndIndex           : this.rendering.pagination.currentEndIndex,
+						lastAction                : this.status.lastAction
 					}
 				}
 			},

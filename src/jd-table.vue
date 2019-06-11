@@ -257,7 +257,7 @@
 				</div>
 
 				<div v-if="!status.mobileSize" class="paginationRows">
-					Rows&nbsp;<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }} of&nbsp;</span>{{ processedDataSize }}
+					Rows&nbsp;<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }} of&nbsp;</span>{{ formatNumberWithCommas( processedDataSize ) }}
 				</div>
 				<div v-else class="paginationRows">
 					<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }}</span>
@@ -292,7 +292,7 @@
 
 			</div>
 			<div v-if="( rendering.engine === 0 || rendering.engine === 1 ) && processedDataSize">
-				<div class="resultRows" v-show="!filters.show">Rows: {{ processedDataSize }}</div>
+				<div class="resultRows" v-show="!filters.show">Rows: {{ formatNumberWithCommas( processedDataSize ) }}</div>
 			</div>
 
 		</div>
@@ -334,7 +334,7 @@
 					<div class="spinner-inner"></div>
 				</div>
 
-				<span class="loadingText">Processing ..</span>
+				<span class="loadingText">Processing</span>
 			</div>
 
 			<!-- Searching -->
@@ -351,7 +351,7 @@
 					<div class="square"></div>
 				</div>
 
-				<span class="loadingText">Searching ..</span>
+				<span class="loadingText">Searching</span>
 			</div>
 
 			<!-- Updating -->
@@ -362,7 +362,7 @@
 					<div class="rhombus"></div>
 				</div>
 
-				<span class="loadingText">Updating ..</span>
+				<span class="loadingText">Updating</span>
 			</div>
 
 			<!-- Get Started Messaging -->
@@ -427,7 +427,6 @@
 			return {
 				status :
 					{
-						tableReady     : false,
 						tableError     : null,
 						getStarted     : false,
 						processingData : false,
@@ -1634,7 +1633,7 @@
 						// Clear the current view.
 						this.view = [];
 
-						// Interal Data
+						// Internal Data
 						if ( !this.setting.dataProvider )
 						{
 							if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Array' )
@@ -1656,7 +1655,7 @@
 								}
 								else
 								{
-									this.clearTable();
+									this.view = [];
 								}
 							}
 							else
@@ -1693,7 +1692,7 @@
 								}
 								else
 								{
-									this.clearTable();
+									this.view = [];
 								}
 							}
 							else
@@ -1706,11 +1705,12 @@
 						{
 							this.status.tableError = 'Error: sendData event issue. Payload is null or improperly formatted.';
 						}
-						else
-						{
-							// Set the table to ready.
-							this.status.tableReady = true;
-						}
+					}
+
+					// Reset table (Clear All)
+					if ( !this.status.tableError && name === 'clearAll' )
+					{
+						this.clearTable();
 					}
 				},
 
@@ -3040,9 +3040,6 @@
 					// Stop any processing messaging.
 					this.updateStatus( 'processingData', false );
 
-					// Make the table NOT ready.
-					this.status.tableReady = false;
-
 					// Reset scroll positions.
 					this.resetScroll();
 
@@ -3071,7 +3068,13 @@
 					{
 						this.status.updatingPage   = state;
 					}
-				}
+				},
+
+				// Convert raw number to formatted.
+				formatNumberWithCommas : function ( x )
+				{
+					return x.toString().replace( /\B(?=(\d{3})+(?!\d))/g, "," );
+				},
 			},
 
 		computed :
@@ -3717,7 +3720,7 @@
 				// Returns the status for displaying the no data message.
 				noDataMessage : function ()
 				{
-					if ( this.status.tableReady && !this.status.processingData && !this.loader && !this.isViewAvailable )
+					if ( !this.status.processingData && !this.loader && !this.isViewAvailable && !this.status.updatingPage && !this.status.searching)
 					{
 						if ( !this.gettingStarted )
 						{

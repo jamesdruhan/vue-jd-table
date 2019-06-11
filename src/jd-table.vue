@@ -177,7 +177,7 @@
 					<div class="dropdownHeader subHeader">Active Filters</div>
 
 					<!-- Filtered Results -->
-					<div class="dropdownHeader smallHeader">Filtered Results: {{ processedDataSize }}</div>
+					<div class="dropdownHeader smallHeader">Filtered Results: {{ formatNumberWithCommas ( processedDataSize ) }}</div>
 
 					<!-- Active Filters -->
 					<div class="dropdownInput disabled" v-for="( filter, index ) in filters.active">
@@ -450,12 +450,6 @@
 				rendering :
 					{
 						engine                  : 0,
-						rowMiddleIndex          : 0,
-						rowTopIndex             : 0,
-						rowBottomIndex          : 0,
-						triggerTopPositionPX    : null,
-						triggerBottomPositionPX : null,
-						virtualHeight           : null,
 						isScrolling             : null,
 						resettingScroll         : false,
 						contentFrameWidth       : null,
@@ -473,7 +467,20 @@
 								leftPages                    : [],
 								rightPages                   : [],
 								currentSelectedPageRowOption : null,
-								externalDataSize             : null
+							},
+						virtual  :
+							{
+								rowMiddleIndex          : 0,
+								rowTopIndex             : 0,
+								rowBottomIndex          : 0,
+								triggerTopPositionPX    : null,
+								triggerBottomPositionPX : null,
+								height                  : null,
+							},
+						external :
+							{
+								dataSize      : null,
+								firstRowIndex : null
 							}
 					},
 
@@ -861,7 +868,7 @@
 					// If auto rendering is the engine, re-render.
 					if ( this.rendering.engine === 0 )
 					{
-						this.renderView( this.rendering.rowMiddleIndex );
+						this.renderView( this.rendering.virtual.rowMiddleIndex );
 					}
 
 					this.checkMobile();
@@ -1132,7 +1139,7 @@
 						// Re-render the rows based on the new window size.
 						if ( !this.rendering.engine )
 						{
-							this.renderView( this.rendering.rowMiddleIndex );
+							this.renderView( this.rendering.virtual.rowMiddleIndex );
 						}
 					};
 
@@ -1667,21 +1674,32 @@
 						// External Data
 						if ( this.setting.dataProvider === 1 )
 						{
+							const virtualViewRequestForData = () =>
+							{
+
+							};
+
 							if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Object' )
 							{
 								if ( this.eventFromApp.payload.data.length > 0 )
 								{
 									// Assign the results true length.
-									this.rendering.pagination.externalDataSize = this.eventFromApp.payload.count;
+									this.rendering.external.dataSize = this.eventFromApp.payload.count;
 
 									// Assign the current skip index.
-									this.rendering.pagination.externalSkipIndex = this.eventFromApp.payload.index;
+									this.rendering.external.firstRowIndex = this.eventFromApp.payload.firstRowIndex;
 
 									// Assign the data to the component.
 									this.data = this.eventFromApp.payload.data;
 
 									// Reset scroll position.
 									this.resetScroll();
+
+									// Check for virtual view, if enabled, calculate request for data positions.
+									if ( this.setting.renderEngine === 0 )
+									{
+										virtualViewRequestForData();
+									}
 
 									// Process the data through filters/search.
 									this.processData().then( () =>
@@ -1834,12 +1852,12 @@
 					let updatedView = [];
 
 					// Set the virtual height div.
-					this.rendering.virtualHeight = 0;
+					this.rendering.virtual.height = 0;
 
 					if ( this.processedDataSize > 0 )
 					{
 						// Update the virtual height div.
-						this.rendering.virtualHeight = this.processedDataSize * this.setting.rowHeight;
+						this.rendering.virtual.height = this.processedDataSize * this.setting.rowHeight;
 
 						let startPosition = renderPosition - VIRTUAL_BUFFER_SIZE();
 						let endPosition   = renderPosition + VIRTUAL_BUFFER_SIZE() + VIRTUAL_ROWS_IN_VIEW();
@@ -1867,13 +1885,13 @@
 						}
 
 						// Update the currently rendered top row (index).
-						this.rendering.rowTopIndex = startPosition;
+						this.rendering.virtual.rowTopIndex = startPosition;
 
 						// Update the currently rendered bottom row (index).
-						this.rendering.rowBottomIndex = endPosition;
+						this.rendering.virtual.rowBottomIndex = endPosition;
 
 						// Update the currently rendered position.
-						this.rendering.rowMiddleIndex = renderPosition;
+						this.rendering.virtual.rowMiddleIndex = renderPosition;
 
 						// Set the next render positions (top/bottom).
 						this.setRenderPositions();
@@ -1903,7 +1921,7 @@
 						let endIndex   = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows );
 
 						// Correction for external data.
-						if ( this.rendering.pagination.externalDataSize )
+						if ( this.rendering.external.dataSize )
 						{
 							startIndex = 0;
 							endIndex   = this.processedData.length;
@@ -2212,7 +2230,7 @@
 						this.rendering.pagination.changingRows          = false;
 						this.rendering.pagination.leftPages             = [];
 						this.rendering.pagination.rightPages            = [];
-						this.rendering.pagination.externalDataSize      = null;
+						this.rendering.external.dataSize        = null;
 
 						// Emit pagination event.
 						if ( this.setting.dataProvider === 1 )
@@ -2257,25 +2275,25 @@
 						};
 
 						// Calculate the next render (top) position.
-						if ( this.rendering.rowTopIndex === 0 )
+						if ( this.rendering.virtual.rowTopIndex === 0 )
 						{
-							this.rendering.triggerTopPositionPX = -1;
+							this.rendering.virtual.triggerTopPositionPX = -1;
 						}
 						else
 						{
 							// Re-render when the scroll bar is at a position where only 5 rows exist above.
-							this.rendering.triggerTopPositionPX = Math.floor( CURRENT_VIEW_POSITION_PX() + ( CURRENT_VIEW_HEIGHT() / 8 ) );
+							this.rendering.virtual.triggerTopPositionPX = Math.floor( CURRENT_VIEW_POSITION_PX() + ( CURRENT_VIEW_HEIGHT() / 8 ) );
 						}
 
 						// Calculate the next render (bottom) position.
-						if ( this.rendering.rowBottomIndex === ( this.processedDataSize - 1 ) )
+						if ( this.rendering.virtual.rowBottomIndex === ( this.processedDataSize - 1 ) )
 						{
-							this.rendering.triggerBottomPositionPX = -1;
+							this.rendering.virtual.triggerBottomPositionPX = -1;
 						}
 						else
 						{
 							// Re-render when scroll bar is at a position where only 2 pages of rows exist.
-							this.rendering.triggerBottomPositionPX = Math.floor ( ( CURRENT_VIEW_POSITION_PX() + CURRENT_VIEW_HEIGHT() ) - ( CURRENT_BODY_HEIGHT() * 2.0 ) );
+							this.rendering.virtual.triggerBottomPositionPX = Math.floor ( ( CURRENT_VIEW_POSITION_PX() + CURRENT_VIEW_HEIGHT() ) - ( CURRENT_BODY_HEIGHT() * 2.0 ) );
 						}
 					});
 				},
@@ -2297,15 +2315,15 @@
 						let scrollPositionPX = this.$refs.bodyData.scrollTop;
 
 						// Calculate the % (0 - 100) the scroll position is.
-						let scrollPositionPercent = scrollPositionPX / this.rendering.virtualHeight;
+						let scrollPositionPercent = scrollPositionPX / this.rendering.virtual.height;
 
 						// Calculate the next potential render position in the data.
 						let potentialRenderPosition = Math.floor( this.processedDataSize * scrollPositionPercent );
 
 						// Scrolling Up Check
-						if ( scrollPositionPX < this.rendering.triggerTopPositionPX )
+						if ( scrollPositionPX < this.rendering.virtual.triggerTopPositionPX )
 						{
-							if ( this.rendering.triggerTopPositionPX >= 0 )
+							if ( this.rendering.virtual.triggerTopPositionPX >= 0 )
 							{
 								// Show the processing message.
 								this.updateStatus( 'processingData', true );
@@ -2318,9 +2336,9 @@
 						}
 
 						// Scrolling Down Check.
-						if ( scrollPositionPX > this.rendering.triggerBottomPositionPX )
+						if ( scrollPositionPX > this.rendering.virtual.triggerBottomPositionPX )
 						{
-							if ( this.rendering.triggerBottomPositionPX >= 0 )
+							if ( this.rendering.virtual.triggerBottomPositionPX >= 0 )
 							{
 								// Show the processing message.
 								this.updateStatus( 'processingData', true );
@@ -2408,7 +2426,7 @@
 						this.columns.activeResize = null;
 					}, 75 );
 
-					this.renderViewVirtual( this.rendering.rowMiddleIndex );
+					this.renderViewVirtual( this.rendering.virtual.rowMiddleIndex );
 
 					window.removeEventListener( 'mouseup', this.resizeStop, false );
 				},
@@ -2417,8 +2435,8 @@
 				resetScroll : function ()
 				{
 					// Reset the render positions.
-					this.rendering.triggerTopPositionPX    = null;
-					this.rendering.triggerBottomPositionPX = null;
+					this.rendering.virtual.triggerTopPositionPX    = null;
+					this.rendering.virtual.triggerBottomPositionPX = null;
 
 					// This prevents the triggering of the onScroll function for body.
 					this.rendering.resettingScroll = true;
@@ -2499,7 +2517,7 @@
 					}
 
 					// Re-render the view.
-					this.renderView( this.rendering.rowMiddleIndex );
+					this.renderView( this.rendering.virtual.rowMiddleIndex );
 				},
 
 				// Sorts the original data.
@@ -3017,22 +3035,27 @@
 					this.filters.show              = false;
 
 					// Reset pagination.
-					this.rendering.pagination.currentPage             = 1;
-					this.rendering.pagination.currentPageHightlight   = null;
-					this.rendering.pagination.currentStartIndex       = null;
-					this.rendering.pagination.currentEndIndex         = null;
-					this.rendering.pagination.availablePages          = null;
-					this.rendering.pagination.currentPageRows         = this.rendering.pagination.currentSelectedPageRowOption;
-					this.rendering.pagination.changingRows            = false;
-					this.rendering.pagination.leftPages               = [];
-					this.rendering.pagination.rightPages              = [];
-					this.rendering.pagination.externalDataSize        = null;
-					this.rendering.pagination.rowBottomIndex          = 0;
-					this.rendering.pagination.rowTopIndex             = 0;
-					this.rendering.pagination.rowMiddleIndex          = 0;
-					this.rendering.pagination.triggerBottomPositionPX = 0;
-					this.rendering.pagination.triggerTopPositionPX    = 0;
-					this.rendering.pagination.virtualHeight           = 0;
+					this.rendering.pagination.currentPage           = 1;
+					this.rendering.pagination.currentPageHightlight = null;
+					this.rendering.pagination.currentStartIndex     = null;
+					this.rendering.pagination.currentEndIndex       = null;
+					this.rendering.pagination.availablePages        = null;
+					this.rendering.pagination.currentPageRows       = this.rendering.pagination.currentSelectedPageRowOption;
+					this.rendering.pagination.changingRows          = false;
+					this.rendering.pagination.leftPages             = [];
+					this.rendering.pagination.rightPages            = [];
+
+					// Reset virtual.
+					this.rendering.virtual.rowBottomIndex           = 0;
+					this.rendering.virtual.rowTopIndex              = 0;
+					this.rendering.virtual.rowMiddleIndex           = 0;
+					this.rendering.virtual.triggerBottomPositionPX  = 0;
+					this.rendering.virtual.triggerTopPositionPX     = 0;
+					this.rendering.virtual.height                   = 0;
+
+					// Reset external.
+					this.rendering.external.dataSize      = null;
+					this.rendering.extenral.firstRowIndex = null;
 
 					// Selection
 					this.row.selectedIndex = null;
@@ -3158,9 +3181,9 @@
 				processedDataSize : function ()
 				{
 					// Check if data is being fed from externally.
-					if ( this.rendering.pagination.externalDataSize )
+					if ( this.rendering.external.dataSize )
 					{
-						return this.rendering.pagination.externalDataSize;
+						return this.rendering.external.dataSize;
 					}
 
 					return this.processedData.length;
@@ -3424,7 +3447,7 @@
 				{
 					let styles =
 						{
-							height : this.rendering.virtualHeight + 'px'
+							height : this.rendering.virtual.height + 'px'
 						};
 
 					return styles;
@@ -3452,7 +3475,7 @@
 					if ( this.rendering.engine === 0 )
 					{
 						styles['position'] = 'absolute';
-						styles['top']      =( this.rendering.rowTopIndex * this.setting.rowHeight ) + 'px';
+						styles['top']      =( this.rendering.virtual.rowTopIndex * this.setting.rowHeight ) + 'px';
 					}
 
 					return styles;
@@ -3735,7 +3758,7 @@
 				componentState : function ()
 				{
 					return {
-						currentVirtualMiddleIndex : this.rendering.rowMiddleIndex,
+						currentVirtualMiddleIndex : this.rendering.virtual.rowMiddleIndex,
 						searchApplied             : this.search.searching,
 						searchText                : this.search.text,
 						filterApplied             : this.filters.active,

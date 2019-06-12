@@ -213,13 +213,13 @@
 				<!-- Table: Head -->
 				<div class="head" :style="tableHeadStyles">
 
-					<div v-for="( column, index ) in columns.list" v-if="column.enabled" @click="changeSort( index )" :title="sortTitle( index )" class="cell" :class="columns.activeHover === index ? ( 'hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
+					<div v-for="( column, index ) in columns.list" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="cell" :class="columns.activeHover === index ? ( 'hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
 
 						<div class="cellText">
 							<div class="title" v-html="column.title"></div>
 							<i v-if="setting.columnSort && columns.activeSortIndex === index && !columns.activeSortAsc" class="fas fa-sort-alpha-up"></i>
 							<i v-if="setting.columnSort && columns.activeSortIndex === index && columns.activeSortAsc" class="fas fa-sort-alpha-down"></i>
-							<i v-if="setting.columnSort && columns.activeSortIndex !== index" class="fas fa-sort-alpha-up hoverSort"></i>
+							<i v-if="setting.columnSort && columns.activeSortIndex !== index" class="fas fa-sort-alpha-down hoverSort"></i>
 						</div>
 
 						<div v-if="resizable" class="resize" @mousedown="resizeStart( index, $event )" @mousemove="resizeDrag( index, $event )" :class="index === columns.activeResize ? 'selected' : ''"></div>
@@ -476,11 +476,11 @@
 								triggerTopPositionPX    : null,
 								triggerBottomPositionPX : null,
 								height                  : null,
+								virtualBufferSize       : 5
 							},
 						external :
 							{
-								dataSize      : null,
-								firstRowIndex : null
+								dataSize                : null
 							}
 					},
 
@@ -498,6 +498,7 @@
 						activeResize       : null,
 						activeResizeStart  : null,
 						activeSortIndex    : 0,
+						activeSortName     : null,
 						activeSortAsc      : false,
 						selecting          : false,
 						selectionItemWidth : 25,
@@ -630,6 +631,11 @@
 		// Default     : True
 		// Description : Enables/disables the export to excel feature. Not compatible with IE11 or lower.
 		//
+		// Prop        : option.exportLimit
+		// Value       : [NUMBER]
+		// Default     : null (ALL)
+		// Description : Sets a restriction on how many records can be exported via Excel.
+		//
 		// Prop        : option.columnSort
 		// Value       : [BOOLEAN]
 		// Default     : True
@@ -689,12 +695,6 @@
 		// Default     : 250
 		// Description : Indicates the amount of rows that if the data exceeds will trigger the virtual rendering engine.
 		//             : Only used when renderEngine is set to 0 (auto).
-		//
-		// Prop        : option.virtualEngineExternalChunkSize
-		// Value       : [NUMBER - MUST BE EVEN]
-		// Default     : 500
-		// Description : Indicates the amount of rows that will be sent to JD-Table when the renderEngine uses the virtualEngine pagination.
-		//             : When a user attempts to view rows beyond this value (@ min/max indexes) a request for more external data will be made.
 		//
 		// Prop        : option.frameWidth
 		// Value       : [NUMBER]
@@ -1098,6 +1098,18 @@
 						}
 					};
 
+					// Force pagination for external data provider.
+					const DATA_PROVIDER_CHECK = () =>
+					{
+						if ( this.setting.dataProvider === 1 )
+						{
+							if ( this.setting.renderEngine !== 2 )
+							{
+								this.status.tableError = 'Error: External data provider is only supported by the Pagination render engine. Please change your settings.';
+							}
+						}
+					}
+
 					// Force disables features if browser is IE11.
 					const BROWSER_CHECK = () =>
 					{
@@ -1126,6 +1138,7 @@
 					SETUP_PAGINATION();
 					SETUP_SEARCH();
 					BROWSER_CHECK();
+					DATA_PROVIDER_CHECK();
 				},
 
 				// Manages all feature actions.
@@ -1219,70 +1232,103 @@
 					// Exports the current available data to excel.
 					const EXPORT = () =>
 					{
-						// Creates a HTML table to be exported.
-						const renderTable = () =>
+						// Check if a limit is set.
+						if ( this.setting.exportLimit )
 						{
-							var table = '<table><thead>';
-
-							table += '<tr>';
-
-							for ( let i = 0; i < this.columns.list.length; i++ )
+							if ( this.setting.dataProvider === 1 )
 							{
-								const column = this.columns.list[i];
-
-								table += '<th>';
-
-								if ( typeof( column.title ) === 'undefined' )
+								if ( this.rendering.external.dataSize > this.setting.exportLimit )
 								{
-									table += column.name;
+									alert(`Sorry, you can only export a maximum of ${ this.formatNumberWithCommas( this.setting.exportLimit ) } records at a time. There are currently ${ this.formatNumberWithCommas( this.rendering.external.dataSize ) } records in your table. Try filtering the records down further to use this feature.`)
 								}
-								else
-								{
-									table += column.title;
-								}
-
-								table += '</th>';
 							}
-
-							table += '</tr>';
-
-							table += '</thead><tbody>';
-
-							for ( let i = 0; i < this.processedData.length; i++ )
+							else
 							{
-								const row = this.processedData[i];
-
-								table += '<tr>';
-
-								for ( var j = 0; j < this.columns.list.length; j++ )
+								if ( this.processedData.length > this.setting.exportLimit )
 								{
-									const column = this.columns.list[j];
-
-									table += '<td>';
-									table += row[column.name];
-									table += '</td>';
+									alert(`Sorry, you can only export a maximum of ${ this.formatNumberWithCommas( this.setting.exportLimit ) } records at a time. There are currently ${ this.formatNumberWithCommas( this.processedData.length ) } records in your table. Try filtering the records down further to use this feature.`)
 								}
-
-								table += '</tr>';
 							}
+						}
+						else
+						{
+							if ( this.setting.dataProvider === 1 )
+							{
+								// Update the last action performed.
+								this.status.lastAction = 'excelExport';
 
-							table += '</tbody></table>';
+								this.updateStatus( 'processingData', true );
 
-							return table;
-						};
+								this.$emit( 'eventFromJDTable', this.componentState );
+							}
+							else
+							{
+								// Creates a HTML table to be exported.
+								const renderTable = () =>
+								{
+									var table = '<table><thead>';
 
-						const mimeType       = 'data:application/vnd.ms-excel;';
-						const htmlTable      = renderTable().replace(/ /g, '%20');
-						const documentPrefix = 'Export';
-						const d              = new Date();
-						let dummy            = document.createElement('a');
+									table += '<tr>';
 
-						dummy.href     = mimeType + ', ' + htmlTable;
-						dummy.download = documentPrefix
-							+ '-' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate()
-							+ '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds()
-							+'.xls';
-						dummy.click();
+									for ( let i = 0; i < this.columns.list.length; i++ )
+									{
+										const column = this.columns.list[i];
+
+										table += '<th>';
+
+										if ( typeof( column.title ) === 'undefined' )
+										{
+											table += column.name;
+										}
+										else
+										{
+											table += column.title;
+										}
+
+										table += '</th>';
+									}
+
+									table += '</tr>';
+
+									table += '</thead><tbody>';
+
+									for ( let i = 0; i < this.processedData.length; i++ )
+									{
+										const row = this.processedData[i];
+
+										table += '<tr>';
+
+										for ( var j = 0; j < this.columns.list.length; j++ )
+										{
+											const column = this.columns.list[j];
+
+											table += '<td>';
+											table += row[column.name];
+											table += '</td>';
+										}
+
+										table += '</tr>';
+									}
+
+									table += '</tbody></table>';
+
+									return table;
+								};
+
+								const mimeType       = 'data:application/vnd.ms-excel;';
+								const htmlTable      = renderTable().replace(/ /g, '%20');
+								const documentPrefix = 'Export';
+								const d              = new Date();
+								let dummy            = document.createElement('a');
+
+								dummy.href     = mimeType + ', ' + htmlTable;
+								dummy.download = documentPrefix
+									+ '-' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate()
+									+ '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds()
+									+'.xls';
+								dummy.click();
+							}
+						}
 					};
 
 					if ( name === 'MaxMinimize' )
@@ -1674,11 +1720,6 @@
 						// External Data
 						if ( this.setting.dataProvider === 1 )
 						{
-							const virtualViewRequestForData = () =>
-							{
-
-							};
-
 							if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Object' )
 							{
 								if ( this.eventFromApp.payload.data.length > 0 )
@@ -1686,20 +1727,8 @@
 									// Assign the results true length.
 									this.rendering.external.dataSize = this.eventFromApp.payload.count;
 
-									// Assign the current skip index.
-									this.rendering.external.firstRowIndex = this.eventFromApp.payload.firstRowIndex;
-
 									// Assign the data to the component.
 									this.data = this.eventFromApp.payload.data;
-
-									// Reset scroll position.
-									this.resetScroll();
-
-									// Check for virtual view, if enabled, calculate request for data positions.
-									if ( this.setting.renderEngine === 0 )
-									{
-										virtualViewRequestForData();
-									}
 
 									// Process the data through filters/search.
 									this.processData().then( () =>
@@ -1729,6 +1758,11 @@
 					if ( !this.status.tableError && name === 'clearAll' )
 					{
 						this.clearTable();
+					}
+
+					if ( !this.status.tableError && name === 'tableError' )
+					{
+						this.status.tableError = this.eventFromApp.payload;
 					}
 				},
 
@@ -1821,20 +1855,11 @@
 				// Renders the virtual view based on the passed position.
 				renderViewVirtual : function ( renderPosition )
 				{
-					// Calculate how many rows will fit in the current view (client table body).
-					const VIRTUAL_ROWS_IN_VIEW = () =>
-					{
-						// Get the current height of the table body container.
-						let viewHeight = this.$refs.bodyData.clientHeight;
-
-						return Math.ceil( viewHeight / this.setting.rowHeight );
-					};
-
 					// Calculate the virtual render buffer size. This # of items will be loaded before and after the view.
 					const VIRTUAL_BUFFER_SIZE = () =>
 					{
 						// Set the buffer size to 5 times the amount of rows that fit in the view.
-						return VIRTUAL_ROWS_IN_VIEW() * 5;
+						return this.getRowsInView() * this.rendering.virtual.virtualBufferSize;
 					};
 
 					// Determines if the renderPosition is near the start of the list.
@@ -1860,7 +1885,7 @@
 						this.rendering.virtual.height = this.processedDataSize * this.setting.rowHeight;
 
 						let startPosition = renderPosition - VIRTUAL_BUFFER_SIZE();
-						let endPosition   = renderPosition + VIRTUAL_BUFFER_SIZE() + VIRTUAL_ROWS_IN_VIEW();
+						let endPosition   = renderPosition + VIRTUAL_BUFFER_SIZE() + this.getRowsInView();
 
 						// If the render position is in the start zone, set to 0 (beginning) of data.
 						if ( VIRTUAL_START_ZONE( startPosition ) )
@@ -1874,6 +1899,15 @@
 							endPosition = this.processedDataSize - 1;
 						}
 
+						// Update the currently rendered top row (index).
+						this.rendering.virtual.rowTopIndex = startPosition;
+
+						// Update the currently rendered bottom row (index).
+						this.rendering.virtual.rowBottomIndex = endPosition;
+
+						// Update the currently rendered position.
+						this.rendering.virtual.rowMiddleIndex = renderPosition;
+
 						for ( let i = startPosition; i <= endPosition; i++ )
 						{
 							// Add item to end of view.
@@ -1883,15 +1917,6 @@
 								data  : this.processedData[i]
 							});
 						}
-
-						// Update the currently rendered top row (index).
-						this.rendering.virtual.rowTopIndex = startPosition;
-
-						// Update the currently rendered bottom row (index).
-						this.rendering.virtual.rowBottomIndex = endPosition;
-
-						// Update the currently rendered position.
-						this.rendering.virtual.rowMiddleIndex = renderPosition;
 
 						// Set the next render positions (top/bottom).
 						this.setRenderPositions();
@@ -1945,8 +1970,16 @@
 
 						if ( pageView.length > 0 )
 						{
-							this.rendering.pagination.currentStartIndex = startIndex;
-							this.rendering.pagination.currentEndIndex   = endIndex;
+							if ( this.setting.dataProvider === 1 )
+							{
+								this.rendering.pagination.currentStartIndex = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows ) - this.rendering.pagination.currentPageRows;
+								this.rendering.pagination.currentEndIndex   = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows );
+							}
+							else
+							{
+								this.rendering.pagination.currentStartIndex = startIndex;
+								this.rendering.pagination.currentEndIndex   = endIndex;
+							}
 						}
 						else
 						{
@@ -2491,8 +2524,11 @@
 				},
 
 				// Changes the sort column and/or direction.
-				changeSort : function ( columnIndex )
+				changeSort : function ( columnIndex, columnName )
 				{
+					// Update the last action performed.
+					this.status.lastAction = 'ChangeSort';
+
 					// Prevent sort on resize.
 					if ( this.columns.activeResize !== null )
 					{
@@ -2509,111 +2545,124 @@
 					{
 						this.columns.activeSortAsc = !this.columns.activeSortAsc;
 					}
-					// Sort the new column descending.
+					// Sort the new column ascending.
 					else
 					{
-						this.columns.activeSortIndex     = columnIndex;
-						this.columns.activeSortAsc = false;
+						this.columns.activeSortIndex = columnIndex;
+						this.columns.activeSortName  = columnName;
+						this.columns.activeSortAsc   = true;
 					}
 
-					// Re-render the view.
-					this.renderView( this.rendering.virtual.rowMiddleIndex );
+					if ( this.setting.dataProvider === 1 )
+					{
+						this.updateStatus( 'updatingPage', true );
+
+						this.$emit( 'eventFromJDTable', this.componentState );
+					}
+					else
+					{
+						// Re-render the view.
+						this.renderView( this.rendering.virtual.rowMiddleIndex );
+					}
 				},
 
 				// Sorts the original data.
 				sortData : function ()
 				{
-					let columnName     = this.columns.list[this.columns.activeSortIndex].name;
-					let columnSortType = this.columns.list[this.columns.activeSortIndex].type;
-
-					if ( this.processedDataSize > 0 )
+					if ( this.setting.dataProvider === 0 )
 					{
-						this.processedData.sort( ( a, b ) =>
+						let columnName     = this.columns.list[this.columns.activeSortIndex].name;
+						let columnSortType = this.columns.list[this.columns.activeSortIndex].type;
+
+						if ( this.processedDataSize > 0 )
 						{
-							// Sort the data with null values.
-							const sortByNull = ( x, y ) =>
+							this.processedData.sort( ( a, b ) =>
 							{
-								if ( !x[columnName] )
+								// Sort the data with null values.
+								const sortByNull = ( x, y ) =>
 								{
-									return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									if ( !x[columnName] )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+
+									if ( !y[columnName] )
+									{
+										return 1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 								}
 
-								if ( !y[columnName] )
+								// Sort the data by string.
+								const sortByString = ( x, y ) =>
 								{
-									return 1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
-								}
-							}
+									let stringX = x[columnName].toUpperCase();
+									let stringY = y[columnName].toUpperCase();
 
-							// Sort the data by string.
-							const sortByString = ( x, y ) =>
-							{
-								let stringX = x[columnName].toUpperCase();
-								let stringY = y[columnName].toUpperCase();
+									if ( stringX < stringY )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 
-								if ( stringX < stringY )
+									if ( stringX > stringY )
+									{
+										return 1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+
+									// Strings are the same.
+									return 0;
+								};
+
+								// Sort the data by number.
+								const sortByNumber = ( x, y ) =>
 								{
-									return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
-								}
+									return ( x[columnName] - y[columnName] ) * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+								};
 
-								if ( stringX > stringY )
+								// Sort the data by array. Sorts the first string in the array.
+								const sortByArray = ( x, y ) =>
 								{
-									return 1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
-								}
+									let stringX = x[columnName][0].toUpperCase();
+									let stringY = y[columnName][0].toUpperCase();
 
-								// Strings are the same.
-								return 0;
-							};
+									if ( stringX < stringY )
+									{
+										return -1;
+									}
 
-							// Sort the data by number.
-							const sortByNumber = ( x, y ) =>
-							{
-								return ( x[columnName] - y[columnName] ) * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
-							};
+									if ( stringX > stringY )
+									{
+										return 1;
+									}
 
-							// Sort the data by array. Sorts the first string in the array.
-							const sortByArray = ( x, y ) =>
-							{
-								let stringX = x[columnName][0].toUpperCase();
-								let stringY = y[columnName][0].toUpperCase();
+									// Strings are the same.
+									return 0;
+								};
 
-								if ( stringX < stringY )
+								// Check for nulls.
+								if ( !a[columnName] || !b[columnName] )
 								{
-									return -1;
+									return sortByNull ( a, b );
 								}
 
-								if ( stringX > stringY )
+								// If the column is a string, sort using string function.
+								if ( columnSortType === 'String' )
 								{
-									return 1;
+									return sortByString ( a, b );
 								}
 
-								// Strings are the same.
-								return 0;
-							};
+								// If the column is a Number, sort using Number function.
+								if ( columnSortType === 'Number' )
+								{
+									return sortByNumber ( a, b );
+								}
 
-							// Check for nulls.
-							if ( !a[columnName] || !b[columnName] )
-							{
-								return sortByNull ( a, b );
-							}
-
-							// If the column is a string, sort using string function.
-							if ( columnSortType === 'String' )
-							{
-								return sortByString ( a, b );
-							}
-
-							// If the column is a Number, sort using Number function.
-							if ( columnSortType === 'Number' )
-							{
-								return sortByNumber ( a, b );
-							}
-
-							// If the column is a Array, sort using Array function.
-							if ( columnSortType === 'Array' )
-							{
-								return sortByArray ( a, b );
-							}
-						});
+								// If the column is a Array, sort using Array function.
+								if ( columnSortType === 'Array' )
+								{
+									return sortByArray ( a, b );
+								}
+							});
+						}
 					}
 				},
 
@@ -3055,7 +3104,6 @@
 
 					// Reset external.
 					this.rendering.external.dataSize      = null;
-					this.rendering.extenral.firstRowIndex = null;
 
 					// Selection
 					this.row.selectedIndex = null;
@@ -3084,12 +3132,12 @@
 
 					if ( statusName === 'searching' )
 					{
-						this.status.searching      = state;
+						this.status.searching = state;
 					}
 
 					if ( statusName === 'updatingPage' )
 					{
-						this.status.updatingPage   = state;
+						this.status.updatingPage = state;
 					}
 				},
 
@@ -3098,6 +3146,15 @@
 				{
 					return x.toString().replace( /\B(?=(\d{3})+(?!\d))/g, "," );
 				},
+
+				// Returns the number of rows that can fit in the current view.
+				getRowsInView : function ()
+				{
+					// Get the current height of the table body container.
+					let viewHeight = this.$refs.bodyData.clientHeight;
+
+					return Math.ceil( viewHeight / this.setting.rowHeight );
+				}
 			},
 
 		computed :
@@ -3138,6 +3195,7 @@
 							resize                       : true,
 							filter                       : true,
 							export                       : true,
+							exportLimit                  : null,
 							columnSort                   : true,
 							quickView			         : true,
 
@@ -3146,7 +3204,6 @@
 							responsiveFrame                : true,
 							responsiveTable                : true,
 							virtualEngineRowStart          : 250,
-							virtualEngineExternalChunkSize : 500,
 							frameWidth                     : null,
 							headerHeight                   : 40,
 							dataHeight                     : null,
@@ -3758,15 +3815,16 @@
 				componentState : function ()
 				{
 					return {
-						currentVirtualMiddleIndex : this.rendering.virtual.rowMiddleIndex,
-						searchApplied             : this.search.searching,
-						searchText                : this.search.text,
-						filterApplied             : this.filters.active,
-						pageLimit                 : this.rendering.pagination.currentSelectedPageRowOption,
-						currentPage               : this.rendering.pagination.currentPage,
-						currentStartIndex         : this.rendering.pagination.currentStartIndex,
-						currentEndIndex           : this.rendering.pagination.currentEndIndex,
-						lastAction                : this.status.lastAction
+						searchApplied     : this.search.searching,
+						searchText        : this.search.text,
+						filterApplied     : this.filters.active,
+						pageLimit         : this.rendering.pagination.currentSelectedPageRowOption,
+						currentPage       : this.rendering.pagination.currentPage,
+						currentStartIndex : this.rendering.pagination.currentStartIndex,
+						currentEndIndex   : this.rendering.pagination.currentEndIndex,
+						lastAction        : this.status.lastAction,
+						sortColumn        : this.columns.activeSortName ? this.columns.activeSortName : this.columns.list[0].name,
+						sortDirection     : this.columns.activeSortAsc ? 'ASC' : 'DESC'
 					}
 				}
 			},

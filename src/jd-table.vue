@@ -164,7 +164,7 @@
 
 					<!-- Select Value Input -->
 					<div class="dropdownInput addPadding">
-						<input ref="filterInput" type="text" @input="filters.error = false" v-model="filters.beingBuilt.value" placeholder="Value"/>
+						<input @keyup.enter="addFilter" ref="filterInput" type="text" @input="filters.error = false" v-model="filters.beingBuilt.value" placeholder="Value"/>
 					</div>
 
 					<!-- Filter Apply Buttons -->
@@ -1103,7 +1103,7 @@
 					{
 						if ( this.setting.dataProvider === 1 )
 						{
-							if ( this.setting.renderEngine !== 2 )
+							if ( this.setting.renderEngine === 0 )
 							{
 								this.status.tableError = 'Error: External data provider is only supported by the Pagination render engine. Please change your settings.';
 							}
@@ -1240,6 +1240,8 @@
 								if ( this.rendering.external.dataSize > this.setting.exportLimit )
 								{
 									alert(`Sorry, you can only export a maximum of ${ this.formatNumberWithCommas( this.setting.exportLimit ) } records at a time. There are currently ${ this.formatNumberWithCommas( this.rendering.external.dataSize ) } records in your table. Try filtering the records down further to use this feature.`)
+
+									return;
 								}
 							}
 							else
@@ -1247,87 +1249,24 @@
 								if ( this.processedData.length > this.setting.exportLimit )
 								{
 									alert(`Sorry, you can only export a maximum of ${ this.formatNumberWithCommas( this.setting.exportLimit ) } records at a time. There are currently ${ this.formatNumberWithCommas( this.processedData.length ) } records in your table. Try filtering the records down further to use this feature.`)
+
+									return;
 								}
 							}
 						}
+
+						if ( this.setting.dataProvider === 1 )
+						{
+							// Update the last action performed.
+							this.status.lastAction = 'excelExport';
+
+							this.updateStatus( 'processingData', true );
+
+							this.$emit( 'eventFromJDTable', this.componentState );
+						}
 						else
 						{
-							if ( this.setting.dataProvider === 1 )
-							{
-								// Update the last action performed.
-								this.status.lastAction = 'excelExport';
-
-								this.updateStatus( 'processingData', true );
-
-								this.$emit( 'eventFromJDTable', this.componentState );
-							}
-							else
-							{
-								// Creates a HTML table to be exported.
-								const renderTable = () =>
-								{
-									var table = '<table><thead>';
-
-									table += '<tr>';
-
-									for ( let i = 0; i < this.columns.list.length; i++ )
-									{
-										const column = this.columns.list[i];
-
-										table += '<th>';
-
-										if ( typeof( column.title ) === 'undefined' )
-										{
-											table += column.name;
-										}
-										else
-										{
-											table += column.title;
-										}
-
-										table += '</th>';
-									}
-
-									table += '</tr>';
-
-									table += '</thead><tbody>';
-
-									for ( let i = 0; i < this.processedData.length; i++ )
-									{
-										const row = this.processedData[i];
-
-										table += '<tr>';
-
-										for ( var j = 0; j < this.columns.list.length; j++ )
-										{
-											const column = this.columns.list[j];
-
-											table += '<td>';
-											table += row[column.name];
-											table += '</td>';
-										}
-
-										table += '</tr>';
-									}
-
-									table += '</tbody></table>';
-
-									return table;
-								};
-
-								const mimeType       = 'data:application/vnd.ms-excel;';
-								const htmlTable      = renderTable().replace(/ /g, '%20');
-								const documentPrefix = 'Export';
-								const d              = new Date();
-								let dummy            = document.createElement('a');
-
-								dummy.href     = mimeType + ', ' + htmlTable;
-								dummy.download = documentPrefix
-									+ '-' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate()
-									+ '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds()
-									+'.xls';
-								dummy.click();
-							}
+							this.exportExcel( this.processedData );
 						}
 					};
 
@@ -1381,6 +1320,81 @@
 						PAGINATION_CLEAN_UP();
 
 						EXPORT();
+					}
+				},
+
+				// Exports data to excel
+				exportExcel : function ( data )
+				{
+					// Creates a HTML table to be exported.
+					const renderTable = () =>
+					{
+						var table = '<table><thead>';
+
+						table += '<tr>';
+
+						for ( let i = 0; i < this.columns.list.length; i++ )
+						{
+							const column = this.columns.list[i];
+
+							table += '<th>';
+
+							if ( typeof( column.title ) === 'undefined' )
+							{
+								table += column.name;
+							}
+							else
+							{
+								table += column.title;
+							}
+
+							table += '</th>';
+						}
+
+						table += '</tr>';
+
+						table += '</thead><tbody>';
+
+						for ( let i = 0; i < this.data.length; i++ )
+						{
+							const row = this.data[i];
+
+							table += '<tr>';
+
+							for ( var j = 0; j < this.columns.list.length; j++ )
+							{
+								const column = this.columns.list[j];
+
+								table += '<td>';
+								table += row[column.name];
+								table += '</td>';
+							}
+
+							table += '</tr>';
+						}
+
+						table += '</tbody></table>';
+
+						return table;
+					};
+
+					let userAgent      = window.navigator.userAgent;
+					let browserDetails = userAgent.indexOf("MSIE ");
+
+					if ( browserDetails > 0 || !!navigator.userAgent.match( /Trident.*rv\:11\./ ) )
+					{
+						console.log('2');
+						excelExportArea.document.open( "txt/html","replace" );
+						excelExportArea.document.write( renderTable().replace(/ /g, '%20') );
+						excelExportArea.document.close();
+						excelExportArea.focus();
+
+						excelExportArea.document.execCommand( "SaveAs",true,"NamedAccount_Export.xls" );
+					}
+					else
+					{
+						console.log('1');
+						window.open( 'data:application/vnd.ms-excel,' + encodeURIComponent( renderTable().replace(/ /g, '%20') ) );
 					}
 				},
 
@@ -1763,6 +1777,15 @@
 					if ( !this.status.tableError && name === 'tableError' )
 					{
 						this.status.tableError = this.eventFromApp.payload;
+					}
+
+					if ( !this.status.tableError && name === 'exportExcel' )
+					{
+						console.log('Hi');
+						this.exportExcel( this.eventFromApp.payload );
+
+						// Clear any messaging/statuses.
+						this.updateStatus( null, null );
 					}
 				},
 
@@ -2820,6 +2843,8 @@
 						// dataProvider = 1 | Filtering is performed externally (emitted).
 						if ( this.setting.dataProvider === 1 )
 						{
+							this.updateStatus( 'updatingPage', true );
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
@@ -2852,6 +2877,8 @@
 					// dataProvider = 1 | Filtering is performed externally (emitted).
 					if ( this.setting.dataProvider === 1 )
 					{
+						this.updateStatus( 'updatingPage', true );
+
 						this.$emit( 'eventFromJDTable', this.componentState );
 					}
 					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
@@ -2889,6 +2916,8 @@
 					// dataProvider = 1 | Filtering is performed externally (emitted).
 					if ( this.setting.dataProvider === 1 )
 					{
+						this.updateStatus( 'updatingPage', true );
+
 						this.$emit( 'eventFromJDTable', this.componentState );
 					}
 					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.

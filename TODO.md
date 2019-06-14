@@ -77,6 +77,8 @@
                 - Starts "Searching" status 
             - (External) ClearSearch
                 - Starts "Updating Page" status
+            - (External) ChangeView
+                - Starts "Updating Page" status
 - Parent Events to JDTable (Prop)
     - sendData
         - Format
@@ -97,3 +99,4 @@
     - Only available when resize option is true and table is not responsive.
 - Column Hide/Show
 - Quick View (Double Click Row)
+- Views

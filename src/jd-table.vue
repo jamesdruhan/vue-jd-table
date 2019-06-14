@@ -41,6 +41,11 @@
 					<i class="fas fa-sync-alt" title="Refresh"></i>
 				</span>
 
+				<!-- Feature: View -->
+				<span v-if="setting.views.length > 0" @click="featureAction('View')" class="controlItem">
+					<i class="far fa-eye" title="View"></i>
+				</span>
+
 				<!-- Feature: Pagination Select -->
 				<span v-if="rendering.engine === 2" @click="featureAction('Pagination')" class="controlItem" :class="rendering.pagination.changingRows ? 'selected' : ''">
 					<i class="fas fa-scroll" title="Rows Per Page"></i>
@@ -202,6 +207,21 @@
 				</div>
 			</transition>
 
+			<!-- Option: View -->
+			<transition name="jdTableSlideDown">
+				<div v-if="rendering.views.changingViews" class="optionDropdown" :style="optionDropdownStyles">
+
+					<!-- Header -->
+					<div class="dropdownHeader">Views</div>
+
+					<!-- View List -->
+					<div v-for="row in rendering.views.list" @click="changeViews( row )" class="dropdownItem paginationItem JD-Clickable" :class="rendering.views.currentSelectedView === row.viewName ? 'selected' : ''">
+						{{ row.viewName }}
+					</div>
+
+				</div>
+			</transition>
+
 		</div>
 
 		<!-- Layer: Content -->
@@ -213,7 +233,7 @@
 				<!-- Table: Head -->
 				<div class="head" :style="tableHeadStyles">
 
-					<div v-for="( column, index ) in columns.list" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="cell" :class="columns.activeHover === index ? ( 'hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
+					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="cell" :class="columns.activeHover === index ? ( 'hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
 
 						<div class="cellText">
 							<div class="title" v-html="column.title"></div>
@@ -235,7 +255,7 @@
 
 					<div ref="viewData" :style="bodyViewStyles">
 						<div v-if="isViewAvailable" v-for="row in view" @dblclick="rowAction( row.index )" class="row" :class="viewRowClasses" :style="viewRowStyles">
-							<div v-for="( column, columnIndex ) in columns.list" v-if="column.enabled" class="cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
+							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
 								{{ row.data[column.name] }}
 							</div>
 						</div>
@@ -473,7 +493,7 @@
 								rightPages                   : [],
 								currentSelectedPageRowOption : null,
 							},
-						virtual  :
+						virtual :
 							{
 								rowMiddleIndex          : 0,
 								rowTopIndex             : 0,
@@ -485,7 +505,14 @@
 							},
 						external :
 							{
-								dataSize                : null
+								dataSize : null
+							},
+						views :
+							{
+								changingViews       : false,
+								currentSelectedView : null,
+								list                : [],
+								currentView   : []
 							}
 					},
 
@@ -797,6 +824,32 @@
 		// Default     : Null
 		// Description : Display's a title at the top of the table.
 		//
+		// Prop        : option.views
+		// Value       : [ARRAY]
+		// Default     : Null
+		// Description : List of available views that are in addition to the default. Each array item should be an object with column view details.
+		//             : [
+		//             :    {   // View #1
+		//             :        viewName : 'My Awesome View',
+		//             :        schema   :
+		//             :        [
+		//             :            {   // Column #1
+		//			   :	        	name          : [STRING] name of the column in the JSON data.
+		//			   :	        	title         : [STRING] title used in the table header.
+		//			   :	        	width         : [NUMBER] used for the width of the column.
+		//			   :	        		          : When option.responsiveTable = FALSE --> Width provided will be PX.
+		//             :                              : When option.responsiveTable = TRUE --> Width provided will be %.
+		//	 		   :	        	order         : [NUMBER] which defines the order of columns from left to right.
+		//             :                sort          : [BOOLEAN] sets the column as the initially sorted column.
+		// 			   :	            sortDirection : [STRING] sets the direction of the initially sorted column: 'desc' or 'asc'.
+		// 			   :	        	type          : [STRING] which defines the type of data in the column. Options are: 'String' and 'Number'.
+		// 			   :	        	filterable    : [BOOLEAN] which determines if the column can be filtered.
+		// 			   :	        	enabled       : [BOOLEAN] which determines if the column is shown/enabled on initial load.
+		//             :            }, ...
+		//             :        ]
+		//             :    }, ...
+		//             : ]
+		//
 		// EVENT ----
 		//
 		// Prop        : eventFromApp.name
@@ -906,22 +959,6 @@
 									this.status.tableError = 'Error: Invalid settings. One of the defined columns does not have a type assigned.';
 								}
 
-								// Sets the column as default sorted.
-								if ( userColumn.sort )
-								{
-									this.columns.activeSortIndex = index;
-
-									if ( typeof( userColumn.sortDirection ) === 'string' )
-									{
-										this.columns.activeSortAsc = false;
-
-										if ( userColumn.sortDirection === 'asc' )
-										{
-											this.columns.activeSortAsc = true;
-										}
-									}
-								}
-
 								// Set column width value.
 								let columnWidth = null;
 
@@ -948,15 +985,17 @@
 
 								this.$set( this.columns.list, index,
 									{
-										name         : userColumn.name,
-										title        : userColumn.title,
-										width        : columnWidth,
-										order        : userColumn.order,
-										type         : userColumn.type,
-										filterable   : filterable,
-										enabled      : enabled,
-										headerStyles : {},
-										dataStyles   : {}
+										name          : userColumn.name,
+										title         : userColumn.title,
+										width         : columnWidth,
+										order         : userColumn.order,
+										type          : userColumn.type,
+										filterable    : filterable,
+										enabled       : enabled,
+										headerStyles  : {},
+										dataStyles    : {},
+										sort          : userColumn.sort ? userColumn.sort : false,
+										sortDirection : userColumn.sortDirection ? userColumn.sortDirection : null,
 									});
 							});
 
@@ -965,6 +1004,60 @@
 							{
 								return a.order - b.order;
 							});
+
+							let viewLength = this.rendering.views.list.push
+							({
+								viewName : 'Default',
+								schema   : []
+							});
+
+							// Create default view.
+							this.columns.list.forEach ( ( column ) =>
+							{
+								if ( column.enabled )
+								{
+									this.rendering.views.list[viewLength - 1].schema.push( column );
+								}
+							});
+
+							// Sort the default view.
+							this.rendering.views.list[viewLength - 1].schema.sort( ( a, b ) =>
+							{
+								return a.order - b.order;
+							});
+
+							// Set the default view and active.
+							this.rendering.views.currentView = this.rendering.views.list[viewLength - 1];
+
+							let hasBeenSorted = false;
+
+							this.rendering.views.currentView.schema.forEach( ( viewColumn, viewIndex ) =>
+							{
+								// Sets the column as default sorted.
+								if ( viewColumn.sort )
+								{
+									this.columns.activeSortIndex = viewIndex;
+									this.columns.activeSortName  = viewColumn.name;
+
+									if ( typeof( viewColumn.sortDirection ) === 'string' )
+									{
+										this.columns.activeSortAsc = false;
+
+										if ( viewColumn.sortDirection === 'asc' )
+										{
+											this.columns.activeSortAsc = true;
+										}
+									}
+								}
+							});
+
+							// No sorting set, use first column.
+							if ( !hasBeenSorted )
+							{
+								this.columns.activeSortIndex = 0;
+								this.columns.activeSortAsc   = true
+								this.columns.activeSortName  = this.rendering.views.currentView.schema[0].name;
+							}
 						}
 						else
 						{
@@ -1114,12 +1207,40 @@
 						}
 					};
 
+					// Build views.
+					const BUILD_VIEWS = () =>
+					{
+						if ( this.setting.views.length > 0 )
+						{
+							// Validate view(s) format.
+							this.setting.views.forEach( ( view ) =>
+							{
+								if ( view.viewName.constructor.name === 'String' && view.schema.constructor.name === 'Array' && view.schema.length > 0 )
+								{
+									// Valid View.
+									let viewLength = this.rendering.views.list.push( view );
+
+									// Sort the default view.
+									this.rendering.views.list[viewLength - 1].schema.sort( ( a, b ) =>
+									{
+										return a.order - b.order;
+									});
+								}
+								else
+								{
+									this.status.tableError = 'Error: There was a problem validating a view configuration. Validate the JD-Table settings.';
+								}
+							});
+						}
+					}
+
 					INIT_COLUMNS();
 					SETUP_MAXIMIZE();
 					SETUP_SIZES();
 					SETUP_PAGINATION();
 					SETUP_SEARCH();
 					DATA_PROVIDER_CHECK();
+					BUILD_VIEWS();
 				},
 
 				// Manages all feature actions.
@@ -1211,6 +1332,18 @@
 						this.rendering.pagination.changingRows = false;
 					};
 
+					// Clean up any view row changing options.
+					const VIEW_CLEAN_UP = () =>
+					{
+						this.rendering.views.changingViews = false;
+					};
+
+					// Show/hide the view changing option.
+					const VIEW = () =>
+					{
+						this.rendering.views.changingViews = !this.rendering.views.changingViews;
+					};
+
 					// Exports the current available data to excel.
 					const EXPORT = () =>
 					{
@@ -1270,6 +1403,8 @@
 					{
 						FILTER_CLEAN_UP();
 						COLUMNS_CLEAN_UP();
+						PAGINATION_CLEAN_UP();
+						VIEW_CLEAN_UP();
 
 						MAXIMIZE();
 					}
@@ -1277,6 +1412,8 @@
 					{
 						FILTER_CLEAN_UP();
 						COLUMNS_CLEAN_UP();
+						PAGINATION_CLEAN_UP();
+						VIEW_CLEAN_UP();
 
 						SEARCH();
 					}
@@ -1285,6 +1422,7 @@
 						FILTER_CLEAN_UP();
 						COLUMNS_CLEAN_UP();
 						PAGINATION_CLEAN_UP();
+						VIEW_CLEAN_UP();
 
 						REFRESH();
 					}
@@ -1292,6 +1430,7 @@
 					{
 						FILTER_CLEAN_UP();
 						PAGINATION_CLEAN_UP();
+						VIEW_CLEAN_UP();
 
 						COLUMNS();
 					}
@@ -1299,6 +1438,7 @@
 					{
 						COLUMNS_CLEAN_UP();
 						PAGINATION_CLEAN_UP();
+						VIEW_CLEAN_UP();
 
 						FILTER();
 					}
@@ -1306,6 +1446,7 @@
 					{
 						COLUMNS_CLEAN_UP();
 						FILTER_CLEAN_UP();
+						VIEW_CLEAN_UP();
 
 						PAGINATION();
 					}
@@ -1314,8 +1455,17 @@
 						FILTER_CLEAN_UP();
 						COLUMNS_CLEAN_UP();
 						PAGINATION_CLEAN_UP();
+						VIEW_CLEAN_UP();
 
 						EXPORT();
+					}
+					else if ( name === 'View' )
+					{
+						COLUMNS_CLEAN_UP();
+						FILTER_CLEAN_UP();
+						PAGINATION_CLEAN_UP();
+
+						VIEW();
 					}
 				},
 
@@ -2305,6 +2455,88 @@
 					}
 				},
 
+				// Changes the current view (Shows/hides a grouping of columns).
+				changeViews : function ( view )
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'ChangeView';
+
+					if ( view )
+					{
+						if ( this.rendering.views.currentSelectedView !== view.viewName )
+						{
+							// Update the status.
+							this.updateStatus( 'updatingPage', true );
+
+							// Update the current view.
+							this.rendering.views.currentSelectedView = view.viewName;
+							this.rendering.views.currentView         = view;
+
+							// Update the visibility on all columns based on the view.
+							this.columns.list.forEach ( ( column ) =>
+							{
+								let matchedColumn = this.rendering.views.currentView.schema.find( ( viewColumn ) =>
+								{
+									return column.name === viewColumn.name;
+								});
+
+								if ( matchedColumn )
+								{
+									column.enabled = true;
+								}
+								else
+								{
+									column.enabled = false
+								}
+							});
+
+							let hasBeenSorted = false;
+
+							// Update the sort.
+							this.rendering.views.currentView.schema.forEach( ( viewColumn, viewIndex ) =>
+							{
+								if ( viewColumn.sort )
+								{
+									this.columns.activeSortIndex = viewIndex;
+									this.columns.activeSortName  = viewColumn.name;
+									hasBeenSorted                = true;
+
+									if ( typeof( viewColumn.sortDirection ) === 'string' )
+									{
+										this.columns.activeSortAsc = false;
+
+										if ( viewColumn.sortDirection === 'asc' )
+										{
+											this.columns.activeSortAsc = true;
+										}
+									}
+								}
+							});
+
+							if ( !hasBeenSorted )
+							{
+								this.columns.activeSortIndex = 0;
+								this.columns.activeSortAsc   = true
+								this.columns.activeSortName  = this.rendering.views.currentView.schema[0].name;
+							}
+
+							if ( this.setting.dataProvider === 1 )
+							{
+								this.updateStatus( 'updatingPage', true );
+
+								this.$emit( 'eventFromJDTable', this.componentState );
+							}
+							else
+							{
+								// Re-render the view.
+								this.renderView();
+							}
+						}
+					}
+
+					this.rendering.views.changingViews = false;
+				},
+
 				// Virtual Engine: Sets the next top and bottom re-rendering position points in pixels.
 				setRenderPositions : function ()
 				{
@@ -2587,7 +2819,7 @@
 					else
 					{
 						// Re-render the view.
-						this.renderView( this.rendering.virtual.rowMiddleIndex );
+						this.renderView();
 					}
 				},
 
@@ -2934,7 +3166,7 @@
 					}
 				},
 
-				// Changes the column visibility.
+				// Changes the column visibility. Adds/removes column from view.
 				columnSelection : function ( selectedColumn )
 				{
 					// If disabling, enforce at least 1 enabled.
@@ -2943,7 +3175,7 @@
 						let enabledCount = 0;
 
 						// Check how many are enabled.
-						this.columns.list.forEach( ( column ) =>
+						this.rendering.views.currentView.schema.forEach( ( column ) =>
 						{
 							if ( column.enabled )
 							{
@@ -2954,8 +3186,18 @@
 						// Must have at least 1 enabled to disable.
 						if ( enabledCount > 1 )
 						{
+							// Spice column out of currentView.
+							let columnToSplice = this.rendering.views.currentView.schema.findIndex( ( viewColumn ) =>
+							{
+								return selectedColumn.name === viewColumn.name;
+							});
+
+							// Update column.
 							selectedColumn.enabled      = false;
 							this.columns.selectionError = false;
+
+							// Remove from array.
+							this.rendering.views.currentView.schema.splice( columnToSplice, 1 );
 
 							// Check mobile size.
 							this.checkMobile();
@@ -2969,6 +3211,9 @@
 					{
 						this.columns.selectionError = false;
 						selectedColumn.enabled      = true;
+
+						// Add to array. The view isn't sorted, its just added to the end.
+						this.rendering.views.currentView.schema.push( selectedColumn );
 
 						// Check mobile size.
 						this.checkMobile();
@@ -3324,7 +3569,8 @@
 							controls            : true,
 							footer              : true,
 
-							title               : null
+							title               : null,
+							views               : []
 						}, this.option
 					);
 				},
@@ -3681,7 +3927,7 @@
 					let totalWidth   = 0;
 					let missingWidth = false;
 
-					this.columns.list.forEach( ( column ) =>
+					this.rendering.views.currentView.schema.forEach( ( column ) =>
 					{
 						if ( column.enabled )
 						{

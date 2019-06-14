@@ -257,6 +257,7 @@
 		.controlItem
 		{
 			height                : 100%;
+			position              : relative;
 			cursor                : pointer;
 			color                 : $jdTable_ControlTextColour;
 			display               : inline-block;
@@ -342,18 +343,19 @@
 			{
 				position      : absolute;
 				top           : $jdTable_HighLightHeight + $jdTable_ControlHeight;
-				left          : 0.3rem;
+				right         : -0.5rem;
 				background    : lighten( $jdTable_BaseBorderColour, 50% );
 				border        : 1px solid $jdTable_BaseBorderColour;
 				padding       : 0.5rem;
 				color         : $jdTable_BaseTextColour;
 				animation     : bounce 2s infinite;
 				border-radius : 6px;
+				white-space   : nowrap;
 
 				&:after, &:before
 				{
 					bottom         : 100%;
-					left           : 62%;
+					right          : 1.5rem;
 					border         : solid transparent;
 					content        : " ";
 					height         : 0;
@@ -366,15 +368,16 @@
 				{
 					border-color        : rgba(224, 224, 224, 0);
 					border-bottom-color : lighten( $jdTable_BaseBorderColour, 50% );
-					border-width        : 5px;
-					margin-left         : -5px;
+					border-width        : 12px;
+					margin-right        : -12px;
 				}
+
 				&:before
 				{
 					border-color        : rgba(73, 73, 73, 0);
 					border-bottom-color : $jdTable_BaseBorderColour;
 					border-width        : 18px;
-					margin-left         : -18px;
+					margin-right        : -18px;
 				}
 			}
 
@@ -389,6 +392,7 @@
 				color         : $jdTable_BaseTextColour;
 				animation     : bounce 2s infinite;
 				border-radius : 6px;
+				white-space   : nowrap;
 
 				&:after, &:before
 				{
@@ -406,8 +410,8 @@
 				{
 					border-color        : rgba(224, 224, 224, 0);
 					border-bottom-color : lighten( $jdTable_BaseBorderColour, 50% );
-					border-width        : 5px;
-					margin-left         : -5px;
+					border-width        : 12px;
+					margin-left         : -12px;
 				}
 
 				&:before

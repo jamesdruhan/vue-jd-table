@@ -41,11 +41,6 @@
 					<i class="fas fa-sync-alt" title="Refresh"></i>
 				</span>
 
-				<!-- Feature: View -->
-				<span v-if="setting.views.length > 0" @click="featureAction('View')" class="controlItem">
-					<i class="far fa-eye" title="View"></i>
-				</span>
-
 				<!-- Feature: Pagination Select -->
 				<span v-if="rendering.engine === 2" @click="featureAction('Pagination')" class="controlItem" :class="rendering.pagination.changingRows ? 'selected' : ''">
 					<i class="fas fa-scroll" title="Rows Per Page"></i>
@@ -64,6 +59,11 @@
 					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !filters.show && !status.processingData && !loader" class="filterArrow">
 						{{ setting.startBySearchArrowFilterText }}
 					</div>
+				</span>
+
+				<!-- Feature: View -->
+				<span v-if="setting.views.length > 0" @click="featureAction('View')" class="controlItem">
+					<i class="far fa-eye" title="View"></i>
 				</span>
 
 				<!-- Feature: Export -->
@@ -254,7 +254,7 @@
 					<div v-if="rendering.engine === 0" class="virtualBody" :style="bodyVirtualStyles"></div>
 
 					<div ref="viewData" :style="bodyViewStyles">
-						<div v-if="isViewAvailable" v-for="row in view" @dblclick="rowAction( row.index )" class="row" :class="viewRowClasses" :style="viewRowStyles">
+						<div v-if="isViewAvailable" v-for="row in currentTableData" @dblclick="rowAction( row.index )" class="row" :class="viewRowClasses" :style="viewRowStyles">
 							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
 								{{ row.data[column.name] }}
 							</div>
@@ -463,8 +463,8 @@
 						lastAction     : null,
 					},
 
-				view : [],
-				data : [],
+				currentTableData : [],
+				data             : [],
 
 				feature :
 					{
@@ -931,6 +931,12 @@
 				// Configures the table according to the init props.
 				initializeTable : function ()
 				{
+					// Sets the rendering engine.
+					const INIT_ENGINE = () =>
+					{
+						this.rendering.engine = this.setting.renderEngine ? this.setting.renderEngine : 0;
+					};
+
 					// Create reactive column settings.
 					const INIT_COLUMNS = () =>
 					{
@@ -1234,6 +1240,7 @@
 						}
 					}
 
+					INIT_ENGINE();
 					INIT_COLUMNS();
 					SETUP_MAXIMIZE();
 					SETUP_SIZES();
@@ -1839,7 +1846,7 @@
 						this.updateStatus( null, null );
 
 						// Clear the current view.
-						this.view = [];
+						this.currentTableData = [];
 
 						// Internal Data
 						if ( this.setting.dataProvider === 0 )
@@ -1863,7 +1870,7 @@
 								}
 								else
 								{
-									this.view = [];
+									this.currentTableData = [];
 								}
 							}
 							else
@@ -1894,7 +1901,7 @@
 								}
 								else
 								{
-									this.view = [];
+									this.currentTableData = [];
 								}
 							}
 							else
@@ -1990,7 +1997,7 @@
 						}
 						else
 						{
-							this.view = [];
+							this.currentTableData = [];
 						}
 
 						this.checkBodyScroll();
@@ -2017,7 +2024,7 @@
 						});
 					}
 
-					this.view = fullView;
+					this.currentTableData = fullView;
 				},
 
 				// Renders the virtual view based on the passed position.
@@ -2090,7 +2097,7 @@
 						this.setRenderPositions();
 					}
 
-					this.view = updatedView;
+					this.currentTableData = updatedView;
 				},
 
 				// Renders a set amount of records per page.
@@ -2266,7 +2273,7 @@
 					this.resetScroll();
 
 					// Update the table view.
-					this.view = GET_ROWS_IN_PAGE();
+					this.currentTableData = GET_ROWS_IN_PAGE();
 				},
 
 				// Changes the page to the passed value.
@@ -3441,7 +3448,7 @@
 					this.resetScroll();
 
 					// Clean the view.
-					this.view = [];
+					this.currentTableData = [];
 				},
 
 				// Displays the appropriate table message based on component status.
@@ -3502,7 +3509,7 @@
 				// View flag. Enabled if the view has data. False if not.
 				isViewAvailable : function ()
 				{
-					if ( this.view.length > 0 )
+					if ( this.currentTableData.length > 0 )
 					{
 						return true;
 					}

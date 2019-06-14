@@ -1,0 +1,99 @@
+# TODO
+
+## Documentation
+
+- Data Format Requirement
+    - Array not yet supported
+- Options list and explanation.
+    - Requirements/Rules/Restrictions
+    - Table feature list
+- Table statuses
+    - Updating Page
+    - Processing Data
+    - 
+- Data providers explained.
+    - Internal
+    - External
+        - Only compatible with render engine 2 (pagination)
+- Render engines explained.
+    - Virtual (Auto)
+        - Will switch to Full if data is small (uses option virtualEngineRowStart)
+        - Will render rows based on the table view size and a buffer zone.
+            - Will re-render when data is about to end
+        -View re-renders when column width changes
+    - Full
+    - Pagination
+- Searching explained.
+    - Internal
+        - Happens before filtering
+        - Full text search on every column
+    - External
+        - Event is emitted and parent must get data and send back to JD Table
+- Filtering explained.
+    - Internal
+        - If search results exist, filter happens on those results.
+            - If not searching, filter happens on entire dataset.
+        - Filters on the same column are grouped with OR clause.
+        - Filters on different columns are processed with AND clause.
+        - Filters Available: Equals To, Not Equals To, Begins With, Contains, Greater Then (Number columns), Less then (Number colums)
+    - External
+        - Starts with filter not available on external data provider.
+- Prop list and explanation.
+- JDTable Events to Parent (Emits)
+    - Sends component data
+        - Search Status
+        - Search Text
+        - Active Filters
+        - Pagination selected page limit
+        - Pagination Current Page
+        - Column being sorted
+        - Column sort direction
+        - Last action performed
+            - Refresh
+                - Starts "Updating Page" status
+            - (External) ExcelExport
+                - Starts "Processing Data" status
+            - (External) PaginationGoToSpecificPage
+                - Starts "Updating Page" status
+            - (External) PaginationGoToNextPage
+                - Starts "Updating Page" status
+            - (External) PaginationGoToLastPage
+                - Starts "Updating Page" status
+            - (External) PaginationGoToPreviousPage
+                - Starts "Updating Page" status
+            - (External) PaginationGoToFirstPage
+                - Starts "Updating Page" status
+            - (External) PaginationPageLimitChange
+                - Starts "Updating Page" status
+            - (External) ChangeSort
+                - Starts "Updating Page" status 
+            - (External) AddFilter
+                - Starts "Updating Page" status 
+            - (External) RemoveFilter
+                - Starts "Updating Page" status 
+            - (External) ClearFilter
+                - Starts "Updating Page" status 
+            - (External) ApplySearch
+                - Starts "Searching" status 
+            - (External) ClearSearch
+                - Starts "Updating Page" status
+- Parent Events to JDTable (Prop)
+    - sendData
+        - Format
+    - clearAll
+        - Format
+    -tableError
+        - Format
+    - exportExcel
+        - Format
+- JDTable Watches
+    - Resize of browser window
+        - Re-renders if Virtual Engine
+        - Changes for Mobile sizing
+- Column Sorting
+    - Internal
+    - External
+- Column Resizing
+    - Only available when resize option is true and table is not responsive.
+- Column Hide/Show
+- Quick View (Double Click Row)

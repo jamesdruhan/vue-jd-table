@@ -369,9 +369,11 @@
 			<div v-if="gettingStarted" class="layerPopup contentFrame">
 				<div class="tableMessage" v-html="setting.startBySearchMessage"></div>
 			</div>
+		</transition>
 
-			<!-- Row Content -->
-			<div v-if="row.selectedIndex !== null" class="layerPopup fullFrame fullFrameZone">
+		<!-- Layer: Quick View -->
+		<transition name="jdTableFade">
+			<div v-if="row.selectedIndex !== null && !status.processingData && !status.searching && !status.updatingPage" class="layerPopup fullFrame fullFrameZone">
 
 				<div class="quickView">
 
@@ -401,7 +403,10 @@
 						<div @click="quickViewPrevious" class="footerDirection previous">
 							<i class="fas fa-backward"></i>
 						</div>
-						<div class="footerItem">
+						<div v-if="setting.dataProvider === 1" class="footerItem">
+							{{ row.selectedIndex + rendering.pagination.currentStartIndex + 1 }} of {{ processedDataSize }}
+						</div>
+						<div v-else class="footerItem">
 							{{ row.selectedIndex + 1 }} of {{ processedDataSize }}
 						</div>
 						<div @click="quickViewNext" class="footerDirection next">
@@ -842,15 +847,7 @@
 
 		created : function ()
 		{
-			// Checks if browser is IE11.
-			if( navigator.userAgent.indexOf('MSIE')!==-1  || navigator.appVersion.indexOf('Trident/') > -1 )
-			{
-				this.status.isIE11 = true;
-			}
-			else
-			{
-				this.status.isIE11 = !!window.MSInputMethodContext && !!document.documentMode
-			}
+			this.checkBrowser();
 
 			this.initializeTable();
 		},
@@ -916,13 +913,11 @@
 
 									if ( typeof( userColumn.sortDirection ) === 'string' )
 									{
+										this.columns.activeSortAsc = false;
+
 										if ( userColumn.sortDirection === 'asc' )
 										{
 											this.columns.activeSortAsc = true;
-										}
-										else
-										{
-											this.columns.activeSortAsc = false;
 										}
 									}
 								}
@@ -1110,19 +1105,6 @@
 						}
 					}
 
-					// Force disables features if browser is IE11.
-					const BROWSER_CHECK = () =>
-					{
-						if ( this.status.isIE11 )
-						{
-							// Export is not compatible with IE11.
-							if ( this.setting.export )
-							{
-								this.setting.export = false;
-							}
-						}
-					}
-
 					// Configure the search option.
 					const SETUP_SEARCH = () =>
 					{
@@ -1137,7 +1119,6 @@
 					SETUP_SIZES();
 					SETUP_PAGINATION();
 					SETUP_SEARCH();
-					BROWSER_CHECK();
 					DATA_PROVIDER_CHECK();
 				},
 
@@ -1149,8 +1130,8 @@
 					{
 						this.feature.maximized = !this.feature.maximized;
 
-						// Re-render the rows based on the new window size.
-						if ( !this.rendering.engine )
+						// Virtual Scroll: Re-render the rows based on the new window size.
+						if ( this.rendering.engine === 0 )
 						{
 							this.renderView( this.rendering.virtual.rowMiddleIndex );
 						}
@@ -1174,12 +1155,13 @@
 						}
 					};
 
-					// Emits a refresh event.
+					// Emits a refresh event to the parent.
 					const REFRESH = () =>
 					{
 						// Update the last action performed.
 						this.status.lastAction = 'Refresh';
 
+						// Update table status.
 						this.updateStatus( 'updatingPage', true );
 
 						this.$emit( 'eventFromJDTable', this.componentState );
@@ -1235,30 +1217,44 @@
 						// Check if a limit is set.
 						if ( this.setting.exportLimit )
 						{
-							if ( this.setting.dataProvider === 1 )
-							{
-								if ( this.rendering.external.dataSize > this.setting.exportLimit )
-								{
-									alert(`Sorry, you can only export a maximum of ${ this.formatNumberWithCommas( this.setting.exportLimit ) } records at a time. There are currently ${ this.formatNumberWithCommas( this.rendering.external.dataSize ) } records in your table. Try filtering the records down further to use this feature.`)
+							let dataSize = null;
 
-									return;
+							const checkExportLimit = () =>
+							{
+								if ( this.setting.dataProvider !== 1 && this.processedData.length > this.setting.exportLimit )
+								{
+									dataSize = this.formatNumberWithCommas( this.processedData.length );
+
+									return true;
 								}
+
+								return false;
 							}
-							else
-							{
-								if ( this.processedData.length > this.setting.exportLimit )
-								{
-									alert(`Sorry, you can only export a maximum of ${ this.formatNumberWithCommas( this.setting.exportLimit ) } records at a time. There are currently ${ this.formatNumberWithCommas( this.processedData.length ) } records in your table. Try filtering the records down further to use this feature.`)
 
-									return;
+							const checkExportLimitExternal = () =>
+							{
+								if ( this.setting.dataProvider === 1 && this.processedDataSize > this.setting.exportLimit )
+								{
+									dataSize = this.formatNumberWithCommas( this.processedDataSize );
+
+									return true;
 								}
+
+								return false;
+							}
+
+							if ( checkExportLimit() || checkExportLimitExternal() )
+							{
+								alert(`Sorry, you can only export a maximum of ${ this.formatNumberWithCommas( this.setting.exportLimit ) } records at a time. There are currently ${ dataSize } records in your table. Try filtering the records down further to use this feature.`)
+
+								return;
 							}
 						}
 
 						if ( this.setting.dataProvider === 1 )
 						{
 							// Update the last action performed.
-							this.status.lastAction = 'excelExport';
+							this.status.lastAction = 'ExcelExport';
 
 							this.updateStatus( 'processingData', true );
 
@@ -1323,13 +1319,13 @@
 					}
 				},
 
-				// Exports data to excel
+				// Exports data to excel. Supports IE.
 				exportExcel : function ( data )
 				{
 					// Creates a HTML table to be exported.
 					const renderTable = () =>
 					{
-						var table = '<table><thead>';
+						let table = '<table><thead>';
 
 						table += '<tr>';
 
@@ -1355,13 +1351,13 @@
 
 						table += '</thead><tbody>';
 
-						for ( let i = 0; i < this.data.length; i++ )
+						for ( let i = 0; i < data.length; i++ )
 						{
-							const row = this.data[i];
+							const row = data[i];
 
 							table += '<tr>';
 
-							for ( var j = 0; j < this.columns.list.length; j++ )
+							for ( let j = 0; j < this.columns.list.length; j++ )
 							{
 								const column = this.columns.list[j];
 
@@ -1383,9 +1379,8 @@
 
 					if ( browserDetails > 0 || !!navigator.userAgent.match( /Trident.*rv\:11\./ ) )
 					{
-						console.log('2');
 						excelExportArea.document.open( "txt/html","replace" );
-						excelExportArea.document.write( renderTable().replace(/ /g, '%20') );
+						excelExportArea.document.write( renderTable() );
 						excelExportArea.document.close();
 						excelExportArea.focus();
 
@@ -1393,15 +1388,14 @@
 					}
 					else
 					{
-						console.log('1');
-						window.open( 'data:application/vnd.ms-excel,' + encodeURIComponent( renderTable().replace(/ /g, '%20') ) );
+						window.open( 'data:application/vnd.ms-excel,' + encodeURIComponent( renderTable() ) );
 					}
 				},
 
 				// Processes the raw data through filters/search. This returns a promise.
 				processData : function ()
 				{
-					let processDataPromise = new Promise( ( resolve, reject ) =>
+					return new Promise( ( resolve, reject ) =>
 					{
 						// External Data - Just copy to processedData.
 						if ( this.setting.dataProvider === 1 )
@@ -1410,7 +1404,7 @@
 
 							resolve();
 						}
-						// Interal Data - Process through search/filter.
+						// Internal Data - Process through search/filter.
 						else
 						{
 							// Timeout ensures processing message.
@@ -1458,7 +1452,7 @@
 											return false;
 										};
 
-										// If the search algorithm function returns true, that row is kept (not filtered).
+										// If the search algorithm function returns true, that row is kept (not excluded from results).
 										return this.columns.list.find( searchAlgorithm );
 									});
 								}
@@ -1585,7 +1579,6 @@
 										let greaterThanValue = null;
 										let lessThanValue    = null;
 
-
 										// Check for Greater/Equal To / Less/Equal To filters which should be grouped.
 										columnFilters.forEach( ( columnFilter ) =>
 										{
@@ -1682,8 +1675,6 @@
 							}, 75);
 						}
 					});
-
-					return processDataPromise;
 				},
 
 				// Processes the passed event.
@@ -1701,7 +1692,7 @@
 						this.view = [];
 
 						// Internal Data
-						if ( !this.setting.dataProvider )
+						if ( this.setting.dataProvider === 0 )
 						{
 							if ( this.eventFromApp.payload !== null && this.eventFromApp.payload.constructor.name === 'Array' )
 							{
@@ -1774,14 +1765,18 @@
 						this.clearTable();
 					}
 
+					// Displays a table error.
 					if ( !this.status.tableError && name === 'tableError' )
 					{
 						this.status.tableError = this.eventFromApp.payload;
+
+						// Clear any messaging/statuses.
+						this.updateStatus( null, null );
 					}
 
+					// Exports passed data to excel.
 					if ( !this.status.tableError && name === 'exportExcel' )
 					{
-						console.log('Hi');
 						this.exportExcel( this.eventFromApp.payload );
 
 						// Clear any messaging/statuses.
@@ -1807,7 +1802,7 @@
 						if ( this.processedDataSize > 0 )
 						{
 							// Rendering Engine: Auto
-							if ( !this.setting.renderEngine )
+							if ( this.setting.renderEngine === 0 )
 							{
 								// Render full.
 								if ( this.processedDataSize <= this.setting.virtualEngineRowStart )
@@ -1948,6 +1943,7 @@
 					this.view = updatedView;
 				},
 
+				// Renders a set amount of records per page.
 				renderPagination : function ()
 				{
 					// Sets the available pages based on the data size and rows per page.
@@ -1969,7 +1965,7 @@
 						let endIndex   = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows );
 
 						// Correction for external data.
-						if ( this.rendering.external.dataSize )
+						if ( this.processedDataSize )
 						{
 							startIndex = 0;
 							endIndex   = this.processedData.length;
@@ -1997,6 +1993,12 @@
 							{
 								this.rendering.pagination.currentStartIndex = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows ) - this.rendering.pagination.currentPageRows;
 								this.rendering.pagination.currentEndIndex   = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows );
+
+								// End index correction for last page
+								if ( this.rendering.pagination.currentEndIndex > this.processedDataSize )
+								{
+									this.rendering.pagination.currentEndIndex = this.processedDataSize;
+								}
 							}
 							else
 							{
@@ -2286,7 +2288,7 @@
 						this.rendering.pagination.changingRows          = false;
 						this.rendering.pagination.leftPages             = [];
 						this.rendering.pagination.rightPages            = [];
-						this.rendering.external.dataSize        = null;
+						this.rendering.external.dataSize                = null;
 
 						// Emit pagination event.
 						if ( this.setting.dataProvider === 1 )
@@ -2303,7 +2305,7 @@
 					}
 				},
 
-				// Sets the next top and bottom re-rendering position points in pixels.
+				// Virtual Engine: Sets the next top and bottom re-rendering position points in pixels.
 				setRenderPositions : function ()
 				{
 					// For a re-render.
@@ -2413,13 +2415,11 @@
 				{
 					setTimeout( () =>
 					{
+						this.status.mobileSize = false;
+
 						if ( this.$refs.bodyData.clientWidth <= 320)
 						{
 							this.status.mobileSize = true;
-						}
-						else
-						{
-							this.status.mobileSize = false;
 						}
 					}, 220);
 				},
@@ -2435,14 +2435,12 @@
 				{
 					setTimeout( () =>
 					{
+						this.status.tableScroll = false;
+
 						// Checks the table widths to see if scroll bar is enabled for body.
 						if ( this.$refs.bodyData.scrollHeight > this.$refs.bodyData.clientHeight )
 						{
 							this.status.tableScroll = true;
-						}
-						else
-						{
-							this.status.tableScroll = false;
 						}
 					}, 100);
 				},
@@ -2466,7 +2464,7 @@
 
 					if ( !this.setting.responsiveTable )
 					{
-						this.columns.activeResize  = columnIndex;
+						this.columns.activeResize      = columnIndex;
 						this.columns.activeResizeStart = e.clientX;
 					}
 
@@ -2482,7 +2480,11 @@
 						this.columns.activeResize = null;
 					}, 75 );
 
-					this.renderViewVirtual( this.rendering.virtual.rowMiddleIndex );
+					// Virtual Engine
+					if ( this.setting.rendering === 0 )
+					{
+						this.renderViewVirtual( this.rendering.virtual.rowMiddleIndex );
+					}
 
 					window.removeEventListener( 'mouseup', this.resizeStop, false );
 				},
@@ -2611,9 +2613,9 @@
 
 									if ( !y[columnName] )
 									{
-										return 1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
 									}
-								}
+								};
 
 								// Sort the data by string.
 								const sortByString = ( x, y ) =>
@@ -2628,7 +2630,7 @@
 
 									if ( stringX > stringY )
 									{
-										return 1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
 									}
 
 									// Strings are the same.
@@ -2795,13 +2797,13 @@
 					}
 					else
 					{
-						if ( this.filters.beingBuilt.option == 'Greater/Equal To' && isNaN( this.filters.beingBuilt.value ) )
+						if ( this.filters.beingBuilt.option === 'Greater/Equal To' && isNaN( this.filters.beingBuilt.value ) )
 						{
 							this.filters.errorText = 'Value must be a number.';
 							this.filters.error = true;
 						}
 
-						if ( this.filters.beingBuilt.option == 'Less/Equal To' && isNaN( this.filters.beingBuilt.value ) )
+						if ( this.filters.beingBuilt.option === 'Less/Equal To' && isNaN( this.filters.beingBuilt.value ) )
 						{
 							this.filters.errorText = 'Value must be a number.';
 							this.filters.error = true;
@@ -2904,7 +2906,7 @@
 					// Clear being built.
 					this.filters.beingBuilt.column = null;
 					this.filters.beingBuilt.option = null;
-					this.filters.beingBuilt.value = null;
+					this.filters.beingBuilt.value  = null;
 
 					// Reset any error that may exist.
 					this.filters.error     = false;
@@ -3029,6 +3031,8 @@
 						// Emit search event.
 						if ( this.setting.dataProvider === 1 )
 						{
+							this.updateStatus( 'updatingPage', true );
+
 							this.$emit( 'eventFromJDTable', this.componentState );
 						}
 						else
@@ -3057,18 +3061,66 @@
 				// Called when the NEXT button is pressed on the quick view.
 				quickViewNext : function ()
 				{
-					if ( this.row.selectedIndex < ( this.processedData.length - 1 ) )
+					// External
+					if ( this.setting.dataProvider === 1 )
 					{
-						this.row.selectedIndex++;
+						if ( this.row.selectedIndex < ( this.processedDataSize ) )
+						{
+							if ( this.data[ this.row.selectedIndex + 1 ] != null )
+							{
+								this.row.selectedIndex++;
+							}
+							else
+							{
+								// Check for last page
+								if ( this.rendering.pagination.currentEndIndex !== this.processedDataSize )
+								{
+									// Need more data (move to next page).
+									this.paginationNext();
+
+									this.row.selectedIndex = 0;
+								}
+							}
+						}
+					}
+					// Internal
+					else
+					{
+						if ( this.row.selectedIndex < ( this.processedData.length - 1 ) )
+						{
+							this.row.selectedIndex++;
+						}
 					}
 				},
 
 				// Called when the PREVIOUS button is pressed on the quick view.
 				quickViewPrevious : function ()
 				{
-					if ( this.row.selectedIndex >= 1 )
+					// External
+					if ( this.setting.dataProvider === 1 )
 					{
-						this.row.selectedIndex--;
+						if ( this.row.selectedIndex === 0 && this.rendering.pagination.currentPage !== 1 )
+						{
+							// Need more data (move to previous page).
+							this.paginationPrevious();
+
+							this.row.selectedIndex = this.data.length - 1;
+						}
+						else
+						{
+							if ( this.row.selectedIndex >= 1 )
+							{
+								this.row.selectedIndex--;
+							}
+						}
+					}
+					// Internal
+					else
+					{
+						if ( this.row.selectedIndex >= 1 )
+						{
+							this.row.selectedIndex--;
+						}
 					}
 				},
 
@@ -3132,7 +3184,7 @@
 					this.rendering.virtual.height                   = 0;
 
 					// Reset external.
-					this.rendering.external.dataSize      = null;
+					this.rendering.external.dataSize = null;
 
 					// Selection
 					this.row.selectedIndex = null;
@@ -3183,6 +3235,20 @@
 					let viewHeight = this.$refs.bodyData.clientHeight;
 
 					return Math.ceil( viewHeight / this.setting.rowHeight );
+				},
+
+				// Checks if the browser is a version of Internet Explorer.
+				checkBrowser : function ()
+				{
+					// Checks if browser is IE11.
+					if ( navigator.userAgent.indexOf('MSIE')!==-1  || navigator.appVersion.indexOf('Trident/') > -1 )
+					{
+						this.status.isIE11 = true;
+					}
+					else
+					{
+						this.status.isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+					}
 				}
 			},
 
@@ -3237,7 +3303,7 @@
 							headerHeight                   : 40,
 							dataHeight                     : null,
 							rowHeight                      : 42,
-							paginationRowLimits            : [50, 750, 100],
+							paginationRowLimits            : [50, 100, 200],
 							paginationRowStart             : 50,
 							paginationRowAll               : true,
 							pageSideQuantity               : 5,
@@ -3267,7 +3333,7 @@
 				processedDataSize : function ()
 				{
 					// Check if data is being fed from externally.
-					if ( this.rendering.external.dataSize )
+					if ( this.setting.dataProvider === 1 )
 					{
 						return this.rendering.external.dataSize;
 					}
@@ -3817,7 +3883,7 @@
 				{
 					if ( !this.status.processingData && !this.loader && this.setting.startBySearch )
 					{
-						if ( !this.search.searching && this.filters.active.length === 0 )
+						if ( !this.search.searching && !this.filtering )
 						{
 							return true;
 						}
@@ -3849,8 +3915,6 @@
 						filterApplied     : this.filters.active,
 						pageLimit         : this.rendering.pagination.currentSelectedPageRowOption,
 						currentPage       : this.rendering.pagination.currentPage,
-						currentStartIndex : this.rendering.pagination.currentStartIndex,
-						currentEndIndex   : this.rendering.pagination.currentEndIndex,
 						lastAction        : this.status.lastAction,
 						sortColumn        : this.columns.activeSortName ? this.columns.activeSortName : this.columns.list[0].name,
 						sortDirection     : this.columns.activeSortAsc ? 'ASC' : 'DESC'

@@ -56,7 +56,7 @@
 					<i class="fas fa-filter" title="Filter"></i>
 
 					<!-- Control: Get Started with Filter Reminder -->
-					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !filters.show && !status.processingData && !loader" class="filterArrow">
+					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !menuVisible && !status.processingData && !loader" class="filterArrow">
 						{{ setting.startBySearchArrowFilterText }}
 					</div>
 				</span>
@@ -994,6 +994,7 @@
 										name          : userColumn.name,
 										title         : userColumn.title,
 										width         : columnWidth,
+										originalWidth : columnWidth,
 										order         : userColumn.order,
 										type          : userColumn.type,
 										filterable    : filterable,
@@ -1056,6 +1057,8 @@
 									}
 								}
 							});
+
+							this.rendering.views.currentSelectedView = 'Default';
 
 							// No sorting set, use first column.
 							if ( !hasBeenSorted )
@@ -1238,6 +1241,8 @@
 								}
 							});
 						}
+
+
 					}
 
 					INIT_ENGINE();
@@ -1541,7 +1546,7 @@
 						excelExportArea.document.close();
 						excelExportArea.focus();
 
-						excelExportArea.document.execCommand( "SaveAs",true,"NamedAccount_Export.xls" );
+						excelExportArea.document.execCommand( "SaveAs",true,"Data_Export.xls" );
 					}
 					else
 					{
@@ -2755,7 +2760,7 @@
 					if ( !this.setting.responsiveTable && this.columns.activeResize !== null )
 					{
 						// Extract the width number from the string.
-						let width = this.columns.list[columnIndex].width;
+						let width = this.rendering.views.currentView.schema[columnIndex].width;
 
 						// Shrink the width.
 						if ( e.clientX < this.columns.activeResizeStart )
@@ -2771,16 +2776,16 @@
 						}
 
 						// If resizeForceMinWidth is enabled and the width is lower then start - reset width.
-						if ( this.setting.resizeForceMinWidth && ( width < this.setting.columns[columnIndex].width ) )
+						if ( this.setting.resizeForceMinWidth && ( width < this.rendering.views.currentView.schema[columnIndex].originalWidth ) )
 						{
 							width = this.setting.columns[columnIndex].width;
 						}
 
 						// Update the column width.
-						this.columns.list[columnIndex].width                   = width;
-						this.columns.list[columnIndex].headerStyles['width']   = width + 'px';
-						this.columns.list[columnIndex].dataStyles['width']     = width + 'px';
-						this.columns.list[columnIndex].dataStyles['min-width'] = width + 'px';
+						this.rendering.views.currentView.schema[columnIndex].width                   = width;
+						this.rendering.views.currentView.schema[columnIndex].headerStyles['width']   = width + 'px';
+						this.rendering.views.currentView.schema[columnIndex].dataStyles['width']     = width + 'px';
+						this.rendering.views.currentView.schema[columnIndex].dataStyles['min-width'] = width + 'px';
 
 						// Update the initial drag position.
 						this.columns.activeResizeStart = e.clientX;
@@ -2835,8 +2840,8 @@
 				{
 					if ( this.setting.dataProvider === 0 )
 					{
-						let columnName     = this.columns.list[this.columns.activeSortIndex].name;
-						let columnSortType = this.columns.list[this.columns.activeSortIndex].type;
+						let columnName     = this.rendering.views.currentView.schema[this.columns.activeSortIndex].name;
+						let columnSortType = this.rendering.views.currentView.schema[this.columns.activeSortIndex].type;
 
 						if ( this.processedDataSize > 0 )
 						{
@@ -3477,7 +3482,12 @@
 				// Convert raw number to formatted.
 				formatNumberWithCommas : function ( x )
 				{
-					return x.toString().replace( /\B(?=(\d{3})+(?!\d))/g, "," );
+					if ( x )
+					{
+						return x.toString().replace( /\B(?=(\d{3})+(?!\d))/g, "," );
+					}
+
+					return 0;
 				},
 
 				// Returns the number of rows that can fit in the current view.
@@ -4159,6 +4169,17 @@
 					return false;
 				},
 
+				// Returns true if any of the option menus are shown and false if none.
+				menuVisible : function ()
+				{
+					if ( this.filters.show || this.rendering.pagination.changingRows || this.columns.selecting || this.rendering.views.changingViews )
+					{
+						return true;
+					}
+
+					return false;
+				},
+
 				// Represents the current state of data of the component. This is emitted to parent events.
 				componentState : function ()
 				{
@@ -4169,7 +4190,7 @@
 						pageLimit         : this.rendering.pagination.currentSelectedPageRowOption,
 						currentPage       : this.rendering.pagination.currentPage,
 						lastAction        : this.status.lastAction,
-						sortColumn        : this.columns.activeSortName ? this.columns.activeSortName : this.columns.list[0].name,
+						sortColumn        : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
 						sortDirection     : this.columns.activeSortAsc ? 'ASC' : 'DESC'
 					}
 				}

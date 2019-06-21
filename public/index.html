@@ -42,11 +42,14 @@
 
 		<div id="app">
 			<JDTable
-				:option  = "tableOptions"
-				:loader  = "tableLoader"
-				:event   = "tableEvent"
-				@refresh = "refresh"
+				:option                 = "tableOptions"
+				:loader                 = "tableLoader"
+				:event-from-app         = "eventFromApp"
+				:event-from-app-trigger = "eventFromAppTrigger"
+				@event-from-jd-table    = "processEventFromApp( $event )"
 			/>
+
+			<iframe id="excelExportArea" style="display:none"></iframe>
 		</div>
 
 		<script type="text/javascript">
@@ -58,11 +61,13 @@
 				{
 					tableOptions : {},
 
-					tableEvent  :
+					eventFromApp  :
 					{
 						name : null,
 						data : null
 					},
+
+					eventFromAppTrigger : false,
 
 					tableLoader : false,
 
@@ -72,11 +77,12 @@
 							name       : 'column1',
 							title      : 'Column 1',
 							order      : 1,
-							type       : 'String',
+							type       : 'Number',
 							filterable : true,
 							enabled    : true,
 							sort          : true,
-							sortDirection : 'asc'
+							sortDirection : 'asc',
+							width         : 100,
 						},
 						{
 							name        : 'column2',
@@ -84,7 +90,8 @@
 							order       : 2,
 							type        : 'String',
 							filterable  : true,
-							enabled     : true
+							enabled     : true,
+							width       : 100,
 						},
 						{
 							name       : 'column3',
@@ -92,7 +99,8 @@
 							order      : 3,
 							type       : 'String',
 							filterable : true,
-							enabled    : true
+							enabled    : true,
+							width      : 100,
 						},
 						{
 							name       : 'column4',
@@ -100,7 +108,8 @@
 							order      : 4,
 							type       : 'String',
 							filterable : true,
-							enabled    : true
+							enabled    : true,
+							width      : 100,
 						}
 					]
 				},
@@ -110,11 +119,13 @@
 					// You don't have to configure all these settings (this is just an example).
 					this.tableOptions =
 					{
+						dataProvider : 0,
+
 						title               : 'JD-Table',
 						columns             : this.columns,
 
-						startBySearch                : true,
-						startBySearchMessage         : 'Use the search or filter features to limit and display data ..',
+						startBySearch                : false,
+						startBySearchMessage         : 'To display data, either search or apply a filter.',
 						startBySearchArrowSearch     : true,
 						startBySearchArrowFilter     : true,
 						startBySearchArrowSearchText : 'Search Here!',
@@ -127,12 +138,13 @@
 						resize              : true,
 						filter              : true,
 						export              : true,
+						exportLimit         : 5000,
 						columnSort          : true,
 						quickView           : true,
 
-						renderEngine          : 0,
+						renderEngine          : 2,
 						responsiveFrame       : false,
-						responsiveTable       : true,
+						responsiveTable       : false,
 						virtualEngineRowStart : 500,
 						frameWidth            : 800,
 						headerHeight          : 40,
@@ -143,7 +155,6 @@
 						paginationRowAll      : false,
 						pageSideQuantity      : 5,
 
-						searchEngine        : 0,
 						forceSearchOpen     : true,
 						searchPlaceHolder   : 'Search ...',
 
@@ -155,7 +166,35 @@
 
 						highlight           : true,
 						controls            : true,
-						footer              : true
+						footer              : true,
+
+						views               :
+						[
+							{
+								viewName : 'Slim',
+								schema   :
+								[
+									{
+										name       : 'column1',
+										title      : 'Column 1',
+										order      : 1,
+										type       : 'String',
+										filterable : true,
+										enabled    : true,
+										sort          : true,
+										sortDirection : 'asc'
+									},
+									{
+										name        : 'column2',
+										title       : 'Column 2',
+										order       : 2,
+										type        : 'String',
+										filterable  : true,
+										enabled     : true
+									}
+								]
+							}
+						]
 					};
 				},
 
@@ -186,20 +225,38 @@
 
 						data = JSON.stringify( data );
 
-						this.tableEvent =
+						this.eventFromApp =
 						{
 							name    : 'sendData',
 							payload : JSON.parse( data )
-						}
+						};
+
+						this.triggerEvent();
 
 						// Disable the table loader.
 						this.tableLoader = false;
 					},
 
-					// Triggers a refresh of data.
-					refresh : function ()
+					// Triggers the currently queued JD-Table event to run.
+					triggerEvent : function ()
 					{
-						this.sendData();
+						// Trigger the event.
+						this.eventFromAppTrigger = true;
+
+						// Reset the trigger event.
+						this.$nextTick( () =>
+						{
+							this.eventFromAppTrigger = false;
+						});
+					},
+
+					// Triggered when the JD-Table emits a "eventFromJDTable" event.
+					processEventFromApp : function ( componentState )
+					{
+						if ( componentState.lastAction === 'Refresh' )
+						{
+							this.sendData();
+						}
 					}
 				}
 			});

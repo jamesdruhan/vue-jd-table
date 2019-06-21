@@ -678,11 +678,6 @@
 		// Default     : True
 		// Description : Enables/disables the ability to double click on a row and show a quick view of all its data.
 		//
-		// -----
-		// | 0 | FULL    : All rows of data will be provided to JD-Table allowing the table to manage the view, search, filtering, pagination itself.
-		// | 1 | REQUEST : All data related actions will be emitted to the parent to be processed. The parent in turn will the data details back to the JD-Table.
-		// -----
-		//
 		// Prop        : option.renderEngine
 		// Value       : [NUMBER]
 		// Default     : NULL
@@ -1297,7 +1292,7 @@
 						// Update table status.
 						this.updateStatus( 'updatingPage', true );
 
-						this.$emit( 'eventFromJDTable', this.componentState );
+						this.$emit( 'event-from-jd-table', this.componentState );
 					};
 
 					// Show/Hide the filtering view.
@@ -1403,7 +1398,7 @@
 
 							this.updateStatus( 'processingData', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						else
 						{
@@ -1842,6 +1837,7 @@
 				// Processes the passed event.
 				processEvent : function ( name )
 				{
+					console.log('processEvent');
 					// Process the data sent to JD-Table.
 					if ( !this.status.tableError && name === 'sendData' )
 					{
@@ -2297,7 +2293,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// Update the view.
 						else
@@ -2327,7 +2323,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// Update the view.
 						else
@@ -2354,7 +2350,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// Update the view.
 						else
@@ -2384,7 +2380,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// Update the view.
 						else
@@ -2411,7 +2407,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// Update the view.
 						else
@@ -2457,7 +2453,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// Update the view.
 						else
@@ -2536,7 +2532,7 @@
 							{
 								this.updateStatus( 'updatingPage', true );
 
-								this.$emit( 'eventFromJDTable', this.componentState );
+								this.$emit( 'event-from-jd-table', this.componentState );
 							}
 							else
 							{
@@ -2826,7 +2822,7 @@
 					{
 						this.updateStatus( 'updatingPage', true );
 
-						this.$emit( 'eventFromJDTable', this.componentState );
+						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					else
 					{
@@ -3091,7 +3087,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 						else
@@ -3125,7 +3121,7 @@
 					{
 						this.updateStatus( 'updatingPage', true );
 
-						this.$emit( 'eventFromJDTable', this.componentState );
+						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -3164,7 +3160,7 @@
 					{
 						this.updateStatus( 'updatingPage', true );
 
-						this.$emit( 'eventFromJDTable', this.componentState );
+						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -3254,7 +3250,7 @@
 						{
 							this.search.searching = true;
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						// Perform search using JD-Table.
 						else
@@ -3290,7 +3286,7 @@
 						{
 							this.updateStatus( 'updatingPage', true );
 
-							this.$emit( 'eventFromJDTable', this.componentState );
+							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						else
 						{
@@ -4201,6 +4197,8 @@
 				// Watches for event triggers. This will run the event when the trigger is true.
 				eventFromAppTrigger : function ( to , from )
 				{
+					console.log(from);
+					console.log(to);
 					if ( from === false && to === true && this.eventFromApp.name )
 					{
 						this.processEvent( this.eventFromApp.name );

@@ -100,3 +100,6 @@
 - Column Hide/Show
 - Quick View (Double Click Row)
 - Views
+- Excel Export iFrame
+- Font Awesome Free Required
+- Custom Themes

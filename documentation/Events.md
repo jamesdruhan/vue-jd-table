@@ -1,3 +1,3 @@
-# Events
+# JD-Table / Events
 
 Coming soon.

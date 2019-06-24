@@ -1,4 +1,4 @@
-# JD-Table
+# JD-Table / Options
 
 #### Options
 
@@ -164,7 +164,7 @@ data ()
     ```
     
     <p align="center">
-      <img src="./documentation/assets/columnSelectExample.gif" alt="Example of columnSelect">
+      <img src="./assets/columnSelectExample.gif" alt="Example of columnSelect">
       <br>
     </p>
     
@@ -298,6 +298,13 @@ data ()
     }
     ```
     
+    **IMPORTANT**
+    > In order for excel import to operate properly you must add the following iFrame HTML code somewhere on your page.
+    
+    ```html
+    <iframe id="excelExportArea" style="display:none"></iframe>
+    ```
+    
 - ##### exportLimit
 
     - **Type**: [Number]
@@ -358,7 +365,7 @@ data ()
     ```
     
     <p align="center">
-      <img src="./documentation/assets/filterExample.gif" alt="Example of filter">
+      <img src="./assets/filterExample.gif" alt="Example of filter">
       <br>
     </p>
     
@@ -539,7 +546,7 @@ data ()
     ```
     
     <p align="center">
-      <img src="./documentation/assets/maxMinimizeExample.gif" alt="Example of maxMinimize">
+      <img src="./assets/maxMinimizeExample.gif" alt="Example of maxMinimize">
       <br>
     </p>
     
@@ -614,7 +621,7 @@ data ()
     ```
     
     <p align="center">
-      <img src="./documentation/assets/paginationRowLimitsExample.gif" alt="Example of paginationRowLimits">
+      <img src="./assets/paginationRowLimitsExample.gif" alt="Example of paginationRowLimits">
       <br>
     </p>
 
@@ -667,7 +674,7 @@ data ()
     ```
     
     <p align="center">
-      <img src="./documentation/assets/quickViewExample.gif" alt="Example of quickView">
+      <img src="./assets/quickViewExample.gif" alt="Example of quickView">
       <br>
     </p>
     
@@ -757,7 +764,7 @@ data ()
     ```
     
     <p align="center">
-      <img src="./documentation/assets/resizeExample.gif" alt="Example of resize">
+      <img src="./assets/resizeExample.gif" alt="Example of resize">
       <br>
     </p>
     
@@ -977,7 +984,7 @@ data ()
     ```
     
     <p align="center">
-      <img src="./documentation/assets/startBySearchExample.gif" alt="Example of startBySearch">
+      <img src="./assets/startBySearchExample.gif" alt="Example of startBySearch">
       <br>
     </p>
     

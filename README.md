@@ -1,9 +1,3 @@
-<p align="center">
-  <br>
-  <img src="./documentation/assets/jd-table-example.png" alt="Example of JD-Table">
-  <br>
-</p>
-
 # JD-Table
 
 > An advanced and flexible Vue.js 2.x component for displaying data tables. Feature rich and capable of handing big data, JD-Table was designed to integrate into applications with various needs.
@@ -12,6 +6,12 @@
     <a href="https://www.npmjs.com/package/vue-jd-table"><img src="https://img.shields.io/npm/dt/vue-jd-table.svg?style=flat-square"></a>
     <a href="https://www.npmjs.com/package/vue-jd-table"><img src="https://img.shields.io/npm/v/vue-jd-table.svg?style=flat-square"></a>
     <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square">
+</p>
+
+<p align="center">
+  <br>
+  <img src="./documentation/assets/jd-table-example.png" alt="Example of JD-Table">
+  <br>
 </p>
 
 - [Features](#features)
@@ -32,7 +32,7 @@
     - [Events](./documentation/Events.md)
         - [From Table](./documentation/Events.md#from-table)
         - [From App](./documentation/Events.md#from-app)
-    - [Watches](./documentation/Watches.md)
+    - [Listeners](./documentation/Listeners.md)
     - [Theming](./documentation/Theming.md)
 
 ---
@@ -96,6 +96,7 @@ The following steps indicate how to initialize JD-Table but not configure its re
             @event-from-jd-table    = "processEventFromApp( $event )"
         />
 
+        <!-- REQUIRED FOR EXCEL EXPORT -->
         <iframe id="excelExportArea" style="display:none"></iframe>
     </div>
 </template>
@@ -130,7 +131,7 @@ The following steps indicate how to initialize JD-Table but not configure its re
     // OPTIONAL: JD-Table SCSS Variable Overrides Here.
 
     @import "~vue-jd-table/dist/assets/jd-table.scss";
-</style
+</style>
 ```
 
 ##### Global
@@ -210,7 +211,7 @@ new Vue
 
 ---
 
-#### Properties
+### Properties
 
 JD-Table accepts the following props/properties:
 
@@ -227,13 +228,13 @@ JD-Table accepts the following props/properties:
 
 ---
 
-#### Browser Support
+### Browser Support
 
 JD-Table runs in all modern browsers. IE11 is supported so long as a polyfill is provided. See the [polyfill](#polyfill) section for more details.
 
 ---
 
-#### Polyfill
+### Polyfill
 
 JD-Table is written with ES5/6 functionality. Take note that the build module for JDTable *does not include* a polyfill. If you need support for legacy browsers like IE 11 you will need to inject a polyfill service.
 
@@ -256,7 +257,7 @@ vue.config.js
 ```
 module.exports =
 {
-	transpileDependencies : ['vue-jd-table']
+    transpileDependencies : ['vue-jd-table']
 };
 ```
 
@@ -266,22 +267,23 @@ Using babel and babel-polyfill, directly add polyfill's to your dependency's.
 
 babel.config.js
 ```
-module.exports = {
-	presets:
-	[
-		['env',
-		{
-			polyfills :
-			[
-				'es6.promise',
-				'es6.object.assign',
-				'es6.function.name',
-				'es6.array.find',
-				'es6.array.find-index',
-				'es7.array.includes',
-				'es6.string.includes'
-			]
-		}]
-	]
+module.exports =
+{
+    presets:
+    [
+        ['env',
+        {
+            polyfills :
+            [
+                'es6.promise',
+                'es6.object.assign',
+                'es6.function.name',
+                'es6.array.find',
+                'es6.array.find-index',
+                'es7.array.includes',
+                'es6.string.includes'
+            ]
+        }]
+    ]
 }
 ```

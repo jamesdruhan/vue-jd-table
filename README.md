@@ -33,8 +33,8 @@
     - [Data](./documentation/Data.md)
     - [Status](./documentation/Status.md)
     - [Events](./documentation/Events.md)
-        - [From Table](./documentation/Events.md#JD-Table Events to Your App)
-        - [From App](./documentation/Events.md#Your App to JD-Table Events)
+        - [From Table](./documentation/Events.md#JD-Table-Events-to-Your-App
+        - [From App](./documentation/Events.md#Your-App-to-JD-Table-Events)
     - [Listeners](./documentation/Listeners.md)
     - [Theming](./documentation/Theming.md)
 

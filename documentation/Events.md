@@ -2,8 +2,8 @@
 
 This section explains how communication works between your app and the JD-Table component. There are two types of events:
 
-- [Your App to JD-Table Events](#Your App to JD-Table Events)
-- [JD-Table Events to Your App](#JD-Table Events to Your App)
+- [Your App to JD-Table Events](#Your-App-to-JD-Table-Events)
+- [JD-Table Events to Your App](#JD-Table-Events-to-Your-App)
 
 ### Why not use an event bus?
 

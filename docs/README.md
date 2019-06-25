@@ -14,6 +14,12 @@
   <br>
 </p>
 
+<p align="center">
+  <br>
+  <a href="./demo/demo.md">Demos</a>
+  <br>
+</p>
+
 ### Table of Contents
 
 - [Features](#features)

@@ -14,6 +14,8 @@
   <br>
 </p>
 
+### Table of Contents
+
 - [Features](#features)
 - [Install](#install)
     - [NPM](#npm)
@@ -33,7 +35,7 @@
     - [Data](./documentation/Data.md)
     - [Status](./documentation/Status.md)
     - [Events](./documentation/Events.md)
-        - [From Table](./documentation/Events.md#JD-Table-Events-to-Your-App
+        - [From Table](./documentation/Events.md#JD-Table-Events-to-Your-App)
         - [From App](./documentation/Events.md#Your-App-to-JD-Table-Events)
     - [Listeners](./documentation/Listeners.md)
     - [Theming](./documentation/Theming.md)
@@ -56,6 +58,10 @@
 - Full screen/minimize
 - Row 'Quick View'
 - ... and more!
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
 
 ---
 
@@ -91,7 +97,7 @@ Follow all 3 steps below to begin using JD-Table.
 
 #### Initialize
 
-Initializing includes 3 parts: Template, Vue Component, Options/Props and Theme. Below are a number of different ways to initialize JD-Tables depending on your needs.
+Initializing includes 4 parts: Template, Vue Component, Options/Props and Theme. Below are a number of different ways to initialize JD-Tables depending on your needs.
 
 ###### SFC
 
@@ -153,7 +159,7 @@ The following is an example of how to use JD-Tables in a Vue SFC (single file co
 
 ###### Global
 
-The following registers JDTable as a global component. Once registered, you can use the instructions above (SFC) to use and apply the component without having to import it each time.
+The following registers JD-Table as a global component. Once registered, you can use the instructions above (SFC) to use and apply the component without having to import it each time.
 
 ```vue
 import Vue     from 'vue';
@@ -265,8 +271,7 @@ JD-Table runs in all modern browsers. IE11 is supported so long as a polyfill is
 
 JD-Table is written with ES5/6 functionality. Take note that the build module for JDTable *does not include* a polyfill. If you need support for legacy browsers like IE 11 you will need to inject a polyfill service.
 
-**Reminder**
-> Typically build processes like Webpack & Vue-CLI do **NOT** add polyfill's to your imported **dependencies** (it will polyfill your app but not the JDTable dependency).
+> **Reminder**: Typically build processes like Webpack & Vue-CLI do **NOT** add polyfill's to your imported **dependencies** (it will polyfill your app but not the JDTable dependency).
 
 ##### Polyfill Solution #1
 

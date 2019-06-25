@@ -8,7 +8,7 @@ Below is a list of options that can be passed to JD-Table via the **option** pro
 ...
 
 <JDTable
-    :option                 = "tableOptions"
+    :option                 = "tableOptions" // <---- PASS OPTIONS HERE!
     :loader                 = "tableLoader"
     :event-from-app         = "eventFromApp"
     :event-from-app-trigger = "eventFromAppTrigger"

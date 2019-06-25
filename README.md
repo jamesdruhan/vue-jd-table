@@ -19,9 +19,12 @@
     - [NPM](#npm)
     - [Manual](#manual)
 - [Usage](#usage)
-    - [SFC](#sfc)
-    - [Global](#global)
-    - [Script](#script)
+    - [Initialize](#initialize)
+    - [Configure Options](./documentation/Options.md)
+    - [Display Data](./documentation/Data.md)
+        - [SFC](#sfc)
+        - [Global](#global)
+        - [Script](#script)
 - [Properties](#properties)
 - [Browser Support](#browser-support)
 - [Polyfill](#polyfill)
@@ -69,25 +72,35 @@ npm install --save-dev @fortawesome/fontawesome-free
 
 ##### Manual
 
-Clone this repository or download and save these files to your project:
+1. Clone this repository or download and save these files to your project:
 
- - ./dist/**jd-table.min.js**
- - ./dist/**jd-table.min.css**
+    - ./dist/**jd-table.min.js**
+    - ./dist/**jd-table.min.css**
+
+2. Instructions for manually installing Font Awesome (Free) can be found here: https://fontawesome.com/start
 
 ---
 
 ### Usage
 
-The following steps indicate how to initialize JD-Table but not configure its required options.
+Follow all 3 steps below to begin using JD-Table.
 
-1. Check out the table options [here](./documentation/Options.md).
-2. Learn how to display data on the table [here](./documentation/Data.md).
+1. [Initialize](#initialize)
+2. [Configure Options](./documentation/Options.md)
+3. [Display Data](./documentation/Data.md)
 
-##### SFC
+#### Initialize
+
+Initializing includes 3 parts: Template, Vue Component, Options/Props and Theme. Below are a number of different ways to initialize JD-Tables depending on your needs.
+
+###### SFC
+
+The following is an example of how to use JD-Tables in a Vue SFC (single file component).
 
 ```vue
 <template>
     <div id="app">
+        <!-- JD-TABLE REQUIRED - TEMPLATE -->
         <JDTable
             :option                 = "tableOptions"
             :loader                 = "tableLoader"
@@ -96,12 +109,13 @@ The following steps indicate how to initialize JD-Table but not configure its re
             @event-from-jd-table    = "processEventFromApp( $event )"
         />
 
-        <!-- REQUIRED FOR EXCEL EXPORT -->
+        <!-- JD-TABLE REQUIRED - EXCEL EXPORT -->
         <iframe id="excelExportArea" style="display:none"></iframe>
     </div>
 </template>
 
 <script>
+    // JD-TABLE REQUIRED - COMPONENT REGISTRATION
     import "@fortawesome/fontawesome-free/css/all.min.css";
     import JDTable from 'vue-jd-table';
     
@@ -109,11 +123,13 @@ The following steps indicate how to initialize JD-Table but not configure its re
     {
         name : 'MyApp',
         
+        // JD-TABLE REQUIRED - COMPONENT REGISTRATION
         components:
         {
             JDTable
         },
         
+        // JD-TABLE REQUIRED - OPTIONS/PROPS
         data ()
         {
             return {
@@ -128,13 +144,14 @@ The following steps indicate how to initialize JD-Table but not configure its re
 </script>
 
 <style lang="scss">
-    // OPTIONAL: JD-Table SCSS Variable Overrides Here.
+    // JD-TABLE OPTIONAL - VARIABLE OVERRIDE
 
+    // JD-TABLE REQUIRED - THEME
     @import "~vue-jd-table/dist/assets/jd-table.scss";
 </style>
 ```
 
-##### Global
+###### Global
 
 The following registers JDTable as a global component. Once registered, you can use the instructions above (SFC) to use and apply the component without having to import it each time.
 
@@ -145,7 +162,7 @@ import JDTable from 'vue-jd-table';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import 'vue-jd-table/dist/jd-table.min.css';
 
-Vue.component('jdtable',JDTable);
+Vue.component( 'jdtable',JDTable );
 
 new Vue
 ({
@@ -153,7 +170,9 @@ new Vue
 }).$mount( '#app' );
 ```
 
-##### Script
+###### Script
+
+The following shows an example of how to use JD-Table your HTML files directly. You will require a polyfill for JD-Table.
 
 ```html
 <!-- Polyfill -->
@@ -208,6 +227,14 @@ new Vue
     });
 </script>
 ```
+
+#### Configure Options
+
+[Dedicated Page - Click Here](./documentation/Options.md)
+
+#### Display Data
+
+[Dedicated Page - Click Here](./documentation/Data.md)
 
 ---
 

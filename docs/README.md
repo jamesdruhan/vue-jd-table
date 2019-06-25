@@ -10,7 +10,7 @@
 
 <p align="center">
   <br>
-  <img src="./documentation/assets/jd-table-example.png" alt="Example of JD-Table">
+  <img src="./assets/jd-table-example.png" alt="Example of JD-Table">
   <br>
 </p>
 
@@ -25,20 +25,20 @@
         - [SFC](#sfc)
         - [Global](#global)
         - [Script](#script)
-    - [Configure Options](./documentation/Options.md)
-    - [Display Data](./documentation/Data.md)
+    - [Configure Options](Options.md)
+    - [Display Data](Data.md)
 - [Properties](#properties)
 - [Browser Support](#browser-support)
 - [Polyfill](#polyfill)
 - Documentation
-    - [Options](./documentation/Options.md)
-    - [Data](./documentation/Data.md)
-    - [Status](./documentation/Status.md)
-    - [Events](./documentation/Events.md)
-        - [From Table](./documentation/Events.md#JD-Table-Events-to-Your-App)
-        - [From App](./documentation/Events.md#Your-App-to-JD-Table-Events)
-    - [Listeners](./documentation/Listeners.md)
-    - [Theming](./documentation/Theming.md)
+    - [Options](Options.md)
+    - [Data](Data.md)
+    - [Status](Status.md)
+    - [Events](Events.md)
+        - [From Table](Events.md#JD-Table-Events-to-Your-App)
+        - [From App](Events.md#Your-App-to-JD-Table-Events)
+    - [Listeners](Listeners.md)
+    - [Theming](Theming.md)
 
 ---
 
@@ -96,8 +96,8 @@ npm install --save-dev @fortawesome/fontawesome-free
 Follow all 3 steps below to begin using JD-Table.
 
 1. [Initialize](#initialize)
-2. [Configure Options](./documentation/Options.md)
-3. [Display Data](./documentation/Data.md)
+2. [Configure Options](Options.md)
+3. [Display Data](Data.md)
 
 #### Initialize
 
@@ -240,11 +240,11 @@ The following shows an example of how to use JD-Table your HTML files directly. 
 
 #### Configure Options
 
-[Dedicated Page - Click Here](./documentation/Options.md)
+[Dedicated Page - Click Here](Options.md)
 
 #### Display Data
 
-[Dedicated Page - Click Here](./documentation/Data.md)
+[Dedicated Page - Click Here](Data.md)
 
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>
@@ -257,15 +257,15 @@ The following shows an example of how to use JD-Table your HTML files directly. 
 JD-Table accepts the following props/properties:
 
 - **option** [Object]
-    - An object containing key/value pairs representing the options/settings for the table. Check out the [options](./documentation/Options.md) to learn more about the available choices.
+    - An object containing key/value pairs representing the options/settings for the table. Check out the [options](Options.md) to learn more about the available choices.
 - **loader** [Boolean]
     - A true/false setting which will enable or disable a loading message in the JD-Table. Use this while waiting to get a response from a REST call for data.
 - **event-from-app**  [Object]
-    - An object containing two keys "name" (string) and "payload" (string/object). Use this to send events to JD-Table such as sending data. Learn more about how to send events and what is available [here](./documentation/Events.md).
+    - An object containing two keys "name" (string) and "payload" (string/object). Use this to send events to JD-Table such as sending data. Learn more about how to send events and what is available [here](Events.md).
 - **event-from-app-trigger** [Boolean]
-    - A true/false setting which tells JD-Table to execute a event-from-app event. Learn more about triggering events [here](./documentation/Events.md).
+    - A true/false setting which tells JD-Table to execute a event-from-app event. Learn more about triggering events [here](Events.md).
 - **event-from-jd-table** [Event/Function/Callback]
-    - A event that that is triggered using a Vue $emit call. Learn more about how to process these events [here](./documentation/Events.md).
+    - A event that that is triggered using a Vue $emit call. Learn more about how to process these events [here](Events.md).
 
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>

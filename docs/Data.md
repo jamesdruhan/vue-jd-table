@@ -12,7 +12,7 @@ In order to display data in JD-Table you must trigger an **event-from-app** even
 
 ### Data Format
 
-The data sent to JD-Table must be in the format of an JavaScript Array of Objects representing each row of data. Each object should have a key with the same name as the column name (not title). The easiest way to do this from data returned for a REST API call is to parse it with JSON.parse().
+The data sent to JD-Table must be in the format of an JavaScript Array of Objects representing each row of data. Each object should have a key with the same name as the column name (not title). The easiest way to do this for data returned from a REST API call is to parse it with JSON.parse().
 
 > The value assigned to each column key should be either string or number. Array of strings/numbers are not yet supported (but will be eventually).
 
@@ -107,7 +107,7 @@ this.eventFromApp =
 };
 ```
 
-1. Trigger the event:
+2. Trigger the event:
 
 ```javascript
 // Trigger the event.

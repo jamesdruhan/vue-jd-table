@@ -82,7 +82,7 @@
 					enabled       : true,
 					sort          : true,
 					sortDirection : 'asc',
-					width         : 25,
+					width         : 100,
 				},
 				{
 					name        : 'employeeCode',
@@ -91,7 +91,7 @@
 					type        : 'String',
 					filterable  : true,
 					enabled     : true,
-					width       : 25,
+					width       : 50,
 				},
 				{
 					name       : 'location',
@@ -100,7 +100,7 @@
 					type       : 'String',
 					filterable : true,
 					enabled    : true,
-					width      : 25,
+					width      : 150,
 				},
 				{
 					name       : 'phone',
@@ -109,7 +109,7 @@
 					type       : 'String',
 					filterable : true,
 					enabled    : true,
-					width      : 25,
+					width      : 50,
 				}
 			]
 		},
@@ -118,11 +118,12 @@
 		{
 			this.tableOptions =
 			{
-				title   : 'JD-Table Demo [Slim (Just Table Data)]',
-				columns : this.columns,
-				controls : false,
-				footer : false,
-				highlight : false
+				title           : 'JD-Table Demo [Default]',
+				columns         : this.columns,
+				responsiveFrame : false,
+				responsiveTable : false,
+				frameWidth      : 400,
+				dataHeight      : 200
 			};
 		},
 

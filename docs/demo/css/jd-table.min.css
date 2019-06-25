@@ -1,0 +1,1408 @@
+.JD-Table {
+  position: relative;
+  min-width: 320px;
+  width: 100%;
+  background-color: #FFFFFF;
+  color: #252627;
+  font-size: 0.9rem;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  align-self: center;
+  z-index: 1;
+  overflow: hidden;
+  transition: max-width 0.2s cubic-bezier(0.05, 0.52, 0.48, 1);
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+  .JD-Table.maximized {
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1.2rem;
+    z-index: 9998;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.6); }
+    .JD-Table.maximized .layerHighlight {
+      min-width: 320px; }
+    .JD-Table.maximized .layerControl {
+      min-width: 320px; }
+    .JD-Table.maximized .layerOption {
+      min-width: 320px; }
+    .JD-Table.maximized .layerContent {
+      display: flex;
+      overflow-x: auto;
+      min-width: 320px;
+      flex-grow: 0;
+      flex-shrink: 1; }
+      .JD-Table.maximized .layerContent .table .body {
+        height: 100%;
+        flex-grow: 0;
+        flex-shrink: 1; }
+    .JD-Table.maximized .layerFooter {
+      min-width: 320px; }
+    .JD-Table.maximized .layerPopup {
+      border-radius: 0; }
+      .JD-Table.maximized .layerPopup.fullFrameZone {
+        padding: 3rem; }
+      .JD-Table.maximized .layerPopup .searchArrow {
+        top: 5.15rem; }
+      .JD-Table.maximized .layerPopup .filterArrow {
+        top: 5.15rem;
+        right: 1.2rem; }
+    .JD-Table.maximized .layerTitle {
+      padding-top: 0;
+      min-width: 320px; }
+  .JD-Table.fullBody {
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%; }
+    .JD-Table.fullBody .layerContent {
+      display: flex;
+      overflow-x: auto; }
+      .JD-Table.fullBody .layerContent .table .body {
+        height: 100%; }
+  .JD-Table .layerTitle {
+    font-size: 1.8rem;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    font-weight: 500;
+    width: 100%;
+    display: flex;
+    justify-content: center; }
+  .JD-Table .layerHighlight {
+    position: relative;
+    width: 100%;
+    height: 0.45rem;
+    min-height: 0.45rem;
+    background-color: #494949;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    z-index: 99; }
+  .JD-Table .layerControl {
+    position: relative;
+    width: 100%;
+    height: 2.5rem;
+    min-height: 2.5rem;
+    min-height: 2.5rem;
+    max-height: 2.5rem;
+    background-color: #757575;
+    color: #FFFFFF;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 99; }
+    .JD-Table .layerControl .controlSearch {
+      position: relative;
+      height: 100%;
+      width: 2rem;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      flex-grow: 0;
+      flex-shrink: 1;
+      transition: all 0.5s ease;
+      -webkit-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease; }
+      .JD-Table .layerControl .controlSearch input {
+        width: 100%;
+        max-width: 10rem;
+        height: 100%;
+        box-shadow: none;
+        border: none;
+        background: transparent;
+        flex-grow: 0;
+        flex-shrink: 1; }
+        .JD-Table .layerControl .controlSearch input:focus {
+          outline: none; }
+        .JD-Table .layerControl .controlSearch input::-ms-clear {
+          display: none; }
+        .JD-Table .layerControl .controlSearch input::-webkit-search-decoration, .JD-Table .layerControl .controlSearch input::-webkit-search-cancel-button, .JD-Table .layerControl .controlSearch input::-webkit-search-results-button, .JD-Table .layerControl .controlSearch input::-webkit-search-results-decoration {
+          display: none; }
+      .JD-Table .layerControl .controlSearch.searching {
+        width: 14rem;
+        color: #494949;
+        background-color: #E0E0E0; }
+        @media only screen and (max-width: 375px) {
+          .JD-Table .layerControl .controlSearch.searching {
+            width: 100%; } }
+    .JD-Table .layerControl .controlFeature {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      flex-wrap: nowrap;
+      flex-direction: row; }
+      @media only screen and (max-width: 375px) {
+        .JD-Table .layerControl .controlFeature.searching {
+          display: none; } }
+    .JD-Table .layerControl .controlItem {
+      height: 100%;
+      position: relative;
+      cursor: pointer;
+      color: #FFFFFF;
+      display: inline-block;
+      width: 2rem;
+      min-width: 2rem;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none; }
+      .JD-Table .layerControl .controlItem i {
+        width: 2rem;
+        min-width: 2rem;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center; }
+      .JD-Table .layerControl .controlItem.active i {
+        animation: activeFeature 1.5s infinite; }
+
+@keyframes activeFeature {
+  0% {
+    color: #FFFFFF; }
+  100% {
+    color: #ff1a1a; } }
+      .JD-Table .layerControl .controlItem:hover {
+        color: #494949;
+        background-color: #E0E0E0; }
+        .JD-Table .layerControl .controlItem:hover:active {
+          color: #C00; }
+      .JD-Table .layerControl .controlItem.selected {
+        color: #C00;
+        background-color: #E0E0E0; }
+        .JD-Table .layerControl .controlItem.selected:active {
+          color: #FFFFFF; }
+      .JD-Table .layerControl .controlItem.clearSearch {
+        color: #E53935; }
+      .JD-Table .layerControl .controlItem.search {
+        color: #757575; }
+      .JD-Table .layerControl .controlItem.noSelect {
+        cursor: default; }
+        .JD-Table .layerControl .controlItem.noSelect:hover:active {
+          color: #757575; }
+      .JD-Table .layerControl .controlItem .filterArrow {
+        position: absolute;
+        top: 2.95rem;
+        right: -0.5rem;
+        background: #c9c9c9;
+        border: 1px solid #494949;
+        padding: 0.5rem;
+        color: #252627;
+        animation: bounce 2s infinite;
+        border-radius: 6px;
+        white-space: nowrap; }
+        .JD-Table .layerControl .controlItem .filterArrow:after, .JD-Table .layerControl .controlItem .filterArrow:before {
+          bottom: 100%;
+          right: 1.5rem;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none; }
+        .JD-Table .layerControl .controlItem .filterArrow:after {
+          border-color: rgba(224, 224, 224, 0);
+          border-bottom-color: #c9c9c9;
+          border-width: 12px;
+          margin-right: -12px; }
+        .JD-Table .layerControl .controlItem .filterArrow:before {
+          border-color: rgba(73, 73, 73, 0);
+          border-bottom-color: #494949;
+          border-width: 18px;
+          margin-right: -18px; }
+      .JD-Table .layerControl .controlItem .searchArrow {
+        position: absolute;
+        top: 2.95rem;
+        left: 3.5rem;
+        background: #c9c9c9;
+        border: 1px solid #494949;
+        padding: 0.5rem;
+        color: #252627;
+        animation: bounce 2s infinite;
+        border-radius: 6px;
+        white-space: nowrap; }
+        .JD-Table .layerControl .controlItem .searchArrow:after, .JD-Table .layerControl .controlItem .searchArrow:before {
+          bottom: 100%;
+          left: 50%;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none; }
+        .JD-Table .layerControl .controlItem .searchArrow:after {
+          border-color: rgba(224, 224, 224, 0);
+          border-bottom-color: #c9c9c9;
+          border-width: 12px;
+          margin-left: -12px; }
+        .JD-Table .layerControl .controlItem .searchArrow:before {
+          border-color: rgba(73, 73, 73, 0);
+          border-bottom-color: #494949;
+          border-width: 18px;
+          margin-left: -18px; }
+  .JD-Table .layerOption {
+    width: 100%;
+    position: relative; }
+    .JD-Table .layerOption .optionDropdown {
+      background-color: #E0E0E0;
+      width: 310px;
+      right: 5px;
+      top: -1px;
+      position: absolute;
+      z-index: 80;
+      padding: 0.5rem 0rem;
+      box-sizing: border-box;
+      transition: all 0.3s cubic-bezier(0.05, 0.52, 0.48, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.54);
+      -moz-box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.54);
+      box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.54);
+      border-bottom-right-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem; }
+      .JD-Table .layerOption .optionDropdown .dropdownHeader {
+        align-items: center;
+        padding-top: 0.5rem;
+        padding-bottom: 1rem;
+        font-size: 1.35rem;
+        text-transform: uppercase;
+        color: #252627;
+        font-weight: 600;
+        align-self: center; }
+        .JD-Table .layerOption .optionDropdown .dropdownHeader.subHeader {
+          padding-top: 1rem;
+          font-size: 1.17rem; }
+        .JD-Table .layerOption .optionDropdown .dropdownHeader.smallHeader {
+          font-size: 0.81rem;
+          font-weight: 400;
+          font-style: italic;
+          text-transform: none;
+          padding-top: 0rem; }
+      .JD-Table .layerOption .optionDropdown .dropdownItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 2rem;
+        min-height: 2rem;
+        width: 100%; }
+        .JD-Table .layerOption .optionDropdown .dropdownItem .columnVisibility {
+          padding-left: 1rem;
+          padding-right: 1rem;
+          color: #357e37; }
+          .JD-Table .layerOption .optionDropdown .dropdownItem .columnVisibility .notVisible {
+            color: #E53935; }
+        .JD-Table .layerOption .optionDropdown .dropdownItem .columnTitle {
+          padding-right: 1rem;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap; }
+        .JD-Table .layerOption .optionDropdown .dropdownItem:hover {
+          background-color: #FFFFFF; }
+        .JD-Table .layerOption .optionDropdown .dropdownItem.selected {
+          background-color: #757575;
+          color: #FFFFFF; }
+          .JD-Table .layerOption .optionDropdown .dropdownItem.selected:hover {
+            background-color: #757575; }
+      .JD-Table .layerOption .optionDropdown .dropdownInput {
+        position: relative;
+        height: 2rem;
+        min-height: 2rem;
+        display: flex;
+        align-items: center;
+        margin: 0rem 1rem 0.5rem 1rem;
+        border: 1px solid #C00;
+        border-left: 5px solid #C00;
+        outline: none;
+        box-sizing: border-box;
+        font-size: 0.765rem;
+        font-weight: 500;
+        background-color: #FFFFFF;
+        align-items: center; }
+        .JD-Table .layerOption .optionDropdown .dropdownInput .label {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none; }
+          .JD-Table .layerOption .optionDropdown .dropdownInput .label span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-left: 0.5rem;
+            margin-right: 2rem; }
+        .JD-Table .layerOption .optionDropdown .dropdownInput ul {
+          position: absolute;
+          max-height: 12rem;
+          overflow-x: hidden;
+          overflow-y: auto;
+          top: 100%;
+          left: -1px;
+          right: -1px;
+          list-style: none;
+          padding: 0rem;
+          margin: 0rem;
+          border: 1px solid #ff6666;
+          background-color: #FFFFFF;
+          box-sizing: border-box;
+          z-index: 9998; }
+          .JD-Table .layerOption .optionDropdown .dropdownInput ul li {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding: 0.2rem;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none; }
+            .JD-Table .layerOption .optionDropdown .dropdownInput ul li:hover {
+              background-color: #ff4d4d;
+              color: #FFFFFF; }
+        .JD-Table .layerOption .optionDropdown .dropdownInput input {
+          width: 100%;
+          font-family: inherit;
+          border: none;
+          font-size: 0.765rem;
+          font-weight: 500;
+          background-color: #FFFFFF;
+          outline: none;
+          box-sizing: border-box; }
+        .JD-Table .layerOption .optionDropdown .dropdownInput.addPadding {
+          padding: 0rem 0.5rem; }
+        .JD-Table .layerOption .optionDropdown .dropdownInput .removeIcon {
+          position: absolute;
+          right: 0.5rem;
+          top: 0.35rem;
+          color: #E53935;
+          font-size: 1.35rem; }
+        .JD-Table .layerOption .optionDropdown .dropdownInput.disabled {
+          border: 1px solid #949494;
+          border-left: 5px solid #949494; }
+        .JD-Table .layerOption .optionDropdown .dropdownInput.carrot:after {
+          content: "";
+          width: 0;
+          height: 0;
+          position: absolute;
+          right: 0.5rem;
+          top: 50%;
+          margin-top: -3px;
+          border-width: 6px 6px 0 6px;
+          border-style: solid;
+          border-color: #C00 transparent; }
+      .JD-Table .layerOption .optionDropdown .dropdownRow {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 2rem;
+        min-height: 2rem;
+        padding: 0rem 1rem;
+        align-items: center; }
+        .JD-Table .layerOption .optionDropdown .dropdownRow.separate {
+          justify-content: space-between; }
+        .JD-Table .layerOption .optionDropdown .dropdownRow button {
+          width: 5rem; }
+      .JD-Table .layerOption .optionDropdown .errorMessage {
+        color: #E53935;
+        font-size: 0.765rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        font-weight: 500; }
+  .JD-Table .layerContent {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    color: #252627;
+    display: block;
+    box-sizing: border-box;
+    overflow-y: hidden;
+    z-index: 50; }
+    .JD-Table .layerContent .rowView {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.2);
+      z-index: 99;
+      padding: 1rem;
+      box-sizing: border-box; }
+    .JD-Table .layerContent .table {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap; }
+      .JD-Table .layerContent .table .head {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        background-color: #757575; }
+        .JD-Table .layerContent .table .head .cell {
+          position: relative;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          box-sizing: border-box;
+          font-size: 0.9rem;
+          padding: 0.2rem 0.5rem;
+          flex-grow: 1;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          border-top: 4px solid #990000;
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+          background-color: #C00;
+          color: #FFFFFF;
+          border-right: 1px solid #990000; }
+          .JD-Table .layerContent .table .head .cell .cellText {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between; }
+          .JD-Table .layerContent .table .head .cell .hoverSort {
+            display: none; }
+          .JD-Table .layerContent .table .head .cell.hoverAssist {
+            background-color: #ff4d4d; }
+          .JD-Table .layerContent .table .head .cell:first-child {
+            border-top-left-radius: 0px; }
+          .JD-Table .layerContent .table .head .cell.scrollBuffer:last-child {
+            margin-right: 17px; }
+          .JD-Table .layerContent .table .head .cell.sort {
+            cursor: pointer; }
+            .JD-Table .layerContent .table .head .cell.sort:hover {
+              border-top: 4px solid #999999;
+              background-color: #FFFFFF;
+              color: #252627;
+              font-weight: 500; }
+              .JD-Table .layerContent .table .head .cell.sort:hover .hoverSort {
+                display: block;
+                color: #252627; }
+        .JD-Table .layerContent .table .head .scrollFix {
+          width: 19px;
+          min-width: 19px;
+          max-width: 19px;
+          border-top-right-radius: 0px;
+          border-right: none;
+          border-top: 4px solid #990000;
+          box-sizing: border-box;
+          position: relative;
+          display: flex;
+          background-color: #C00;
+          border-left: none; }
+        .JD-Table .layerContent .table .head .resize {
+          position: absolute;
+          height: 100%;
+          width: 8px;
+          display: block;
+          cursor: w-resize;
+          right: -5px;
+          top: 0;
+          z-index: 10;
+          overflow: hidden; }
+          .JD-Table .layerContent .table .head .resize.selected {
+            width: 500px;
+            right: -250px; }
+      .JD-Table .layerContent .table .body {
+        position: relative;
+        width: 100%;
+        display: block;
+        overflow-x: hidden;
+        background-color: #F7F7F7;
+        z-index: 50;
+        background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px); }
+        .JD-Table .layerContent .table .body .row {
+          position: relative;
+          z-index: 50;
+          background-color: #FFFFFF; }
+          .JD-Table .layerContent .table .body .row:hover {
+            background-color: #ff4d4d !important;
+            color: #FFFFFF; }
+          .JD-Table .layerContent .table .body .row.zebra:nth-child(even) {
+            background-color: #f2f2f2; }
+          .JD-Table .layerContent .table .body .row .cell {
+            position: relative;
+            font-size: 0.81rem;
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden; }
+            .JD-Table .layerContent .table .body .row .cell.rowFlex {
+              display: flex;
+              height: 100%;
+              align-items: center;
+              white-space: inherit;
+              min-height: inherit; }
+            .JD-Table .layerContent .table .body .row .cell:after {
+              display: block;
+              content: '';
+              min-height: inherit;
+              font-size: 0; }
+        .JD-Table .layerContent .table .body .virtualBody {
+          position: absolute;
+          opacity: 0;
+          top: 0;
+          left: 0;
+          width: 1px;
+          background: transparent; }
+      .JD-Table .layerContent .table .row {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        cursor: pointer; }
+        .JD-Table .layerContent .table .row .cell {
+          width: 100%;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          flex-grow: 1;
+          padding-left: 0.5rem;
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          word-break: break-all;
+          word-break: break-word;
+          -ms-word-break: break-all;
+          hyphens: auto;
+          -ms-hyphens: auto;
+          -moz-hyphens: auto;
+          -webkit-hyphens: auto; }
+  .JD-Table .layerFooter {
+    position: relative;
+    width: 100%;
+    height: 2rem;
+    min-height: 2rem;
+    background-color: #494949;
+    color: #FFFFFF;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    z-index: 99;
+    font-size: 0.81rem;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none; }
+    .JD-Table .layerFooter .resultRows {
+      font-size: 0.765rem; }
+    .JD-Table .layerFooter .pagination {
+      width: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%; }
+      .JD-Table .layerFooter .pagination .paginationDirection {
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+        height: 100%;
+        align-items: center; }
+        .JD-Table .layerFooter .pagination .paginationDirection.left {
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: #494949;
+          border-bottom-left-radius: 0.5rem; }
+        .JD-Table .layerFooter .pagination .paginationDirection.right {
+          position: absolute;
+          top: 0;
+          right: 0;
+          background-color: #494949;
+          border-bottom-right-radius: 0.5rem; }
+        .JD-Table .layerFooter .pagination .paginationDirection.disabled {
+          cursor: no-drop; }
+          .JD-Table .layerFooter .pagination .paginationDirection.disabled i:hover {
+            background-color: #494949; }
+          .JD-Table .layerFooter .pagination .paginationDirection.disabled i:active {
+            background-color: #494949; }
+        .JD-Table .layerFooter .pagination .paginationDirection i {
+          display: flex;
+          align-items: center;
+          width: 3rem;
+          height: 100%;
+          justify-content: center; }
+          .JD-Table .layerFooter .pagination .paginationDirection i:hover {
+            background-color: #6f6f6f; }
+          .JD-Table .layerFooter .pagination .paginationDirection i:active {
+            background-color: #898989; }
+          .JD-Table .layerFooter .pagination .paginationDirection i.start {
+            border-bottom-left-radius: 0.5rem; }
+          .JD-Table .layerFooter .pagination .paginationDirection i.end {
+            border-bottom-right-radius: 0.5rem; }
+      .JD-Table .layerFooter .pagination .paginationRows {
+        position: absolute;
+        background-color: #494949;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.72rem;
+        padding: 0rem 1rem;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%); }
+      .JD-Table .layerFooter .pagination .paginationArea {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around; }
+        .JD-Table .layerFooter .pagination .paginationArea .paginationList {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          height: 100%; }
+          .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0rem 0.3rem;
+            height: 100%;
+            box-sizing: border-box;
+            font-size: 0.72rem; }
+            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage span {
+              border: 1px solid #6f6f6f;
+              padding: 0.2rem 0.4rem;
+              min-width: 1.5rem;
+              text-align: center;
+              box-sizing: border-box; }
+            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.addHover:hover {
+              cursor: pointer; }
+              .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.addHover:hover span {
+                background-color: #6f6f6f;
+                color: #FFFFFF; }
+            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.selected span {
+              background-color: #6f6f6f; }
+            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.selected:hover {
+              cursor: default !important; }
+              .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.selected:hover span {
+                background-color: #6f6f6f !important;
+                color: #FFFFFF !important; }
+  .JD-Table .layerPopup {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 0.5rem; }
+    .JD-Table .layerPopup.fullFrame {
+      z-index: 9998; }
+    .JD-Table .layerPopup.contentFrame {
+      z-index: 50;
+      padding-top: 2.95rem;
+      padding-bottom: 2rem; }
+    .JD-Table .layerPopup.fullFrameZone {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 1rem; }
+    .JD-Table .layerPopup .errorMessage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background-color: #FFFFFF;
+      color: #E53935;
+      font-size: 1.17rem; }
+    .JD-Table .layerPopup.filterOverride {
+      z-index: 85; }
+    .JD-Table .layerPopup.fullOverride {
+      z-index: 999; }
+    .JD-Table .layerPopup .noDataFrame {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem; }
+      .JD-Table .layerPopup .noDataFrame .title {
+        font-size: 1.17rem;
+        font-weight: 500;
+        text-transform: uppercase; }
+      .JD-Table .layerPopup .noDataFrame .filters {
+        margin-top: 1rem; }
+    .JD-Table .layerPopup .quickView {
+      position: relative;
+      min-width: 314px;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 0.5rem;
+      background-color: #494949;
+      box-sizing: border-box;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
+      .JD-Table .layerPopup .quickView .quickViewHighlight_1 {
+        width: 100%;
+        height: 0.3375rem;
+        background-color: #494949;
+        border-top-right-radius: 0.5rem;
+        border-top-left-radius: 0.5rem; }
+      .JD-Table .layerPopup .quickView .quickViewHighlight_2 {
+        width: 100%;
+        height: 0.675rem;
+        background-color: #C00; }
+      .JD-Table .layerPopup .quickView .quickViewControl {
+        width: 100%;
+        height: 2.5rem;
+        background-color: #757575;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        color: #FFFFFF;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none; }
+        .JD-Table .layerPopup .quickView .quickViewControl .controlAction {
+          font-size: 0.9rem;
+          display: flex;
+          justify-content: center;
+          width: 2rem;
+          cursor: pointer;
+          height: 100%;
+          align-items: center; }
+          .JD-Table .layerPopup .quickView .quickViewControl .controlAction:hover {
+            background-color: #9b9b9b; }
+        .JD-Table .layerPopup .quickView .quickViewControl .controlTitle {
+          text-transform: uppercase;
+          font-size: 1.17rem; }
+      .JD-Table .layerPopup .quickView .quickViewContent {
+        width: 100%;
+        max-height: 320px;
+        overflow: auto;
+        background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px); }
+        .JD-Table .layerPopup .quickView .quickViewContent .contentRow {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          background-color: #FFFFFF; }
+          .JD-Table .layerPopup .quickView .quickViewContent .contentRow .rowTitle {
+            display: flex;
+            align-items: center;
+            font-size: 0.99rem;
+            font-weight: 600;
+            word-break: break-all;
+            padding: 0.5rem 1rem;
+            background-color: #e6e6e6; }
+          .JD-Table .layerPopup .quickView .quickViewContent .contentRow .rowData {
+            display: flex;
+            align-items: center;
+            min-height: 2rem;
+            padding: 0.5rem 1rem;
+            word-break: break-all; }
+      .JD-Table .layerPopup .quickView .quickViewFooter {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 2rem;
+        background-color: #494949;
+        color: #FFFFFF;
+        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        font-size: 0.81rem;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none; }
+        .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection {
+          display: flex;
+          justify-content: center;
+          width: 5rem;
+          cursor: pointer;
+          height: 100%;
+          align-items: center; }
+          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection:hover {
+            background-color: #6f6f6f; }
+          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection:active {
+            background-color: #898989; }
+          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection.previous {
+            border-bottom-left-radius: 0.5rem; }
+          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection.next {
+            border-bottom-right-radius: 0.5rem; }
+        .JD-Table .layerPopup .quickView .quickViewFooter .footerItem {
+          font-size: 0.765rem; }
+    .JD-Table .layerPopup .tableMessage {
+      font-size: 1.5rem;
+      text-align: center; }
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0); }
+  40% {
+    transform: translateY(30px); }
+  60% {
+    transform: translateY(15px); } }
+
+.JD-Reset * {
+  box-sizing: border-box; }
+
+.JD-Reset ::before, .JD-Reset ::after {
+  box-sizing: inherit; }
+
+.JD-Reset html {
+  line-height: 1.15;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -webkit-tap-highlight-color: transparent;
+  /* 3*/ }
+
+.JD-Reset body {
+  margin: 0; }
+
+.JD-Reset main {
+  display: block; }
+
+.JD-Reset p,
+.JD-Reset table,
+.JD-Reset blockquote,
+.JD-Reset address,
+.JD-Reset pre,
+.JD-Reset iframe,
+.JD-Reset form,
+.JD-Reset figure,
+.JD-Reset dl {
+  margin: 0; }
+
+.JD-Reset h1,
+.JD-Reset h2,
+.JD-Reset h3,
+.JD-Reset h4,
+.JD-Reset h5,
+.JD-Reset h6 {
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  margin: 0; }
+
+.JD-Reset ul,
+.JD-Reset ol {
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+.JD-Reset dt {
+  font-weight: bold; }
+
+.JD-Reset dd {
+  margin-left: 0; }
+
+.JD-Reset hr {
+  box-sizing: content-box;
+  /* 1 */
+  height: 0;
+  /* 1 */
+  overflow: visible;
+  /* 2 */
+  border: 0;
+  border-top: 1px solid;
+  margin: 0;
+  clear: both; }
+
+.JD-Reset pre {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: inherit;
+  /* 2 */ }
+
+.JD-Reset address {
+  font-style: inherit; }
+
+.JD-Reset a {
+  background-color: transparent;
+  text-decoration: none;
+  color: inherit; }
+
+.JD-Reset abb
+[title] {
+  border-bottom: none;
+  /* 1 */
+  text-decoration: underline;
+  /* 2 */
+  text-decoration: underline dotted;
+  /* 2 */ }
+
+.JD-Reset b, .JD-Resetstrong {
+  font-weight: bolder; }
+
+.JD-Reset code,
+.JD-Reset kbd,
+.JD-Reset samp {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: inherit;
+  /* 2 */ }
+
+.JD-Reset small {
+  font-size: 80%; }
+
+.JD-Reset sub,
+.JD-Reset sup {
+  ont-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline; }
+
+.JD-Reset sub {
+  bottom: -0.25em; }
+
+.JD-Reset sup {
+  top: -0.5em; }
+
+.JD-Reset img {
+  border-style: none;
+  vertical-align: bottom; }
+
+.JD-Reset embed,
+.JD-Reset object,
+.JD-Reset iframe {
+  border: 0;
+  vertical-align: bottom; }
+
+.JD-Reset button,
+.JD-Reset input,
+.JD-Reset optgroup,
+.JD-Reset select,
+.JD-Reset textarea {
+  vertical-align: middle;
+  color: inherit;
+  font: inherit;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  outline: 0; }
+
+.JD-Reset select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0; }
+
+.JD-Reset button,
+.JD-Reset input {
+  overflow: visible; }
+
+.JD-Reset button,
+.JD-Reset select {
+  text-transform: none; }
+
+.JD-Reset button,
+.JD-Reset [type='button'],
+.JD-Reset [type='reset'],
+.JD-Reset [type='submit'] {
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none; }
+
+.JD-Reset button[disabled],
+.JD-Reset [type='button'][disabled],
+.JD-Reset [type='reset'][disabled],
+.JD-Reset [type='submit'][disabled] {
+  cursor: default; }
+
+.JD-Reset button::-moz-focus-inner,
+.JD-Reset [type='button']::-moz-focus-inner,
+.JD-Reset [type='reset']::-moz-focus-inner,
+.JD-Reset [type='submit']::-moz-focus-inner {
+  border-style: none;
+  padding: 0; }
+
+.JD-Reset button:-moz-focusring,
+.JD-Reset [type='button']:-moz-focusring,
+.JD-Reset [type='reset']:-moz-focusring,
+.JD-Reset [type='submit']:-moz-focusring {
+  outline: 1px dotted ButtonText; }
+
+.JD-Reset fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0; }
+
+.JD-Reset legend {
+  color: inherit;
+  /* 2 */
+  display: table;
+  /* 1 */
+  max-width: 100%;
+  /* 1 */
+  padding: 0;
+  /* 3 */
+  white-space: normal;
+  /* 1 */ }
+
+.JD-Reset progress {
+  vertical-align: baseline; }
+
+.JD-Reset textarea {
+  overflow: auto; }
+
+.JD-Reset [type='checkbox'],
+.JD-Reset [type='radio'] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */ }
+
+.JD-Reset [type='number']::-webkit-inner-spin-button,
+.JD-Reset [type='number']::-webkit-outer-spin-button {
+  height: auto; }
+
+.JD-Reset [type='search'] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */ }
+
+.JD-Reset [type='search']::-webkit-search-decoration {
+  -webkit-appearance: none; }
+
+.JD-Reset ::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */ }
+
+.JD-Reset ::-webkit-input-placeholder {
+  font: inherit; }
+
+.JD-Reset :-ms-input-placeholder {
+  font: inherit; }
+
+.JD-Reset ::-ms-input-placeholder {
+  font: inherit; }
+
+.JD-Reset ::placeholder {
+  font: inherit; }
+
+.JD-Reset label[for] {
+  cursor: pointer; }
+
+.JD-Reset details {
+  display: block; }
+
+.JD-Reset summary {
+  display: list-item; }
+
+.JD-Reset table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+.JD-Reset caption {
+  text-align: left; }
+
+.JD-Reset td,
+.JD-Reset th {
+  vertical-align: top; }
+
+.JD-Reset th {
+  text-align: left;
+  font-weight: bold; }
+
+.JD-Reset template {
+  display: none; }
+
+.JD-Reset [hidden] {
+  display: none; }
+
+.JD-Clickable {
+  cursor: pointer; }
+
+.JD-NoneSelectable {
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none; }
+
+.JD-Loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  padding-top: 1.5rem;
+  border-radius: 0.5rem; }
+  .JD-Loader .loadingText {
+    margin-top: 0.6rem;
+    font-weight: 500; }
+  .JD-Loader .fulfilling-square-spinner, .JD-Loader .fulfilling-square-spinner * {
+    box-sizing: border-box; }
+  .JD-Loader .fulfilling-square-spinner {
+    height: 50px;
+    width: 50px;
+    position: relative;
+    border: 4px solid #C00;
+    animation: fulfilling-square-spinner-animation 4s infinite ease; }
+  .JD-Loader .fulfilling-square-spinner .spinner-inner {
+    vertical-align: top;
+    display: inline-block;
+    background-color: #C00;
+    width: 100%;
+    opacity: 1;
+    animation: fulfilling-square-spinner-inner-animation 4s infinite ease-in; }
+
+@keyframes fulfilling-square-spinner-animation {
+  0% {
+    transform: rotate(0deg); }
+  25% {
+    transform: rotate(180deg); }
+  50% {
+    transform: rotate(180deg); }
+  75% {
+    transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg); } }
+
+@keyframes fulfilling-square-spinner-inner-animation {
+  0% {
+    height: 0%; }
+  25% {
+    height: 0%; }
+  50% {
+    height: 100%; }
+  75% {
+    height: 100%; }
+  100% {
+    height: 0%; } }
+  .JD-Loader .self-building-square-spinner, .JD-Loader .self-building-square-spinner * {
+    box-sizing: border-box; }
+  .JD-Loader .self-building-square-spinner {
+    height: 40px;
+    width: 40px;
+    top: calc( -10px * 2 / 3); }
+  .JD-Loader .self-building-square-spinner .square {
+    height: 10px;
+    width: 10px;
+    top: calc( -10px * 2 / 3);
+    margin-right: calc(10px / 3);
+    margin-top: calc(10px / 3);
+    background: #C00;
+    float: left;
+    position: relative;
+    opacity: 0;
+    animation: self-building-square-spinner 6s infinite; }
+  .JD-Loader .self-building-square-spinner .square:nth-child(1) {
+    animation-delay: calc( 300ms * 6); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(2) {
+    animation-delay: calc( 300ms * 7); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(3) {
+    animation-delay: calc( 300ms * 8); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(4) {
+    animation-delay: calc( 300ms * 3); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(5) {
+    animation-delay: calc( 300ms * 4); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(6) {
+    animation-delay: calc( 300ms * 5); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(7) {
+    animation-delay: calc( 300ms * 0); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(8) {
+    animation-delay: calc( 300ms * 1); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(9) {
+    animation-delay: calc( 300ms * 2); }
+  .JD-Loader .self-building-square-spinner .clear {
+    clear: both; }
+
+@keyframes self-building-square-spinner {
+  0% {
+    opacity: 0; }
+  5% {
+    opacity: 1;
+    top: 0; }
+  50.9% {
+    opacity: 1;
+    top: 0; }
+  55.9% {
+    opacity: 0;
+    top: inherit; } }
+  .JD-Loader .looping-rhombuses-spinner, .JD-Loader .looping-rhombuses-spinner * {
+    box-sizing: border-box; }
+  .JD-Loader .looping-rhombuses-spinner {
+    width: calc(15px * 4);
+    height: 15px;
+    position: relative; }
+  .JD-Loader .looping-rhombuses-spinner .rhombus {
+    height: 15px;
+    width: 15px;
+    background-color: #C00;
+    left: calc(15px * 4);
+    position: absolute;
+    margin: 0 auto;
+    border-radius: 2px;
+    transform: translateY(0) rotate(45deg) scale(0);
+    animation: looping-rhombuses-spinner-animation 2500ms linear infinite; }
+  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(1) {
+    animation-delay: calc(2500ms * 1 / -1.5); }
+  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(2) {
+    animation-delay: calc(2500ms * 2 / -1.5); }
+  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(3) {
+    animation-delay: calc(2500ms * 3 / -1.5); }
+
+@keyframes looping-rhombuses-spinner-animation {
+  0% {
+    transform: translateX(0) rotate(45deg) scale(0); }
+  50% {
+    transform: translateX(-233%) rotate(45deg) scale(1); }
+  100% {
+    transform: translateX(-466%) rotate(45deg) scale(0); } }
+
+.JD-Button {
+  position: relative;
+  margin: 0.5rem 0rem !important;
+  width: auto;
+  height: 1.8rem;
+  overflow: hidden !important;
+  border-width: 0;
+  outline: none !important;
+  border-radius: 2px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  background-color: #C00;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  align-items: center;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  transition: background-color .3s;
+  -webkit-transition: background-color .3s;
+  -moz-transition: background-color .3s;
+  -o-transition: background-color .3s; }
+  .JD-Button:hover {
+    background-color: red; }
+  .JD-Button:focus {
+    background-color: #990000; }
+  .JD-Button:focus:hover {
+    background-color: red; }
+  .JD-Button:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 0;
+    padding-top: 0;
+    border-radius: 100%;
+    background-color: #E0E0E0;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%); }
+  .JD-Button:active:before {
+    width: 120%;
+    padding-top: 120%;
+    opacity: 0.32;
+    transition: width .2s ease-out, padding-top .2s ease-out;
+    -webkit-transition: width .2s ease-out, padding-top .2s ease-out;
+    -moz-transition: width .2s ease-out, padding-top .2s ease-out;
+    -ms-transition: width .2s ease-out, padding-top .2s ease-out;
+    -o-transition: width .2s ease-out, padding-top .2s ease-out; }
+  .JD-Button:disabled {
+    background-color: #660000;
+    cursor: not-allowed;
+    color: #cccccc; }
+  .JD-Button.small {
+    min-width: 3rem !important; }
+  .JD-Button.medium {
+    min-width: 5rem !important; }
+  .JD-Button.large {
+    min-width: 7rem !important; }
+  .JD-Button.danger {
+    background-color: #E53935;
+    color: #FFFFFF; }
+    .JD-Button.danger:hover {
+      background-color: #cd1e1a; }
+    .JD-Button.danger:focus {
+      background-color: #eb6562; }
+    .JD-Button.danger:focus:hover {
+      background-color: #cd1e1a; }
+    .JD-Button.danger:disabled {
+      background-color: #9f1815;
+      color: #cccccc;
+      cursor: not-allowed; }
+  .JD-Button.success {
+    background-color: #3C903F;
+    color: #FFFFFF; }
+    .JD-Button.success:hover {
+      background-color: #2d6c2f; }
+    .JD-Button.success:focus {
+      background-color: #4bb44f; }
+    .JD-Button.success:focus:hover {
+      background-color: #2d6c2f; }
+    .JD-Button.success:disabled {
+      background-color: #1e4820;
+      color: #cccccc;
+      cursor: not-allowed; }
+
+.jdTableFade-enter-active, .jdTableFade-leave-active {
+  transition: opacity 0.3s;
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s; }
+
+.jdTableFade-enter, .jdTableFade-leave-to {
+  opacity: 0; }
+
+.jdTableSlideDown-enter-active, .jdTableSlideDown-leave-active {
+  transition: all 0.3s cubic-bezier(0.05, 0.52, 0.48, 1);
+  -webkit-transition: all 0.3s cubic-bezier(0.05, 0.52, 0.48, 1);
+  -moz-transition: all 0.3s cubic-bezier(0.05, 0.52, 0.48, 1);
+  -o-transition: all 0.3s cubic-bezier(0.05, 0.52, 0.48, 1); }
+
+.jdTableSlideDown-enter, .jdTableSlideDown-leave-to {
+  transform: translateY(-2.95rem);
+  opacity: 0; }

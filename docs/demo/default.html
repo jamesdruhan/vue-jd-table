@@ -279,11 +279,12 @@
 
 				let dataCount    = sampleData.length;
 				let dataToReturn = [];
-
+				console.log('Starting Generate');
 				for( let i = 0; i < howManyRows; i++ )
 				{
 					let randomEmployee = Math.floor(Math.random() * dataCount);
-
+					console.log(randomEmployee);
+					console.log(sampleData[randomEmployee]);
 					dataToReturn.push( sampleData[randomEmployee] );
 				}
 

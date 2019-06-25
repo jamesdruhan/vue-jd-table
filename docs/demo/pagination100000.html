@@ -118,8 +118,9 @@
 		{
 			this.tableOptions =
 			{
-				title   : 'JD-Table Demo [Default]',
-				columns : this.columns,
+				title        : 'JD-Table Demo [Pagination Rendering (100,000 Rows)]',
+				columns      : this.columns,
+				renderEngine : 2
 			};
 		},
 
@@ -135,7 +136,7 @@
 				// Enable the table loader.
 				this.tableLoader = true;
 
-				this.getData( 1000 ).then( ( result ) =>
+				this.getData( 100000 ).then( ( result ) =>
 				{
 					this.eventFromApp =
 						{

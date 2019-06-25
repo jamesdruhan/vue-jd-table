@@ -2122,7 +2122,7 @@
 						let endIndex   = ( this.rendering.pagination.currentPage * this.rendering.pagination.currentPageRows );
 
 						// Correction for external data.
-						if ( this.processedDataSize )
+						if ( this.setting.dataProvider === 1 && this.processedDataSize )
 						{
 							startIndex = 0;
 							endIndex   = this.processedData.length;

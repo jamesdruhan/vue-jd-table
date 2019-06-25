@@ -14,12 +14,7 @@
   <br>
 </p>
 
-<p align="center">
-  <a href="https://jamesdruhan.github.io/vue-jd-table/demo/demo.html">Demos</a>
-  <br>
-</p>
-
-[Demo's](Demos.md)
+### [View Demos](Demos.md)
 
 ### Table of Contents
 

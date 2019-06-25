@@ -32,7 +32,6 @@ data ()
 - [columnSort](#columnSort)
 - [controls](#controls)
 - [dataHeight](#dataHeight)
-- [dataHeight](#dataHeight)
 - [dataprovider](#dataprovider)
 - [export](#export)
 - [exportLimit](#exportLimit)
@@ -242,7 +241,7 @@ data ()
 
     - **Type**: [Number]
     <br><br>
-    -  **Default**: Null
+    -  **Default**: 400
     <br><br>
     - **Details**: A number value (PX) which will applied to the data table body height. Null = 100%.
     <br><br>

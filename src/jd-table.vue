@@ -1093,7 +1093,7 @@
 						});
 
 						// If the table should be responsive, but the sum of the widths is Greater/Equal To 100%. Throw an error.
-						if ( this.setting.responsiveTable && this.tableWidth > 100 )
+						if ( this.setting.responsiveTable && this.tableWidth !== null && this.tableWidth > 100 )
 						{
 							this.status.tableError =  'Error: Invalid settings. The sum of the individual column widths is greater then 100%. Ensure your columns are balanced.'
 						}
@@ -3559,7 +3559,7 @@
 							virtualEngineRowStart          : 250,
 							frameWidth                     : null,
 							headerHeight                   : 40,
-							dataHeight                     : null,
+							dataHeight                     : 400,
 							rowHeight                      : 42,
 							paginationRowLimits            : [50, 100, 200],
 							paginationRowStart             : 50,

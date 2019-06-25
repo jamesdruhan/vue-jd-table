@@ -1837,7 +1837,6 @@
 				// Processes the passed event.
 				processEvent : function ( name )
 				{
-					console.log('processEvent');
 					// Process the data sent to JD-Table.
 					if ( !this.status.tableError && name === 'sendData' )
 					{
@@ -4197,8 +4196,6 @@
 				// Watches for event triggers. This will run the event when the trigger is true.
 				eventFromAppTrigger : function ( to , from )
 				{
-					console.log(from);
-					console.log(to);
 					if ( from === false && to === true && this.eventFromApp.name )
 					{
 						this.processEvent( this.eventFromApp.name );

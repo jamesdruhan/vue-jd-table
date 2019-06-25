@@ -15,9 +15,11 @@
 </p>
 
 <p align="center">
-  <a href="./demo/demo.html">Demos</a>
+  <a href="https://jamesdruhan.github.io/vue-jd-table/demo/demo.html">Demos</a>
   <br>
 </p>
+
+[Demo's](test.md)
 
 ### Table of Contents
 

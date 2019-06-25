@@ -134,18 +134,19 @@
 				// Enable the table loader.
 				this.tableLoader = true;
 
-				var data = this.getData(100);
-
-				this.eventFromApp =
+				this.getData(100).then( ( result ) =>
 				{
-					name    : 'sendData',
-					payload : data
-				};
+					this.eventFromApp =
+						{
+							name    : 'sendData',
+							payload : result
+						};
 
-				this.triggerEvent();
+					this.triggerEvent();
 
-				// Disable the table loader.
-				this.tableLoader = false;
+					// Disable the table loader.
+					this.tableLoader = false;
+				});
 			},
 
 			// Triggers the currently queued JD-Table event to run.

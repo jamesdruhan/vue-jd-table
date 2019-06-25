@@ -136,7 +136,7 @@
 				// Enable the table loader.
 				this.tableLoader = true;
 
-				this.getData( 100000 ).then( ( result ) =>
+				this.getData( 10000 ).then( ( result ) =>
 				{
 					this.eventFromApp =
 						{
@@ -169,7 +169,7 @@
 			{
 				if ( componentState.lastAction === 'Refresh' )
 				{
-					this.getData( 1000 ).then( ( result ) =>
+					this.getData( 100000 ).then( ( result ) =>
 					{
 						this.eventFromApp =
 							{

@@ -1,10 +1,10 @@
 # JD-Table / Data
 
-In order to display data in JD-Table you must trigger an **event-from-app** event from your app with the name of "**sendData**". The rational for this approach is that typically when you page/component renders the data may not be available immediately. This is usually due to the fact that you need to request it via some sort of API like REST.
+In order to display data in JD-Table you must trigger an **event-from-app** event from your app (the parent) with the name of "**sendData**". The rational for this approach is that typically when your page/component renders, the data may not be available immediately. This is usually due to the fact that you need to request it via some sort of API like REST.
 
 <p align="center">
   <br>
-  <img src="./documentation/assets/DataEventFlow.png" alt="Example of Data Flow for JD-Table">
+  <img src="./assets/DataEventFlow.png" alt="Example of Data Flow for JD-Table">
   <br>
 </p>
 

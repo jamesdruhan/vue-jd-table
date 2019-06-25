@@ -277,8 +277,8 @@ data ()
     <br>
     
     - **Options**:
-        - 0: All data will be injected to the JD-Table component via a **from app** event. All table functionality such as search, filtering, sorting, etc. will be processed by the JD-Table component.
-        - 1: All data will be provided by the app (normally via a external API) and injected to the JD-Table component via a *from app* event. All table functionality such as search, filtering, sorting, pagination, etc. will be handled via the application (JD-Table will emit events for all these actions).
+        - 0: All data will be injected to the JD-Table component via a *from app* event. All table functionality such as search, filtering, sorting, etc. will be processed by the JD-Table component.
+        - 1: Partial data will be provided by the app (normally via a external API) and injected to the JD-Table component via a *from app* event. All table functionality such as search, filtering, sorting, pagination, etc. will be handled via the application (JD-Table will emit events for all these actions).
     <br><br>
     - **Example**:
     

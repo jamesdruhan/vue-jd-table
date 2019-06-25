@@ -2427,13 +2427,10 @@
 
 						if ( rows === 'All' )
 						{
-							console.log('Its all selected.');
 							this.rendering.pagination.currentPageRows = this.processedDataSize;
 						}
 						else
 						{
-							console.log('Its not all');
-							console.log(rows);
 							this.rendering.pagination.currentPageRows = rows;
 						}
 

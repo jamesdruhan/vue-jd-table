@@ -238,17 +238,9 @@ The following shows an example of how to use JD-Table your HTML files directly. 
 </script>
 ```
 
-<p align="right">
-    <a href="#table-of-contents">Back to Table of Contents</a>
-</p>
-
 #### Configure Options
 
 [Dedicated Page - Click Here](./documentation/Options.md)
-
-<p align="right">
-    <a href="#table-of-contents">Back to Table of Contents</a>
-</p>
 
 #### Display Data
 

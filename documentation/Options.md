@@ -25,6 +25,8 @@ data ()
 }
 ```
 
+### Table of Contents
+
 - [columns](#columns)
 - [columnSelect](#columnSelect)
 - [columnSort](#columnSort)
@@ -137,6 +139,10 @@ data ()
     }
     ```
     
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+    
 - ##### columnSelect
 
     - **Type**: [Boolean]
@@ -167,7 +173,11 @@ data ()
       <img src="./assets/columnSelectExample.gif" alt="Example of columnSelect">
       <br>
     </p>
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### columnSort
 
     - **Type**: [Boolean]
@@ -193,7 +203,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### controls
 
     - **Type**: [Boolean]
@@ -219,7 +233,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### dataHeight
 
     - **Type**: [Number]
@@ -241,7 +259,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### dataProvider
 
     - **Type**: [Number]
@@ -269,7 +291,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### export
 
     - **Type**: [Boolean]
@@ -304,7 +330,11 @@ data ()
     ```html
     <iframe id="excelExportArea" style="display:none"></iframe>
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### exportLimit
 
     - **Type**: [Number]
@@ -329,7 +359,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### filter
 
     - **Type**: [Boolean]
@@ -368,7 +402,11 @@ data ()
       <img src="./assets/filterExample.gif" alt="Example of filter">
       <br>
     </p>
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### footer
 
     - **Type**: [Boolean]
@@ -394,7 +432,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### forceMaximized
 
     - **Type**: [Boolean]
@@ -420,7 +462,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### forceSearchOpen
 
     - **Type**: [TYPEHERE]
@@ -446,7 +492,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### frameWidth
 
     - **Type**: [Number]
@@ -470,7 +520,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### headerHeight
 
     - **Type**: [Number]
@@ -492,7 +546,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### highlight
 
     - **Type**: [Boolean]
@@ -518,7 +576,11 @@ data ()
         }
     }
     ```
-        
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+ 
 - ##### maxMinimize
 
     - **Type**: [Boolean]
@@ -549,7 +611,11 @@ data ()
       <img src="./assets/maxMinimizeExample.gif" alt="Example of maxMinimize">
       <br>
     </p>
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### pageSideQuantity
 
     - **Type**: [Number]
@@ -571,7 +637,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### paginationRowAll
 
     - **Type**: [Boolean]
@@ -597,7 +667,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### paginationRowLimits
 
     - **Type**: [Array]
@@ -625,6 +699,10 @@ data ()
       <br>
     </p>
 
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### paginationRowStart
 
     - **Type**: [Number]
@@ -646,7 +724,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### quickView
 
     - **Type**: [Boolean]
@@ -677,7 +759,11 @@ data ()
       <img src="./assets/quickViewExample.gif" alt="Example of quickView">
       <br>
     </p>
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### refresh
 
     - **Type**: [TYPEHERE]
@@ -703,7 +789,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### renderEngine
        
    - **Type**: [Number]
@@ -733,7 +823,11 @@ data ()
        }
    }
    ```
-   
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### resize
 
     - **Type**: [Boolean]
@@ -767,7 +861,11 @@ data ()
       <img src="./assets/resizeExample.gif" alt="Example of resize">
       <br>
     </p>
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### resizeForceMinWidth
 
     - **Type**: [Boolean]
@@ -795,7 +893,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### responsiveFrame
 
    - **Type**: [Boolean]
@@ -824,7 +926,11 @@ data ()
        }
    }
    ```
-   
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### responsiveTable
 
    - **Type**: [Boolean]
@@ -852,7 +958,11 @@ data ()
        }
    }
    ```
-   
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### rowFlex
 
     - **Type**: [Boolean]
@@ -878,7 +988,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### rowHeight
 
     - **Type**: [Number]
@@ -902,7 +1016,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### rowZebra
 
     - **Type**: [Boolean]
@@ -928,7 +1046,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### search
 
     - **Type**: [Boolean]
@@ -954,7 +1076,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### startBySearch
 
     - **Type**: [Boolean]
@@ -987,7 +1113,11 @@ data ()
       <img src="./assets/startBySearchExample.gif" alt="Example of startBySearch">
       <br>
     </p>
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### startBySearchMessage
 
     - **Type**: [String]
@@ -1012,7 +1142,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### startBySearchArrowFilter
 
     - **Type**: [Boolean]
@@ -1041,7 +1175,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### startBySearchArrowFilterText
 
     - **Type**: [String]
@@ -1068,6 +1206,10 @@ data ()
         }
     }
     ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
 
 - ##### startBySearchArrowSearch
 
@@ -1099,6 +1241,10 @@ data ()
     }
     ```
 
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### startBySearchArrowSearchText
 
     - **Type**: [String]
@@ -1124,7 +1270,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### searchPlaceHolder
 
     - **Type**: [String]
@@ -1146,7 +1296,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### startMaximized
 
     - **Type**: [Boolean]
@@ -1172,7 +1326,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### title
 
     - **Type**: [String]
@@ -1194,7 +1352,11 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### views
 
     - **Type**: [Array]
@@ -1235,7 +1397,10 @@ data ()
       }
     }
     ```  
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
 - ##### virtualEngineRowStart
 
     - **Type**: [Number]
@@ -1257,4 +1422,7 @@ data ()
         }
     }
     ```
-    
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>

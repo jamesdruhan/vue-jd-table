@@ -85,6 +85,10 @@ npm install --save-dev @fortawesome/fontawesome-free
 
 2. Instructions for manually installing Font Awesome (Free) can be found here: https://fontawesome.com/start
 
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 ---
 
 ### Usage
@@ -234,13 +238,25 @@ The following shows an example of how to use JD-Table your HTML files directly. 
 </script>
 ```
 
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 #### Configure Options
 
 [Dedicated Page - Click Here](./documentation/Options.md)
 
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 #### Display Data
 
 [Dedicated Page - Click Here](./documentation/Data.md)
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
 
 ---
 
@@ -259,11 +275,19 @@ JD-Table accepts the following props/properties:
 - **event-from-jd-table** [Event/Function/Callback]
     - A event that that is triggered using a Vue $emit call. Learn more about how to process these events [here](./documentation/Events.md).
 
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 ---
 
 ### Browser Support
 
 JD-Table runs in all modern browsers. IE11 is supported so long as a polyfill is provided. See the [polyfill](#polyfill) section for more details.
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
 
 ---
 
@@ -319,3 +343,7 @@ module.exports =
     ]
 }
 ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>

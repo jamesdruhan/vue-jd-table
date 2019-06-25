@@ -23,11 +23,11 @@
 
 				<input v-show="feature.searching" @keyup.enter="performSearch" v-model="search.text" type="search" ref="searchField" :placeholder="setting.searchPlaceHolder ? setting.searchPlaceHolder : 'Search Here ..'" :disabled="status.processingData">
 
-				<span v-show="!search.searching" @click="performSearch" class="controlItem search" title="Perform Search">
+				<span v-show="feature.searching && !search.searching" @click="performSearch" class="controlItem search" title="Perform Search">
 					<i  class="fas fa-angle-right"></i>
 				</span>
 
-				<span v-show="search.searching" @click="clearSearch" class="controlItem clearSearch" title="Clear Search">
+				<span v-show="feature.searching && search.searching" @click="clearSearch" class="controlItem clearSearch" title="Clear Search">
 					<i  class="fas fa-times-circle"></i>
 				</span>
 
@@ -3698,7 +3698,7 @@
 				// Apply class to search icon based on searching status.
 				searchIconClasses : function ()
 				{
-					let classes = 'search';
+					let classes = '';
 
 					if ( this.setting.forceSearchOpen )
 					{
@@ -3707,12 +3707,17 @@
 
 					if ( this.feature.searching )
 					{
-						classes += ' selected';
+						classes += ' search selected';
 					}
 
 					if ( this.search.searching )
 					{
 						classes += ' active';
+					}
+
+					if ( !this.feature.searching && !this.setting.forceSearchOpen )
+					{
+						classes += ' notActive'
 					}
 
 					return classes;

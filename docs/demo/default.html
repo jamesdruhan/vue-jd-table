@@ -58,144 +58,68 @@
 		el : '#app',
 
 		data :
+		{
+			tableOptions : {},
+
+			eventFromApp  :
 			{
-				tableOptions : {},
-
-				eventFromApp  :
-					{
-						name : null,
-						data : null
-					},
-
-				eventFromAppTrigger : false,
-
-				tableLoader : false,
-
-				columns :
-					[
-						{
-							name       : 'column1',
-							title      : 'Column 1',
-							order      : 1,
-							type       : 'Number',
-							filterable : true,
-							enabled    : true,
-							sort          : true,
-							sortDirection : 'asc',
-							width         : 100,
-						},
-						{
-							name        : 'column2',
-							title       : 'Column 2',
-							order       : 2,
-							type        : 'String',
-							filterable  : true,
-							enabled     : true,
-							width       : 100,
-						},
-						{
-							name       : 'column3',
-							title      : 'Column 3',
-							order      : 3,
-							type       : 'String',
-							filterable : true,
-							enabled    : true,
-							width      : 100,
-						},
-						{
-							name       : 'column4',
-							title      : 'Column 4',
-							order      : 4,
-							type       : 'String',
-							filterable : true,
-							enabled    : true,
-							width      : 100,
-						}
-					]
+				name : null,
+				data : null
 			},
+
+			eventFromAppTrigger : false,
+
+			tableLoader : false,
+
+			columns :
+			[
+				{
+					name          : 'employeeName',
+					title         : 'Employee Name',
+					order         : 1,
+					type          : 'String',
+					filterable    : true,
+					enabled       : true,
+					sort          : true,
+					sortDirection : 'asc',
+					width         : 100,
+				},
+				{
+					name        : 'employeeCode',
+					title       : 'Employee Code',
+					order       : 2,
+					type        : 'String',
+					filterable  : true,
+					enabled     : true,
+					width       : 100,
+				},
+				{
+					name       : 'location',
+					title      : 'Location',
+					order      : 3,
+					type       : 'String',
+					filterable : true,
+					enabled    : true,
+					width      : 100,
+				},
+				{
+					name       : 'phone',
+					title      : 'Phone #',
+					order      : 4,
+					type       : 'String',
+					filterable : true,
+					enabled    : true,
+					width      : 100,
+				}
+			]
+		},
 
 		created : function ()
 		{
-			// You don't have to configure all these settings (this is just an example).
 			this.tableOptions =
-				{
-					dataProvider : 0,
-
-					title               : 'JD-Table',
-					columns             : this.columns,
-
-					startBySearch                : false,
-					startBySearchMessage         : 'To display data, either search or apply a filter.',
-					startBySearchArrowSearch     : true,
-					startBySearchArrowFilter     : true,
-					startBySearchArrowSearchText : 'Search Here!',
-					startBySearchArrowFilterText : 'Filter by Column',
-
-					maxMinimize         : true,
-					refresh             : true,
-					search              : true,
-					columnSelect        : true,
-					resize              : true,
-					filter              : true,
-					export              : true,
-					exportLimit         : 5000,
-					columnSort          : true,
-					quickView           : true,
-
-					renderEngine          : 2,
-					responsiveFrame       : false,
-					responsiveTable       : false,
-					virtualEngineRowStart : 500,
-					frameWidth            : 800,
-					headerHeight          : 40,
-					dataHeight            : 400,
-					rowHeight             : 38,
-					paginationRowLimits   : [50, 75, 100],
-					paginationRowStart    : 50,
-					paginationRowAll      : false,
-					pageSideQuantity      : 5,
-
-					forceSearchOpen     : true,
-					searchPlaceHolder   : 'Search ...',
-
-					startMaximized      : false,
-					forceMaximized      : false,
-					rowZebra            : true,
-					rowFlex             : true,
-					resizeForceMinWidth : true,
-
-					highlight           : true,
-					controls            : true,
-					footer              : true,
-
-					views               :
-						[
-							{
-								viewName : 'Slim',
-								schema   :
-									[
-										{
-											name       : 'column1',
-											title      : 'Column 1',
-											order      : 1,
-											type       : 'String',
-											filterable : true,
-											enabled    : true,
-											sort          : true,
-											sortDirection : 'asc'
-										},
-										{
-											name        : 'column2',
-											title       : 'Column 2',
-											order       : 2,
-											type        : 'String',
-											filterable  : true,
-											enabled     : true
-										}
-									]
-							}
-						]
-				};
+			{
+				columns : this.columns,
+			};
 		},
 
 		mounted : function ()
@@ -204,61 +128,167 @@
 		},
 
 		methods :
+		{
+			sendData : function ()
 			{
-				sendData : function ()
+				// Enable the table loader.
+				this.tableLoader = true;
+
+				var data = this.getData(100);
+
+				this.eventFromApp =
 				{
-					// Enable the table loader.
-					this.tableLoader = true;
+					name    : 'sendData',
+					payload : data
+				};
 
-					var data = [];
+				this.triggerEvent();
 
-					for( var i = 0; i < 1000; i++ )
-					{
-						data.push
-						({
-							column1 : String(i),
-							column2 : String(i * i),
-							column3 : String(i + i),
-							column4 : String(i + i + i),
-						})
-					}
+				// Disable the table loader.
+				this.tableLoader = false;
+			},
 
-					data = JSON.stringify( data );
+			// Triggers the currently queued JD-Table event to run.
+			triggerEvent : function ()
+			{
+				// Trigger the event.
+				this.eventFromAppTrigger = true;
 
-					this.eventFromApp =
-						{
-							name    : 'sendData',
-							payload : JSON.parse( data )
-						};
-
-					this.triggerEvent();
-
-					// Disable the table loader.
-					this.tableLoader = false;
-				},
-
-				// Triggers the currently queued JD-Table event to run.
-				triggerEvent : function ()
+				// Reset the trigger event.
+				this.$nextTick( () =>
 				{
-					// Trigger the event.
-					this.eventFromAppTrigger = true;
+					this.eventFromAppTrigger = false;
+				});
+			},
 
-					// Reset the trigger event.
-					this.$nextTick( () =>
-					{
-						this.eventFromAppTrigger = false;
-					});
-				},
-
-				// Triggered when the JD-Table emits a "eventFromJDTable" event.
-				processEventFromApp : function ( componentState )
+			// Triggered when the JD-Table emits a "eventFromJDTable" event.
+			processEventFromApp : function ( componentState )
+			{
+				if ( componentState.lastAction === 'Refresh' )
 				{
-					if ( componentState.lastAction === 'Refresh' )
-					{
-						this.sendData();
-					}
+					this.sendData();
 				}
+			},
+
+			getData : function ( howManyRows )
+			{
+				return new Promise( ( resolve, reject ) =>
+				{
+					let sampleData =
+					[
+						{
+							employeeName : 'James Druhan',
+							employeeCode : 'EM1239123',
+							location     : 'Mississauga, ON',
+							phone        : '416-555-2314'
+						},
+						{
+							employeeName : 'Kimberly Hughes',
+							employeeCode : 'EM8395093',
+							location     : 'San Diego, CA',
+							phone        : '239-267-4744'
+						},
+						{
+							employeeName : 'Minnie Christensen',
+							employeeCode : 'EM4599851',
+							location     : 'Flint, MI',
+							phone        : '425-243-7641'
+						},
+						{
+							employeeName : 'Albert Patterson',
+							employeeCode : 'EM0967899',
+							location     : 'Lineville, MO',
+							phone        : '609-812-8480'
+						},
+						{
+							employeeName : 'Jeffrey Martinez',
+							employeeCode : 'EM3146452',
+							location     : 'Berea, KY',
+							phone        : '281-286-3130'
+						},
+						{
+							employeeName : 'John Butler',
+							employeeCode : 'EM4456376',
+							location     : 'Toledo, OH',
+							phone        : '502-321-3456'
+						},
+						{
+							employeeName : 'Michelle Chaffin',
+							employeeCode : 'EM6478887',
+							location     : 'West Enfield, ME',
+							phone        : '802-261-4831'
+						},
+						{
+							employeeName : 'Dale Gaytan',
+							employeeCode : 'EM3444323',
+							location     : 'Westbury, NY',
+							phone        : '845-461-3895'
+						},
+
+						{
+							employeeName : 'John Bradley',
+							employeeCode : 'EM3632155',
+							location     : 'Herndon, VA',
+							phone        : '703-404-5844'
+						},
+						{
+							employeeName : 'Kathleen Wrigley',
+							employeeCode : 'EM6566432',
+							location     : 'Springfield, MA',
+							phone        : '413-555-0664'
+						},
+						{
+							employeeName : 'Marie Wheeler',
+							employeeCode : 'EM5566890',
+							location     : 'San Jose, CA',
+							phone        : '408-532-8492'
+						},
+						{
+							employeeName : 'Tanya Stokes',
+							employeeCode : 'EM4277645',
+							location     : 'San Diego, CA',
+							phone        : '619-839-1602'
+						},
+						{
+							employeeName : 'Phyllis Gonzalez',
+							employeeCode : 'EM23412357',
+							location     : 'Chandler, AZ',
+							phone        : '480-533-0506'
+						},
+						{
+							employeeName : 'Darrell McLamb',
+							employeeCode : 'EM6445234',
+							location     : 'Kenner, LA',
+							phone        : '504-313-4620'
+						},
+						{
+							employeeName : 'Sandra Rodriguez',
+							employeeCode : 'EM554678',
+							location     : 'Grand Rapids, MI',
+							phone        : '616-970-4858'
+						},
+						{
+							employeeName : 'Marcus Sauers',
+							employeeCode : 'EM6780063',
+							location     : 'Dallas, TX',
+							phone        : '972-325-6068'
+						},
+					]
+				});
+
+				let dataCount    = sampleData.length;
+				let dataToReturn = [];
+
+				for( var i = 0; i < howManyRows; i++ )
+				{
+					let randomEmployee = Math.floor(Math.random() * dataCount);
+
+					dataToReturn.push( sampleData[randomEmployee] );
+				}
+
+				resolve(dataToReturn);
 			}
+		}
 	});
 </script>
 </body>

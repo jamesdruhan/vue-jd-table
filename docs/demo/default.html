@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-	<link rel="icon" href="../../public/favicon.ico">
+	<link rel="icon" href="./favicon.ico">
 
 	<title>JD-Table</title>
 
@@ -274,21 +274,21 @@
 							location     : 'Dallas, TX',
 							phone        : '972-325-6068'
 						},
-					]
+					];
+
+					let dataCount    = sampleData.length;
+					let dataToReturn = [];
+					console.log('Starting Generate');
+					for( let i = 0; i < howManyRows; i++ )
+					{
+						let randomEmployee = Math.floor(Math.random() * dataCount);
+						console.log(randomEmployee);
+						console.log(sampleData[randomEmployee]);
+						dataToReturn.push( sampleData[randomEmployee] );
+					}
+
+					resolve(dataToReturn);
 				});
-
-				let dataCount    = sampleData.length;
-				let dataToReturn = [];
-				console.log('Starting Generate');
-				for( let i = 0; i < howManyRows; i++ )
-				{
-					let randomEmployee = Math.floor(Math.random() * dataCount);
-					console.log(randomEmployee);
-					console.log(sampleData[randomEmployee]);
-					dataToReturn.push( sampleData[randomEmployee] );
-				}
-
-				resolve(dataToReturn);
 			}
 		}
 	});

@@ -15,8 +15,7 @@
 </p>
 
 <p align="center">
-  <br>
-  <a href="./demo/Demo.md">Demos</a>
+  <a href="./demo/demo.html">Demos</a>
   <br>
 </p>
 

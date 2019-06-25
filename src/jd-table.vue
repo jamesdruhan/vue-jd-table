@@ -2432,6 +2432,8 @@
 						}
 						else
 						{
+							console.log('Its not all');
+							console.log(rows);
 							this.rendering.pagination.currentPageRows = rows;
 						}
 

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<link rel="icon" href="../../public/favicon.ico">
+
+	<title>JD-Table</title>
+
+	<!-- Polyfill -->
+	<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>
+
+	<!-- VueJS -->
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+	<!-- JD-Table Vue Component -->
+	<script type="text/javascript" src="../../dist/jd-table.min.js"></script>
+
+	<!-- JD-Table Styles -->
+	<link rel="stylesheet" href="../../dist/jd-table.min.css">
+
+	<!-- Font Awesome (Free) -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+	<!-- Font -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+	<style>
+		body
+		{
+			font-family : 'Roboto', sans-serif;
+		}
+	</style>
+</head>
+
+<body>
+<noscript>
+	<strong>We're sorry but JD-Table doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+
+<div id="app">
+	<JDTable
+			:option                 = "tableOptions"
+			:loader                 = "tableLoader"
+			:event-from-app         = "eventFromApp"
+			:event-from-app-trigger = "eventFromAppTrigger"
+			@event-from-jd-table    = "processEventFromApp( $event )"
+	/>
+
+	<iframe id="excelExportArea" style="display:none"></iframe>
+</div>
+
+<script type="text/javascript">
+	const app = new Vue
+	({
+		el : '#app',
+
+		data :
+			{
+				tableOptions : {},
+
+				eventFromApp  :
+					{
+						name : null,
+						data : null
+					},
+
+				eventFromAppTrigger : false,
+
+				tableLoader : false,
+
+				columns :
+					[
+						{
+							name       : 'column1',
+							title      : 'Column 1',
+							order      : 1,
+							type       : 'Number',
+							filterable : true,
+							enabled    : true,
+							sort          : true,
+							sortDirection : 'asc',
+							width         : 100,
+						},
+						{
+							name        : 'column2',
+							title       : 'Column 2',
+							order       : 2,
+							type        : 'String',
+							filterable  : true,
+							enabled     : true,
+							width       : 100,
+						},
+						{
+							name       : 'column3',
+							title      : 'Column 3',
+							order      : 3,
+							type       : 'String',
+							filterable : true,
+							enabled    : true,
+							width      : 100,
+						},
+						{
+							name       : 'column4',
+							title      : 'Column 4',
+							order      : 4,
+							type       : 'String',
+							filterable : true,
+							enabled    : true,
+							width      : 100,
+						}
+					]
+			},
+
+		created : function ()
+		{
+			// You don't have to configure all these settings (this is just an example).
+			this.tableOptions =
+				{
+					dataProvider : 0,
+
+					title               : 'JD-Table',
+					columns             : this.columns,
+
+					startBySearch                : false,
+					startBySearchMessage         : 'To display data, either search or apply a filter.',
+					startBySearchArrowSearch     : true,
+					startBySearchArrowFilter     : true,
+					startBySearchArrowSearchText : 'Search Here!',
+					startBySearchArrowFilterText : 'Filter by Column',
+
+					maxMinimize         : true,
+					refresh             : true,
+					search              : true,
+					columnSelect        : true,
+					resize              : true,
+					filter              : true,
+					export              : true,
+					exportLimit         : 5000,
+					columnSort          : true,
+					quickView           : true,
+
+					renderEngine          : 2,
+					responsiveFrame       : false,
+					responsiveTable       : false,
+					virtualEngineRowStart : 500,
+					frameWidth            : 800,
+					headerHeight          : 40,
+					dataHeight            : 400,
+					rowHeight             : 38,
+					paginationRowLimits   : [50, 75, 100],
+					paginationRowStart    : 50,
+					paginationRowAll      : false,
+					pageSideQuantity      : 5,
+
+					forceSearchOpen     : true,
+					searchPlaceHolder   : 'Search ...',
+
+					startMaximized      : false,
+					forceMaximized      : false,
+					rowZebra            : true,
+					rowFlex             : true,
+					resizeForceMinWidth : true,
+
+					highlight           : true,
+					controls            : true,
+					footer              : true,
+
+					views               :
+						[
+							{
+								viewName : 'Slim',
+								schema   :
+									[
+										{
+											name       : 'column1',
+											title      : 'Column 1',
+											order      : 1,
+											type       : 'String',
+											filterable : true,
+											enabled    : true,
+											sort          : true,
+											sortDirection : 'asc'
+										},
+										{
+											name        : 'column2',
+											title       : 'Column 2',
+											order       : 2,
+											type        : 'String',
+											filterable  : true,
+											enabled     : true
+										}
+									]
+							}
+						]
+				};
+		},
+
+		mounted : function ()
+		{
+			this.sendData();
+		},
+
+		methods :
+			{
+				sendData : function ()
+				{
+					// Enable the table loader.
+					this.tableLoader = true;
+
+					var data = [];
+
+					for( var i = 0; i < 1000; i++ )
+					{
+						data.push
+						({
+							column1 : String(i),
+							column2 : String(i * i),
+							column3 : String(i + i),
+							column4 : String(i + i + i),
+						})
+					}
+
+					data = JSON.stringify( data );
+
+					this.eventFromApp =
+						{
+							name    : 'sendData',
+							payload : JSON.parse( data )
+						};
+
+					this.triggerEvent();
+
+					// Disable the table loader.
+					this.tableLoader = false;
+				},
+
+				// Triggers the currently queued JD-Table event to run.
+				triggerEvent : function ()
+				{
+					// Trigger the event.
+					this.eventFromAppTrigger = true;
+
+					// Reset the trigger event.
+					this.$nextTick( () =>
+					{
+						this.eventFromAppTrigger = false;
+					});
+				},
+
+				// Triggered when the JD-Table emits a "eventFromJDTable" event.
+				processEventFromApp : function ( componentState )
+				{
+					if ( componentState.lastAction === 'Refresh' )
+					{
+						this.sendData();
+					}
+				}
+			}
+	});
+</script>
+</body>
+</html>

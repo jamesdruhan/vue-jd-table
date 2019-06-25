@@ -51,6 +51,11 @@
       border-radius: 0; }
       .JD-Table.maximized .layerPopup.fullFrameZone {
         padding: 3rem; }
+      .JD-Table.maximized .layerPopup .searchArrow {
+        top: 5.15rem; }
+      .JD-Table.maximized .layerPopup .filterArrow {
+        top: 5.15rem;
+        right: 1.2rem; }
     .JD-Table.maximized .layerTitle {
       padding-top: 0;
       min-width: 320px; }
@@ -104,7 +109,6 @@
       flex-direction: row;
       flex-grow: 0;
       flex-shrink: 1;
-      overflow: hidden;
       transition: all 0.5s ease;
       -webkit-transition: all 0.5s ease;
       -moz-transition: all 0.5s ease;
@@ -144,6 +148,7 @@
           display: none; } }
     .JD-Table .layerControl .controlItem {
       height: 100%;
+      position: relative;
       cursor: pointer;
       color: #FFFFFF;
       display: inline-block;
@@ -187,6 +192,66 @@
         cursor: default; }
         .JD-Table .layerControl .controlItem.noSelect:hover:active {
           color: #757575; }
+      .JD-Table .layerControl .controlItem .filterArrow {
+        position: absolute;
+        top: 2.95rem;
+        right: -0.5rem;
+        background: #c9c9c9;
+        border: 1px solid #494949;
+        padding: 0.5rem;
+        color: #252627;
+        animation: bounce 2s infinite;
+        border-radius: 6px;
+        white-space: nowrap; }
+        .JD-Table .layerControl .controlItem .filterArrow:after, .JD-Table .layerControl .controlItem .filterArrow:before {
+          bottom: 100%;
+          right: 1.5rem;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none; }
+        .JD-Table .layerControl .controlItem .filterArrow:after {
+          border-color: rgba(224, 224, 224, 0);
+          border-bottom-color: #c9c9c9;
+          border-width: 12px;
+          margin-right: -12px; }
+        .JD-Table .layerControl .controlItem .filterArrow:before {
+          border-color: rgba(73, 73, 73, 0);
+          border-bottom-color: #494949;
+          border-width: 18px;
+          margin-right: -18px; }
+      .JD-Table .layerControl .controlItem .searchArrow {
+        position: absolute;
+        top: 2.95rem;
+        left: 3.5rem;
+        background: #c9c9c9;
+        border: 1px solid #494949;
+        padding: 0.5rem;
+        color: #252627;
+        animation: bounce 2s infinite;
+        border-radius: 6px;
+        white-space: nowrap; }
+        .JD-Table .layerControl .controlItem .searchArrow:after, .JD-Table .layerControl .controlItem .searchArrow:before {
+          bottom: 100%;
+          left: 50%;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+          position: absolute;
+          pointer-events: none; }
+        .JD-Table .layerControl .controlItem .searchArrow:after {
+          border-color: rgba(224, 224, 224, 0);
+          border-bottom-color: #c9c9c9;
+          border-width: 12px;
+          margin-left: -12px; }
+        .JD-Table .layerControl .controlItem .searchArrow:before {
+          border-color: rgba(73, 73, 73, 0);
+          border-bottom-color: #494949;
+          border-width: 18px;
+          margin-left: -18px; }
   .JD-Table .layerOption {
     width: 100%;
     position: relative; }
@@ -671,7 +736,9 @@
     .JD-Table .layerPopup.fullFrame {
       z-index: 9998; }
     .JD-Table .layerPopup.contentFrame {
-      z-index: 50; }
+      z-index: 50;
+      padding-top: 2.95rem;
+      padding-bottom: 2rem; }
     .JD-Table .layerPopup.fullFrameZone {
       width: 100%;
       box-sizing: border-box;
@@ -807,6 +874,17 @@
             border-bottom-right-radius: 0.5rem; }
         .JD-Table .layerPopup .quickView .quickViewFooter .footerItem {
           font-size: 0.765rem; }
+    .JD-Table .layerPopup .tableMessage {
+      font-size: 1.5rem;
+      text-align: center; }
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0); }
+  40% {
+    transform: translateY(30px); }
+  60% {
+    transform: translateY(15px); } }
 
 .JD-Reset * {
   box-sizing: border-box; }
@@ -1139,6 +1217,86 @@
     height: 100%; }
   100% {
     height: 0%; } }
+  .JD-Loader .self-building-square-spinner, .JD-Loader .self-building-square-spinner * {
+    box-sizing: border-box; }
+  .JD-Loader .self-building-square-spinner {
+    height: 40px;
+    width: 40px;
+    top: calc( -10px * 2 / 3); }
+  .JD-Loader .self-building-square-spinner .square {
+    height: 10px;
+    width: 10px;
+    top: calc( -10px * 2 / 3);
+    margin-right: calc(10px / 3);
+    margin-top: calc(10px / 3);
+    background: #C00;
+    float: left;
+    position: relative;
+    opacity: 0;
+    animation: self-building-square-spinner 6s infinite; }
+  .JD-Loader .self-building-square-spinner .square:nth-child(1) {
+    animation-delay: calc( 300ms * 6); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(2) {
+    animation-delay: calc( 300ms * 7); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(3) {
+    animation-delay: calc( 300ms * 8); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(4) {
+    animation-delay: calc( 300ms * 3); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(5) {
+    animation-delay: calc( 300ms * 4); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(6) {
+    animation-delay: calc( 300ms * 5); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(7) {
+    animation-delay: calc( 300ms * 0); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(8) {
+    animation-delay: calc( 300ms * 1); }
+  .JD-Loader .self-building-square-spinner .square:nth-child(9) {
+    animation-delay: calc( 300ms * 2); }
+  .JD-Loader .self-building-square-spinner .clear {
+    clear: both; }
+
+@keyframes self-building-square-spinner {
+  0% {
+    opacity: 0; }
+  5% {
+    opacity: 1;
+    top: 0; }
+  50.9% {
+    opacity: 1;
+    top: 0; }
+  55.9% {
+    opacity: 0;
+    top: inherit; } }
+  .JD-Loader .looping-rhombuses-spinner, .JD-Loader .looping-rhombuses-spinner * {
+    box-sizing: border-box; }
+  .JD-Loader .looping-rhombuses-spinner {
+    width: calc(15px * 4);
+    height: 15px;
+    position: relative; }
+  .JD-Loader .looping-rhombuses-spinner .rhombus {
+    height: 15px;
+    width: 15px;
+    background-color: #C00;
+    left: calc(15px * 4);
+    position: absolute;
+    margin: 0 auto;
+    border-radius: 2px;
+    transform: translateY(0) rotate(45deg) scale(0);
+    animation: looping-rhombuses-spinner-animation 2500ms linear infinite; }
+  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(1) {
+    animation-delay: calc(2500ms * 1 / -1.5); }
+  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(2) {
+    animation-delay: calc(2500ms * 2 / -1.5); }
+  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(3) {
+    animation-delay: calc(2500ms * 3 / -1.5); }
+
+@keyframes looping-rhombuses-spinner-animation {
+  0% {
+    transform: translateX(0) rotate(45deg) scale(0); }
+  50% {
+    transform: translateX(-233%) rotate(45deg) scale(1); }
+  100% {
+    transform: translateX(-466%) rotate(45deg) scale(0); } }
 
 .JD-Button {
   position: relative;

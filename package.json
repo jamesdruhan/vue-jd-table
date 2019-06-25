@@ -1,6 +1,6 @@
 {
   "name": "vue-jd-table",
-  "version": "0.5.3",
+  "version": "0.8.0",
   "description": "A VueJS v2.X component for displaying data in a table.",
   "keywords": [
     "vue",

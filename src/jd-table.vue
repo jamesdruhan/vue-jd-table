@@ -2427,6 +2427,7 @@
 
 						if ( rows === 'All' )
 						{
+							console.log('Its all selected.');
 							this.rendering.pagination.currentPageRows = this.processedDataSize;
 						}
 						else
@@ -2441,7 +2442,6 @@
 						this.rendering.pagination.currentStartIndex     = null;
 						this.rendering.pagination.currentEndIndex       = null;
 						this.rendering.pagination.availablePages        = null;
-						this.rendering.pagination.currentPageRows       = this.rendering.pagination.currentSelectedPageRowOption;
 						this.rendering.pagination.changingRows          = false;
 						this.rendering.pagination.leftPages             = [];
 						this.rendering.pagination.rightPages            = [];

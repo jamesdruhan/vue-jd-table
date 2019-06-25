@@ -134,7 +134,7 @@
 				// Enable the table loader.
 				this.tableLoader = true;
 
-				this.getData(100).then( ( result ) =>
+				this.getData( 1000 ).then( ( result ) =>
 				{
 					this.eventFromApp =
 						{
@@ -278,12 +278,11 @@
 
 					let dataCount    = sampleData.length;
 					let dataToReturn = [];
-					console.log('Starting Generate');
+
 					for( let i = 0; i < howManyRows; i++ )
 					{
 						let randomEmployee = Math.floor(Math.random() * dataCount);
-						console.log(randomEmployee);
-						console.log(sampleData[randomEmployee]);
+
 						dataToReturn.push( sampleData[randomEmployee] );
 					}
 

@@ -799,7 +799,7 @@ data ()
        
    - **Type**: [Number]
    <br><br>
-   -  **Default**: Null (0)
+   -  **Default**: Pagination (2)
    <br><br>
    - **Details**: Selects the rendering engine JD-Table uses when rendering rows of data. This setting depends on the amount of data you will be displaying as well as the experience you want to give to the user. The primary reason this setting exists it due to a limitation of element rendering in the browser. If you have 5,000 rows to display, you don't want the browser to render each and every row with a really big scroll bar. Not only would it take a while for the browser to render it, the browser may crash or run out of memory.<br><br>
      - **Virtual**: This rendering engine will create a virtual scrollbar and only render a certain amount of rows at a time. As the user scrolls, the table will update the view to give the feel of one really long list of rows. The amount of rows that the browser will render is based on the table height and how many rows fit in a single page of view. While scrolling, a processing message will appear when the table is in the process of updating the rows in the view.<br><br>If this setting is used, when the data is low enough the rendering engine will temporarily be set to All. This value can be set with the virtualEngineRowStart option.<br><br>

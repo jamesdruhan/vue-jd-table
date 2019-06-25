@@ -272,10 +272,12 @@ data ()
     <br><br>
     - **Details**: Indicates how data will be provided. This setting determines how most table functionality will operate. Typically this setting will be determined by how much data you need to display/process. When working with small amounts of data such as 5,000 rows or less you can most likely send the entirety of the data to JD-Table to manage and display. This could be done using a single REST API call and sending the parsed JSON result to JD-Table. In this scenario, JD-Table will handle search, filtering, sorting, pagination, etc. all by itself.<br><br>On the other hand, if you have big data such as anything higher than 5,000 rows (including millions or billions) then you will typically want to load (request) the data necessary to display to a user as it is needed. Option **1** of this setting will change any data manipulating function (searching, filtering, pagination, sorting, etc.) to a $emit event in Vue. This allows you to design the necessary API calls for each action individually. Setting this option to **1** is certainly more complex to configure for but the payoff of being able to present a data table with millions of rows of data behind it is worth it!
     <br><br>
+    
     > JD-Table does not implement any REST API calls on your behalf. Instead, all data requests must be designed by you. The primary reason for this is that there is such a wide variety of API's schema's out there.
     <br>
+    
     - **Options**:
-        - 0: All data will be injected to the JD-Table component via a *from app* event. All table functionality such as search, filtering, sorting, etc. will be processed by the JD-Table component.
+        - 0: All data will be injected to the JD-Table component via a **from app** event. All table functionality such as search, filtering, sorting, etc. will be processed by the JD-Table component.
         - 1: All data will be provided by the app (normally via a external API) and injected to the JD-Table component via a *from app* event. All table functionality such as search, filtering, sorting, pagination, etc. will be handled via the application (JD-Table will emit events for all these actions).
     <br><br>
     - **Example**:

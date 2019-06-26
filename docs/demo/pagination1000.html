@@ -74,29 +74,38 @@
 			columns :
 			[
 				{
-					name          : 'employeeName',
-					title         : 'Employee Name',
+					name          : 'id',
+					title         : 'ID',
 					order         : 1,
 					type          : 'String',
 					filterable    : true,
 					enabled       : true,
 					sort          : true,
 					sortDirection : 'asc',
+					width         : 10,
+				},
+				{
+					name          : 'employeeName',
+					title         : 'Employee Name',
+					order         : 2,
+					type          : 'String',
+					filterable    : true,
+					enabled       : true,
 					width         : 25,
 				},
 				{
 					name        : 'employeeCode',
 					title       : 'Employee Code',
-					order       : 2,
+					order       : 3,
 					type        : 'String',
 					filterable  : true,
 					enabled     : true,
-					width       : 25,
+					width       : 15,
 				},
 				{
 					name       : 'location',
 					title      : 'Location',
-					order      : 3,
+					order      : 4,
 					type       : 'String',
 					filterable : true,
 					enabled    : true,
@@ -105,7 +114,7 @@
 				{
 					name       : 'phone',
 					title      : 'Phone #',
-					order      : 4,
+					order      : 5,
 					type       : 'String',
 					filterable : true,
 					enabled    : true,
@@ -172,10 +181,10 @@
 					this.getData( 1000 ).then( ( result ) =>
 					{
 						this.eventFromApp =
-							{
-								name    : 'sendData',
-								payload : result
-							};
+						{
+							name    : 'sendData',
+							payload : result
+						};
 
 						this.triggerEvent();
 					});
@@ -293,6 +302,8 @@
 					for( let i = 0; i < howManyRows; i++ )
 					{
 						let randomEmployee = Math.floor(Math.random() * dataCount);
+
+						sampleData[randomEmployee]['id'] = i;
 
 						dataToReturn.push( sampleData[randomEmployee] );
 					}

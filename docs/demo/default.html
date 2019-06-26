@@ -302,9 +302,9 @@
 					{
 						let randomEmployee = Math.floor(Math.random() * dataCount);
 
-						sampleData[randomEmployee]['id'] = i.toString();
+						let newSample = { ...sampleData[randomEmployee], id : i.toString() };
 
-						dataToReturn.push( sampleData[randomEmployee] );
+						dataToReturn.push( newSample );
 					}
 
 					resolve(dataToReturn);

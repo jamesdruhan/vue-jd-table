@@ -74,14 +74,23 @@
 			columns :
 			[
 				{
-					name          : 'employeeName',
-					title         : 'Employee Name',
+					name          : 'id',
+					title         : 'ID',
 					order         : 1,
 					type          : 'String',
 					filterable    : true,
 					enabled       : true,
 					sort          : true,
 					sortDirection : 'asc',
+					width         : 100,
+				},
+				{
+					name          : 'employeeName',
+					title         : 'Employee Name',
+					order         : 2,
+					type          : 'String',
+					filterable    : true,
+					enabled       : true,
 					width         : 200,
 				},
 				{
@@ -297,6 +306,8 @@
 					for( let i = 0; i < howManyRows; i++ )
 					{
 						let randomEmployee = Math.floor(Math.random() * dataCount);
+
+						sampleData[randomEmployee]['id'] = i.toString();
 
 						dataToReturn.push( sampleData[randomEmployee] );
 					}

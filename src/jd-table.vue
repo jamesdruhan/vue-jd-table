@@ -451,112 +451,112 @@
 		{
 			return {
 				status :
-					{
-						tableError     : null,
-						getStarted     : false,
-						processingData : false,
-						updatingPage   : false,
-						searching      : false,
-						mobileSize     : false,
-						isIE11         : false,
-						tableScroll    : false,
-						lastAction     : null,
-					},
+				{
+					tableError     : null,
+					getStarted     : false,
+					processingData : false,
+					updatingPage   : false,
+					searching      : false,
+					mobileSize     : false,
+					isIE11         : false,
+					tableScroll    : false,
+					lastAction     : null,
+				},
 
 				currentTableData : [],
 				data             : [],
 
 				feature :
-					{
-						maximized     : false,
-						searching     : false
-					},
+				{
+					maximized     : false,
+					searching     : false
+				},
 
 				rendering :
+				{
+					engine                  : 0,
+					isScrolling             : null,
+					resettingScroll         : false,
+					contentFrameWidth       : null,
+					isResizing              : null,
+					pagination              :
 					{
-						engine                  : 0,
-						isScrolling             : null,
-						resettingScroll         : false,
-						contentFrameWidth       : null,
-						isResizing              : null,
-						pagination              :
-							{
-								currentPage                  : null,
-								currentPageHightlight        : null,
-								currentStartIndex            : null,
-								currentEndIndex              : null,
-								availablePages               : null,
-								currentPageRows              : null,
-								pageRowOptions               : [],
-								changingRows                 : false,
-								leftPages                    : [],
-								rightPages                   : [],
-								currentSelectedPageRowOption : null,
-							},
-						virtual :
-							{
-								rowMiddleIndex          : 0,
-								rowTopIndex             : 0,
-								rowBottomIndex          : 0,
-								triggerTopPositionPX    : null,
-								triggerBottomPositionPX : null,
-								height                  : null,
-								virtualBufferSize       : 5
-							},
-						external :
-							{
-								dataSize : null
-							},
-						views :
-							{
-								changingViews       : false,
-								currentSelectedView : null,
-								list                : [],
-								currentView   : []
-							}
+						currentPage                  : null,
+						currentPageHightlight        : null,
+						currentStartIndex            : null,
+						currentEndIndex              : null,
+						availablePages               : null,
+						currentPageRows              : null,
+						pageRowOptions               : [],
+						changingRows                 : false,
+						leftPages                    : [],
+						rightPages                   : [],
+						currentSelectedPageRowOption : null,
 					},
+					virtual :
+					{
+						rowMiddleIndex          : 0,
+						rowTopIndex             : 0,
+						rowBottomIndex          : 0,
+						triggerTopPositionPX    : null,
+						triggerBottomPositionPX : null,
+						height                  : null,
+						virtualBufferSize       : 5
+					},
+					external :
+					{
+						dataSize : null
+					},
+					views :
+					{
+						changingViews       : false,
+						currentSelectedView : null,
+						list                : [],
+						currentView   : []
+					}
+				},
 
 				processedData : [],
 
 				row :
-					{
-						selectedIndex : null
-					},
+				{
+					selectedIndex : null
+				},
 
 				columns :
-					{
-						list               : [],
-						activeHover        : null,
-						activeResize       : null,
-						activeResizeStart  : null,
-						activeSortIndex    : 0,
-						activeSortName     : null,
-						activeSortAsc      : false,
-						selecting          : false,
-						selectionItemWidth : 25,
-						selectionError     : false
-					},
+				{
+					list               : [],
+					activeHover        : null,
+					activeResize       : null,
+					activeResizeStart  : null,
+					activeSortIndex    : 0,
+					activeSortName     : null,
+					activeSortAsc      : false,
+					selecting          : false,
+					selectionItemWidth : 25,
+					selectionError     : false
+				},
 
 				search :
-					{
-						text      : '',
-						searching : false
-					},
+				{
+					text      : '',
+					searching : false
+				},
 
 				filters :
+				{
+					show           : false,
+					active         : [],
+					activeDropdown : null,
+					error          : false,
+					errorText      : '',
+					beingBuilt     :
 					{
-						show           : false,
-						active         : [],
-						activeDropdown : null,
-						error          : false,
-						errorText      : '',
-						beingBuilt     :
-							{
-								column : null,
-								option : null,
-								value  : null
-							}
+						column : null,
+						option : null,
+						value  : null
 					}
+				}
 			}
 		},
 
@@ -863,35 +863,35 @@
 		// Description : Triggers the stored event in event.name/payload to execute.
 
 		props :
+		{
+			option :
 			{
-				option :
-					{
-						type    : Object,
-						default : () => ({})
-					},
-
-				eventFromApp :
-					{
-						type    : Object,
-						default : () =>
-							({
-								name    : null,
-								payload : null
-							})
-					},
-
-				eventFromAppTrigger :
-					{
-						type    : Boolean,
-						default : false
-					},
-
-				loader :
-					{
-						type    : Boolean,
-						default : true
-					}
+				type    : Object,
+				default : () => ({})
 			},
+
+			eventFromApp :
+			{
+				type    : Object,
+				default : () =>
+				({
+					name    : null,
+					payload : null
+				})
+			},
+
+			eventFromAppTrigger :
+			{
+				type    : Boolean,
+				default : false
+			},
+
+			loader :
+			{
+				type    : Boolean,
+				default : true
+			}
+		},
 
 		created : function ()
 		{
@@ -985,20 +985,20 @@
 								}
 
 								this.$set( this.columns.list, index,
-									{
-										name          : userColumn.name,
-										title         : userColumn.title,
-										width         : columnWidth,
-										originalWidth : columnWidth,
-										order         : userColumn.order,
-										type          : userColumn.type,
-										filterable    : filterable,
-										enabled       : enabled,
-										headerStyles  : {},
-										dataStyles    : {},
-										sort          : userColumn.sort ? userColumn.sort : false,
-										sortDirection : userColumn.sortDirection ? userColumn.sortDirection : null,
-									});
+								{
+									name          : userColumn.name,
+									title         : userColumn.title,
+									width         : columnWidth,
+									originalWidth : columnWidth,
+									order         : userColumn.order,
+									type          : userColumn.type,
+									filterable    : filterable,
+									enabled       : enabled,
+									headerStyles  : {},
+									dataStyles    : {},
+									sort          : userColumn.sort ? userColumn.sort : false,
+									sortDirection : userColumn.sortDirection ? userColumn.sortDirection : null,
+								});
 							});
 
 							// Sort the array based on the passed order.
@@ -3389,7 +3389,7 @@
 					printWindow.document.write('</body></html>');
 
 					printWindow.document.close();
-					printWindow.focus()
+					printWindow.focus();
 					printWindow.print();
 					printWindow.close();
 				},
@@ -3513,12 +3513,7 @@
 				// View flag. Enabled if the view has data. False if not.
 				isViewAvailable : function ()
 				{
-					if ( this.currentTableData.length > 0 )
-					{
-						return true;
-					}
-
-					return false;
+					return this.currentTableData.length > 0;
 				},
 
 				// Normalizes the initialize settings in case one or more properties are not configured.
@@ -3601,12 +3596,7 @@
 				// Returns true if there are active filters.
 				filtering : function ()
 				{
-					if ( this.filters.active.length > 0 )
-					{
-						return true;
-					}
-
-					return false;
+					return this.filters.active.length > 0;
 				},
 
 				// Returns TRUE or FALSE based on if resize should be enabled.
@@ -3859,32 +3849,26 @@
 				// Apply styles to the content table virtual body based on settings.
 				bodyVirtualStyles : function ()
 				{
-					let styles =
-						{
-							height : this.rendering.virtual.height + 'px'
-						};
-
-					return styles;
+					return {
+						height : this.rendering.virtual.height + 'px'
+					};
 				},
 
 				// Apply styles to feature option zone based on settings.
 				optionDropdownStyles : function ()
 				{
-					let styles =
-						{
-							'max-height' : ( this.setting.dataHeight + this.setting.headerHeight ) + 'px'
-						};
-
-					return styles;
+					return {
+						'max-height' : ( this.setting.dataHeight + this.setting.headerHeight ) + 'px'
+					};
 				},
 
 				// Apply styles to the content table body data container based on settings.
 				bodyViewStyles : function ()
 				{
 					let styles =
-						{
-							'width': '100%'
-						};
+					{
+						'width': '100%'
+					};
 
 					if ( this.rendering.engine === 0 )
 					{
@@ -4039,8 +4023,6 @@
 					{
 						return this.filters.beingBuilt.option;
 					}
-
-					return this.filterableOptions[this.filters.beingBuilt.option];
 				},
 
 				// Returns the styles for the layerHighlight div.

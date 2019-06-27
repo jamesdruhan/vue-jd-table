@@ -468,18 +468,18 @@
 
 				feature :
 				{
-					maximized     : false,
-					searching     : false
+					maximized : false,
+					searching : false
 				},
 
 				rendering :
 				{
-					engine                  : 0,
-					isScrolling             : null,
-					resettingScroll         : false,
-					contentFrameWidth       : null,
-					isResizing              : null,
-					pagination              :
+					engine            : 0,
+					isScrolling       : null,
+					resettingScroll   : false,
+					contentFrameWidth : null,
+					isResizing        : null,
+					pagination        :
 					{
 						currentPage                  : null,
 						currentPageHightlight        : null,
@@ -512,7 +512,7 @@
 						changingViews       : false,
 						currentSelectedView : null,
 						list                : [],
-						currentView   : []
+						currentView         : []
 					}
 				},
 

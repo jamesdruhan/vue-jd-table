@@ -1059,7 +1059,7 @@
 						if ( !hasBeenSorted )
 						{
 							this.columns.activeSortIndex = 0;
-							this.columns.activeSortAsc   = true
+							this.columns.activeSortAsc   = true;
 							this.columns.activeSortName  = this.rendering.views.currentView.schema[0].name;
 						}
 					}
@@ -1217,15 +1217,85 @@
 					if ( this.setting.views.length > 0 )
 					{
 						// Validate view(s) format.
-						this.setting.views.forEach( ( view ) =>
+						this.setting.views.forEach ( ( view, viewIndex ) =>
 						{
+							// +1 is added to index because "Default" is the first (0).
+							let currentViewIndex = viewIndex + 1;
+
 							if ( view.viewName.constructor.name === 'String' && view.schema.constructor.name === 'Array' && view.schema.length > 0 )
 							{
-								// Valid View.
-								let viewLength = this.rendering.views.list.push( view );
+								// Create the view in the list.
+								this.$set( this.rendering.views.list, currentViewIndex,
+								{
+									viewName : view.viewName,
+									schema   : []
+								});
 
-								// Sort the default view.
-								this.rendering.views.list[viewLength - 1].schema.sort( ( a, b ) =>
+								// Set the column width for each column.
+								view.schema.forEach( ( column, columnIndex ) =>
+								{
+									this.$set( this.rendering.views.list[currentViewIndex].schema, columnIndex,
+									{
+										name          : column.name ? column.name : '',
+										title         : column.title ? column.title : '',
+										width         : column.width ? column.width : null,
+										originalWidth : column.width ? column.width : null,
+										order         : column.order ? column.order : null,
+										type          : column.type ? column.type : 'String',
+										filterable    : column.filterable ? column.filterable : false,
+										enabled       : column.enabled ? column.enabled : false,
+										headerStyles  : {},
+										dataStyles    : {},
+										sort          : column.sort ? column.sort : false,
+										sortDirection : column.sortDirection ? column.sortDirection : null,
+									});
+
+									// If the column has an assigned width ..
+									if ( column.width !== null )
+									{
+										this.rendering.views.list[currentViewIndex].schema[columnIndex].originalWidth = column.width;
+
+										// If the table is NOT responsive, the width is PX.
+										if ( !this.setting.responsiveTable )
+										{
+											this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].headerStyles, 'width', column.width + 'px' );
+											this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].headerStyles, 'min-width', column.width + 'px' );
+											this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].headerStyles, 'height', this.setting.headerHeight + 'px' );
+
+											this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].dataStyles, 'width', column.width + 'px' );
+											this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].dataStyles, 'min-width', column.width + 'px' );
+
+											if ( this.setting.rowFlex )
+											{
+												this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].dataStyles, 'min-height', this.setting.rowHeight + 'px' );
+											}
+										}
+										// If the table IS responsive, the width is %.
+										else
+										{
+											this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].headerStyles, 'width', column.width + '%' );
+											this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].dataStyles, 'width', column.width + '%' );
+										}
+									}
+									// If no width is assigned to the column ..
+									else
+									{
+										// If the table is NOT responsive throw an error. This is because column widths are in PX.
+										if ( !this.setting.responsiveTable )
+										{
+											this.status.tableError = `Error: Invalid settings in view name: ${ view.viewName }. One or more of the columns does not have an assigned width. When the setting responsiveTable is set to false, all columns must have a specified width. Rendering table as responsive instead.`;
+										}
+
+										// Calculate the width out of the remaining percentage.
+										let autoColumnWidth = ( 100 - this.tableWidth ) / noWidthColumns;
+
+										this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].headerStyles, 'width', autoColumnWidth + '%' );
+										this.$set( this.rendering.views.list[currentViewIndex].schema[columnIndex].dataStyles, 'width', autoColumnWidth + '%' );
+									}
+								});
+
+								// Sort the new view.
+								this.rendering.views.list[currentViewIndex].schema.sort( ( a, b ) =>
 								{
 									return a.order - b.order;
 								});
@@ -1236,8 +1306,6 @@
 							}
 						});
 					}
-
-
 				}
 
 				INIT_ENGINE();

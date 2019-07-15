@@ -3,7 +3,7 @@
 // -----------------
 // JD-Table Styling.
 // -----------------
-.JD-Table
+.jd-table
 {
 	position                : relative;
 	min-width               : 320px;
@@ -28,7 +28,7 @@
 	// -----------------------
 	// Maximized Table Styling
 	// -----------------------
-	&.maximized
+	&.jd-maximized
 	{
 		height           : 100%;
 		min-height       : 100%;
@@ -41,22 +41,22 @@
 		box-sizing       : border-box;
 		background-color : $jdTable_MaximizedBackgroundColour;
 
-		.layerHighlight
+		.jd-layerHighlight
 		{
 			min-width  : 320px;
 		}
 
-		.layerControl
+		.jd-layerControl
 		{
 			min-width  : 320px;
 		}
 
-		.layerOption
+		.jd-layerOption
 		{
 			min-width  : 320px;
 		}
 
-		.layerContent
+		.jd-layerContent
 		{
 			display     : flex;
 			overflow-x  : auto;
@@ -75,33 +75,33 @@
 			}
 		}
 
-		.layerFooter
+		.jd-layerFooter
 		{
 			min-width  : 320px;
 		}
 
-		.layerPopup
+		.jd-layerPopup
 		{
 			border-radius : 0;
 
-			&.fullFrameZone
+			&.jd-fullFrameZone
 			{
 				padding : 3rem;
 			}
 
-			.searchArrow
+			.jd-searchArrow
 			{
 				top : $jdTable_HighLightHeight + $jdTable_ControlHeight + $jdTable_MaximizedPadding + 1rem;
 			}
 
-			.filterArrow
+			.jd-filterArrow
 			{
 				top   : $jdTable_HighLightHeight + $jdTable_ControlHeight + $jdTable_MaximizedPadding + 1rem;
 				right : 1.2rem;
 			}
 		}
 
-		.layerTitle
+		.jd-layerTitle
 		{
 			padding-top : 0;
 			min-width   : 320px;
@@ -111,20 +111,20 @@
 	// ---------
 	// 100% Body. Applied when dataHeight is not provided.
 	// ---------
-	&.fullBody
+	&.jd-fullBody
 	{
 		height     : 100%;
 		min-height : 100%;
 		max-height : 100%;
 
-		.layerContent
+		.jd-layerContent
 		{
 			display    : flex;
 			overflow-x : auto;
 
-			.table
+			.jd-contentTable
 			{
-				.body
+				.jd-body
 				{
 					height : 100%;
 				}
@@ -135,7 +135,7 @@
 	// ----------------------
 	// Title Layer (Optional)
 	// ----------------------
-	.layerTitle
+	.jd-layerTitle
 	{
 		font-size       : $jdTable_BaseFontSize * 2;
 		padding-top     : 1.2rem;
@@ -149,7 +149,7 @@
 	// ----------------------
 	// Table highlight layer.
 	// ----------------------
-	.layerHighlight
+	.jd-layerHighlight
 	{
 		position                : relative;
 		width                   : 100%;
@@ -164,7 +164,7 @@
 	// -----------------------------------------------------------------
 	// Table control layer. Search and other controls are rendered here.
 	// -----------------------------------------------------------------
-	.layerControl
+	.jd-layerControl
 	{
 		position         : relative;
 		width            : 100%;
@@ -181,7 +181,7 @@
 		justify-content  : space-between;
 		z-index          : 99;
 
-		.controlSearch
+		.jd-controlSearch
 		{
 			position           : relative;
 			height             : 100%;
@@ -222,7 +222,7 @@
 				}
 			}
 
-			&.searching
+			&.jd-searching
 			{
 				width            : 14rem;
 				color            : $jdTable_ControlTextHoverColour;
@@ -235,7 +235,7 @@
 			}
 		}
 
-		.controlFeature
+		.jd-controlFeature
 		{
 			position       : relative;
 			height         : 100%;
@@ -247,14 +247,14 @@
 
 			@media only screen and ( max-width: 375px )
 			{
-				&.searching
+				&.jd-searching
 				{
 					display : none;
 				}
 			}
 		}
 
-		.controlItem
+		.jd-controlItem
 		{
 			height                : 100%;
 			position              : relative;
@@ -279,7 +279,7 @@
 				align-items     : center;
 			}
 
-			&.active
+			&.jd-active
 			{
 				i
 				{
@@ -304,7 +304,7 @@
 				}
 			}
 
-			&.selected
+			&.jd-selected
 			{
 				color            : $jdTable_ControlTextActiveColour;
 				background-color : $jdTable_ControlBackgroundHoverColour;
@@ -315,17 +315,17 @@
 				}
 			}
 
-			&.clearSearch
+			&.jd-clearSearch
 			{
 				color : $jdTable_BaseDangerColour;
 			}
 
-			&.search
+			&.jd-search
 			{
 				color : $jdTable_ControlBackgroundColour;
 			}
 
-			&.noSelect
+			&.jd-noSelect
 			{
 				cursor : default;
 
@@ -339,7 +339,7 @@
 
 			}
 
-			.filterArrow
+			.jd-filterArrow
 			{
 				position      : absolute;
 				top           : $jdTable_HighLightHeight + $jdTable_ControlHeight;
@@ -381,7 +381,7 @@
 				}
 			}
 
-			.searchArrow
+			.jd-searchArrow
 			{
 				position      : absolute;
 				top           : $jdTable_HighLightHeight + $jdTable_ControlHeight;
@@ -429,12 +429,12 @@
 	// ----------------------------------------------------------------
 	// Options layer. Used when specific features are selected.
 	// ----------------------------------------------------------------
-	.layerOption
+	.jd-layerOption
 	{
 		width    : 100%;
 		position : relative;
 
-		.optionDropdown
+		.jd-optionDropdown
 		{
 			background-color           : $jdTable_ControlBackgroundHoverColour;
 			width                      : 310px;
@@ -455,7 +455,7 @@
 			border-bottom-right-radius : $jdTable_BaseCornerRadius;
 			border-bottom-left-radius  : $jdTable_BaseCornerRadius;
 
-			.dropdownHeader
+			.jd-dropdownHeader
 			{
 				align-items    : center;
 				padding-top    : 0.5rem;
@@ -466,13 +466,13 @@
 				font-weight    : $jdTable_BaseFontWeight + 200;
 				align-self     : center;
 
-				&.subHeader
+				&.jd-subHeader
 				{
 					padding-top : 1rem;
 					font-size   : $jdTable_BaseFontSize * 1.3;
 				}
 
-				&.smallHeader
+				&.jd-smallHeader
 				{
 					font-size      : $jdTable_BaseFontSize * 0.9;
 					font-weight    : $jdTable_BaseFontWeight;
@@ -482,7 +482,7 @@
 				}
 			}
 
-			.dropdownItem
+			.jd-dropdownItem
 			{
 				display         : flex;
 				flex-direction  : row;
@@ -492,19 +492,19 @@
 				min-height      : 2rem;
 				width           : 100%;
 
-				.columnVisibility
+				.jd-columnVisibility
 				{
 					padding-left  : 1rem;
 					padding-right : 1rem;
 					color         : darken( $jdTable_BaseSuccessColour, 5% );
 
-					.notVisible
+					.jd-notVisible
 					{
 						color : $jdTable_BaseDangerColour;
 					}
 				}
 
-				.columnTitle
+				.jd-columnTitle
 				{
 					padding-right : 1rem;
 					width         : 100%;
@@ -518,7 +518,7 @@
 					background-color : #FFFFFF;
 				}
 
-				&.selected
+				&.jd-selected
 				{
 					background-color : $jdTable_ControlBackgroundColour;
 					color            : $jdTable_ControlTextColour;
@@ -530,7 +530,7 @@
 				}
 			}
 
-			.dropdownInput
+			.jd-dropdownInput
 			{
 				position         : relative;
 				height           : 2rem;
@@ -547,7 +547,7 @@
 				background-color : $jdTable_BaseBGColour;
 				align-items      : center;
 
-				.label
+				.jd-label
 				{
 					width                 : 100%;
 					height                : 100%;
@@ -619,12 +619,12 @@
 					box-sizing       : border-box;
 				}
 
-				&.addPadding
+				&.jd-addPadding
 				{
 					padding : 0rem 0.5rem;
 				}
 
-				.removeIcon
+				.jd-removeIcon
 				{
 					position  : absolute;
 					right     : 0.5rem;
@@ -633,13 +633,13 @@
 					font-size : $jdTable_BaseFontSize * 1.5;
 				}
 
-				&.disabled
+				&.jd-disabled
 				{
 					border           : 1px solid darken( $jdTable_ControlBackgroundHoverColour, 30% );
 					border-left      : 5px solid darken( $jdTable_ControlBackgroundHoverColour, 30% );
 				}
 
-				&.carrot:after
+				&.jd-carrot:after
 				{
 					content      : "";
 					width        : 0;
@@ -654,7 +654,7 @@
 				}
 			}
 
-			.dropdownRow
+			.jd-dropdownRow
 			{
 				display         : flex;
 				flex-direction  : row;
@@ -665,7 +665,7 @@
 				padding         : 0rem 1rem;
 				align-items     : center;
 
-				&.separate
+				&.jd-separate
 				{
 					justify-content : space-between;
 				}
@@ -676,7 +676,7 @@
 				}
 			}
 
-			.errorMessage
+			.jd-errorMessage
 			{
 				color         : $jdTable_BaseDangerColour;
 				font-size     : $jdTable_BaseFontSize * 0.85;
@@ -690,7 +690,7 @@
 	// -------------------------------------------------
 	// Table content layer. Data rows are rendered here.
 	// -------------------------------------------------
-	.layerContent
+	.jd-layerContent
 	{
 		position         : relative;
 		width            : 100%;
@@ -702,7 +702,7 @@
 		overflow-y       : hidden;
 		z-index          : 50;
 
-		.rowView
+		.jd-rowView
 		{
 			position         : absolute;
 			top              : 0px;
@@ -718,7 +718,7 @@
 			box-sizing       : border-box;
 		}
 
-		.table
+		.jd-contentTable
 		{
 			position       : relative;
 			width          : 100%;
@@ -727,7 +727,7 @@
 			flex-direction : column;
 			flex-wrap      : nowrap;
 
-			.head
+			.jd-head
 			{
 				position         : relative;
 				width            : 100%;
@@ -737,7 +737,7 @@
 				flex-direction   : row;
 				background-color : $jdTable_ControlBackgroundColour;
 
-				.cell
+				.jd-cell
 				{
 					position                : relative;
 					display                 : flex;
@@ -759,7 +759,7 @@
 					color                   : $jdTable_BaseThemeFontColour;
 					border-right            : 1px solid darken( $jdTable_BaseThemeBackgroundColour, 10% );
 
-					.cellText
+					.jd-cellText
 					{
 						display        : flex;
 						flex-direction : row;
@@ -768,12 +768,12 @@
 						justify-content: space-between;
 					}
 
-					.hoverSort
+					.jd-hoverSort
 					{
 						display : none;
 					}
 
-					&.hoverAssist
+					&.jd-hoverAssist
 					{
 						background-color : $jdTable_ContentCellHighlightBackgroundColour;
 					}
@@ -783,7 +783,7 @@
 						border-top-left-radius : 0px;
 					}
 
-					&.scrollBuffer
+					&.jd-scrollBuffer
 					{
 						&:last-child
 						{
@@ -791,7 +791,7 @@
 						}
 					}
 
-					&.sort
+					&.jd-sort
 					{
 						cursor : pointer;
 
@@ -802,7 +802,7 @@
 							color            : $jdTable_BaseTextColour;
 							font-weight      : $jdTable_BaseFontWeight + 100;
 
-							.hoverSort
+							.jd-hoverSort
 							{
 								display : block;
 								color   : $jdTable_BaseTextColour;
@@ -812,7 +812,7 @@
 				}
 
 				// Body scroll bar header correction.
-				.scrollFix
+				.jd-scrollFix
 				{
 					width     : 19px;
 					min-width : 19px;
@@ -828,7 +828,7 @@
 				}
 
 
-				.resize
+				.jd-resize
 				{
 					position   : absolute;
 					height     : 100%;
@@ -840,7 +840,7 @@
 					z-index    : 10;
 					overflow   : hidden;
 
-					&.selected
+					&.jd-selected
 					{
 						width : 500px;
 						right : -250px;
@@ -848,7 +848,7 @@
 				}
 			}
 
-			.body
+			.jd-body
 			{
 				position         : relative;
 				width            : 100%;
@@ -858,7 +858,7 @@
 				z-index          : 50;
 				background       : repeating-linear-gradient( 45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px );
 
-				.row
+				.jd-row
 				{
 					position         : relative;
 					z-index          : 50;
@@ -870,12 +870,12 @@
 						color            : $jdTable_ContentCellHighlightTextColour;
 					}
 
-					&.zebra:nth-child(even)
+					&.jd-zebra:nth-child(even)
 					{
 						background-color : darken( $jdTable_BaseBGColour, 5% );
 					}
 
-					.cell
+					.jd-cell
 					{
 						position      : relative;
 						font-size     : ( $jdTable_BaseFontSize * 0.9 );
@@ -884,7 +884,7 @@
 						text-overflow : ellipsis;
 						overflow      : hidden;
 
-						&.rowFlex
+						&.jd-rowFlex
 						{
 							display     : flex;
 							height      : 100%;
@@ -904,7 +904,7 @@
 					}
 				}
 
-				.virtualBody
+				.jd-virtualBody
 				{
 					position   : absolute;
 					opacity    : 0;
@@ -915,7 +915,7 @@
 				}
 			}
 
-			.row
+			.jd-row
 			{
 				width          : 100%;
 				height         : 100%;
@@ -924,7 +924,7 @@
 				flex-direction : row;
 				cursor         : pointer;
 
-				.cell
+				.jd-cell
 				{
 					width           : 100%;
 					box-sizing      : border-box;
@@ -949,7 +949,7 @@
 	// ------------------------------------------------
 	// Table footer layer. Pagination is rendered here.
 	// ------------------------------------------------
-	.layerFooter
+	.jd-layerFooter
 	{
 		position                   : relative;
 		width                      : 100%;
@@ -972,12 +972,12 @@
 		-moz-user-select           : none;
 		-ms-user-select            : none;
 
-		.resultRows
+		.jd-resultRows
 		{
 			font-size : $jdTable_BaseFontSize * 0.85;
 		}
 
-		.pagination
+		.jd-pagination
 		{
 			width           : 100%;
 			display         : flex;
@@ -987,7 +987,7 @@
 			justify-content : space-between;
 			height          : 100%;
 
-			.paginationDirection
+			.jd-paginationDirection
 			{
 				display         : flex;
 				justify-content : center;
@@ -995,7 +995,7 @@
 				height          : 100%;
 				align-items     : center;
 
-				&.left
+				&.jd-left
 				{
 					position         : absolute;
 					top              : 0;
@@ -1004,7 +1004,7 @@
 					border-bottom-left-radius  : $jdTable_BaseCornerRadius;
 				}
 
-				&.right
+				&.jd-right
 				{
 					position                   : absolute;
 					top                        : 0;
@@ -1013,7 +1013,7 @@
 					border-bottom-right-radius : $jdTable_BaseCornerRadius;
 				}
 
-				&.disabled
+				&.jd-disabled
 				{
 					cursor : no-drop;
 
@@ -1049,19 +1049,19 @@
 						background-color : lighten( $jdTable_FooterBackgroundColour, 25% );
 					}
 
-					&.start
+					&.jd-start
 					{
 						border-bottom-left-radius  : $jdTable_BaseCornerRadius;
 					}
 
-					&.end
+					&.jd-end
 					{
 						border-bottom-right-radius : $jdTable_BaseCornerRadius;
 					}
 				}
 			}
 
-			.paginationRows
+			.jd-paginationRows
 			{
 				position: absolute;
 				background-color: #494949;
@@ -1078,7 +1078,7 @@
 				transform : translateX(-50%);
 			}
 
-			.paginationArea
+			.jd-paginationArea
 			{
 				width : 100%;
 				display         : flex;
@@ -1086,7 +1086,7 @@
 				align-items     : center;
 				justify-content : space-around;
 
-				.paginationList
+				.jd-paginationList
 				{
 					display         : flex;
 					flex-direction  : row;
@@ -1094,7 +1094,7 @@
 					justify-content : center;
 					height          : 100%;
 
-					.paginationPage
+					.jd-paginationPage
 					{
 						display         : flex;
 						align-items     : center;
@@ -1113,7 +1113,7 @@
 							box-sizing : border-box;
 						}
 
-						&.addHover
+						&.jd-addHover
 						{
 							&:hover
 							{
@@ -1127,7 +1127,7 @@
 							}
 						}
 
-						&.selected
+						&.jd-selected
 						{
 							span
 							{
@@ -1154,7 +1154,7 @@
 	// -------------------------------------------------------
 	// Filter feature layer. Filter options are rendered here.
 	// -------------------------------------------------------
-	.layerPopup
+	.jd-layerPopup
 	{
 		position         : absolute;
 		top              : 0px;
@@ -1167,26 +1167,26 @@
 		background-color : $jdTable_MaximizedBackgroundColour;
 		border-radius    : $jdTable_BaseCornerRadius;
 
-		&.fullFrame
+		&.jd-fullFrame
 		{
 			z-index : 9998;
 		}
 
-		&.contentFrame
+		&.jd-contentFrame
 		{
 			z-index        : 50;
 			padding-top    : $jdTable_HighLightHeight + $jdTable_ControlHeight;
 			padding-bottom : $jdTable_FooterHeight;
 		}
 
-		&.fullFrameZone
+		&.jd-fullFrameZone
 		{
 			width      : 100%;
 			box-sizing : border-box;
 			padding    : 1rem;
 		}
 
-		.errorMessage
+		.jd-errorMessage
 		{
 			display          : flex;
 			flex-direction   : column;
@@ -1198,37 +1198,37 @@
 			font-size        : $jdTable_BaseFontSize * 1.3;
 		}
 
-		&.filterOverride
+		&.jd-filterOverride
 		{
 			z-index          : 85;
 		}
 
-		&.fullOverride
+		&.jd-fullOverride
 		{
 			z-index          : 999;
 		}
 
-		.noDataFrame
+		.jd-noDataFrame
 		{
 			display          : flex;
 			flex-direction   : column;
 			align-items      : center;
 			padding          : 1rem;
 
-			.title
+			.jd-title
 			{
 				font-size      : $jdTable_BaseFontSize * 1.3;
 				font-weight    : $jdTable_BaseFontWeight + 100;
 				text-transform : uppercase;
 			}
 
-			.filters
+			.jd-filters
 			{
 				margin-top : 1rem;
 			}
 		}
 
-		.quickView
+		.jd-quickView
 		{
 			position         : relative;
 			min-width        : 314px;
@@ -1242,7 +1242,7 @@
 			overflow         : hidden;
 			box-shadow       : 0 1px 4px rgba(0, 0, 0, .6);
 
-			.quickViewHighlight_1
+			.jd-quickViewHighlight_1
 			{
 				width                   : 100%;
 				height                  : $jdTable_HighLightHeight * 0.75;
@@ -1251,14 +1251,14 @@
 				border-top-left-radius  : $jdTable_BaseCornerRadius;
 			}
 
-			.quickViewHighlight_2
+			.jd-quickViewHighlight_2
 			{
 				width            : 100%;
 				height           : $jdTable_HighLightHeight * 1.5;
 				background-color : $jdTable_BaseThemeBackgroundColour;
 			}
 
-			.quickViewControl
+			.jd-quickViewControl
 			{
 				width                 : 100%;
 				height                : $jdTable_ControlHeight;
@@ -1274,7 +1274,7 @@
 				-moz-user-select      : none;
 				-ms-user-select       : none;
 
-				.controlAction
+				.jd-controlAction
 				{
 					font-size       : $jdTable_BaseFontSize;
 					display         : flex;
@@ -1290,28 +1290,28 @@
 					}
 				}
 
-				.controlTitle
+				.jd-controlTitle
 				{
 					text-transform : uppercase;
 					font-size      : $jdTable_BaseFontSize * 1.3;
 				}
 			}
 
-			.quickViewContent
+			.jd-quickViewContent
 			{
 				width      : 100%;
 				max-height : 320px;
 				overflow   : auto;
 				background : repeating-linear-gradient( 45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px );
 
-				.contentRow
+				.jd-contentRow
 				{
 					display          : flex;
 					flex-direction   : column;
 					width            : 100%;
 					background-color : $jdTable_BaseBGColour;
 
-					.rowTitle
+					.jd-rowTitle
 					{
 						display          : flex;
 						align-items      : center;
@@ -1322,7 +1322,7 @@
 						background-color : darken( $jdTable_BaseBGColour, 10% );
 					}
 
-					.rowData
+					.jd-rowData
 					{
 						display     : flex;
 						align-items : center;
@@ -1333,7 +1333,7 @@
 				}
 			}
 
-			.quickViewFooter
+			.jd-quickViewFooter
 			{
 				width                      : 100%;
 				display                    : flex;
@@ -1352,7 +1352,7 @@
 				-moz-user-select           : none;
 				-ms-user-select            : none;
 
-				.footerDirection
+				.jd-footerDirection
 				{
 					display         : flex;
 					justify-content : center;
@@ -1371,25 +1371,25 @@
 						background-color : lighten( $jdTable_FooterBackgroundColour, 25% );
 					}
 
-					&.previous
+					&.jd-previous
 					{
 						border-bottom-left-radius  : $jdTable_BaseCornerRadius;
 					}
 
-					&.next
+					&.jd-next
 					{
 						border-bottom-right-radius : $jdTable_BaseCornerRadius;
 					}
 				}
 
-				.footerItem
+				.jd-footerItem
 				{
 					font-size : $jdTable_BaseFontSize * 0.85;
 				}
 			}
 		}
 
-		.tableMessage
+		.jd-tableMessage
 		{
 			font-size  : 1.5rem;
 			text-align : center;
@@ -1417,7 +1417,7 @@
 // JD-Helpers
 // ----------
 
-.JD-Reset
+.jd-reset
 {
 	*
 	{
@@ -1773,12 +1773,12 @@
 	}
 }
 
-.JD-Clickable
+.jd-clickable
 {
 	cursor : pointer;
 }
 
-.JD-NoneSelectable
+.jd-noneSelectable
 {
 	user-select           : none;
 	-webkit-touch-callout : none;
@@ -1791,7 +1791,7 @@
 // JD-Loader
 // ---------
 
-.JD-Loader
+.jd-loader
 {
 	display          : flex;
 	flex-direction   : column;
@@ -1800,7 +1800,7 @@
 	padding-top      : 1.5rem;
 	border-radius    : 0.5rem;
 
-	.loadingText
+	.jd-loadingText
 	{
 		margin-top  : 0.6rem;
 		font-weight : 500;
@@ -2053,7 +2053,7 @@
 // JD-Table Button
 // ---------------
 
-.JD-Button
+.jd-button
 {
 	position           : relative;
 	margin             : 0.5rem 0rem !important;
@@ -2130,22 +2130,22 @@
 		color            : darken( $jdTable_BaseThemeFontColour, 20% );
 	}
 
-	&.small
+	&.jd-small
 	{
 		min-width : 3rem !important;
 	}
 
-	&.medium
+	&.jd-medium
 	{
 		min-width : 5rem !important;
 	}
 
-	&.large
+	&.jd-large
 	{
 		min-width : 7rem !important;
 	}
 
-	&.danger
+	&.jd-danger
 	{
 		background-color : $jdTable_BaseDangerColour;
 		color            : #FFFFFF;
@@ -2173,7 +2173,7 @@
 		}
 	}
 
-	&.success
+	&.jd-success
 	{
 		background-color : $jdTable_BaseSuccessColour;
 		color            : #FFFFFF;

@@ -1,78 +1,78 @@
 <template>
-	<div class="JD-Reset JD-Table" :class="frameClasses" :style="frameStyles">
+	<div class="jd-reset jd-table" :class="frameClasses" :style="frameStyles">
 
-		<div v-if="setting.title !== null" class="layerTitle">{{ setting.title }}</div>
+		<div v-if="setting.title !== null" class="jd-layerTitle">{{ setting.title }}</div>
 
 		<!-- Layer: Highlight -->
-		<div v-if="setting.highlight" class="layerHighlight JD-NoneSelectable" :style="layerHighlightStyles"></div>
+		<div v-if="setting.highlight" class="jd-layerHighlight jd-noneSelectable" :style="layerHighlightStyles"></div>
 
 		<!-- Layer: Controls -->
-		<div v-if="setting.controls" class="layerControl JD-NoneSelectable" :style="layerControlStyles">
+		<div v-if="setting.controls" class="jd-layerControl jd-noneSelectable" :style="layerControlStyles">
 
 			<!-- Control: Search -->
-			<div v-if="setting.search" class="controlSearch" :class="controlSearchClasses">
+			<div v-if="setting.search" class="jd-controlSearch" :class="controlSearchClasses">
 
-				<span @click="featureAction('Search')" class="controlItem" :class="searchIconClasses" :title="searchIconTitle">
+				<span @click="featureAction('Search')" class="jd-controlItem" :class="searchIconClasses" :title="searchIconTitle">
 					<i  class="fas fa-search"></i>
 
 					<!-- Control: Get Started with Search Reminder -->
-					<div v-if="gettingStarted && setting.startBySearchArrowSearch && !status.processingData && !loader" class="searchArrow">
+					<div v-if="gettingStarted && setting.startBySearchArrowSearch && !status.processingData && !loader" class="jd-searchArrow">
 					{{ setting.startBySearchArrowSearchText }}
 				</div>
 				</span>
 
 				<input v-show="feature.searching" @keyup.enter="performSearch" v-model="search.text" type="search" ref="searchField" :placeholder="setting.searchPlaceHolder ? setting.searchPlaceHolder : 'Search Here ..'" :disabled="status.processingData">
 
-				<span v-show="feature.searching && !search.searching" @click="performSearch" class="controlItem search" title="Perform Search">
+				<span v-show="feature.searching && !search.searching" @click="performSearch" class="jd-controlItem jd-search" title="Perform Search">
 					<i  class="fas fa-angle-right"></i>
 				</span>
 
-				<span v-show="feature.searching && search.searching" @click="clearSearch" class="controlItem clearSearch" title="Clear Search">
+				<span v-show="feature.searching && search.searching" @click="clearSearch" class="jd-controlItem jd-clearSearch" title="Clear Search">
 					<i  class="fas fa-times-circle"></i>
 				</span>
 
 			</div>
 
 			<!-- Control: Feature -->
-			<div class="controlFeature" :class="controlFeatureClasses">
+			<div class="jd-controlFeature" :class="controlFeatureClasses">
 
 				<!-- Feature: Refresh -->
-				<span v-if="setting.refresh" @click="featureAction('Refresh')" class="controlItem">
+				<span v-if="setting.refresh" @click="featureAction('Refresh')" class="jd-controlItem">
 					<i class="fas fa-sync-alt" title="Refresh"></i>
 				</span>
 
 				<!-- Feature: Pagination Select -->
-				<span v-if="rendering.engine === 2" @click="featureAction('Pagination')" class="controlItem" :class="rendering.pagination.changingRows ? 'selected' : ''">
+				<span v-if="rendering.engine === 2" @click="featureAction('Pagination')" class="jd-controlItem" :class="rendering.pagination.changingRows ? 'jd-selected' : ''">
 					<i class="fas fa-scroll" title="Rows Per Page"></i>
 				</span>
 
 				<!-- Feature: Column Select -->
-				<span v-if="setting.columnSelect" @click="featureAction('Columns')" class="controlItem" :class="columns.selecting ? 'selected' : ''">
+				<span v-if="setting.columnSelect" @click="featureAction('Columns')" class="jd-controlItem" :class="columns.selecting ? 'jd-selected' : ''">
 					<i class="fas fa-columns" title="Columns"></i>
 				</span>
 
 				<!-- Feature: Filter -->
-				<span v-if="setting.filter" @click="featureAction('Filter')" class="controlItem" :class="controlFilterClasses">
+				<span v-if="setting.filter" @click="featureAction('Filter')" class="jd-controlItem" :class="controlFilterClasses">
 					<i class="fas fa-filter" title="Filter"></i>
 
 					<!-- Control: Get Started with Filter Reminder -->
-					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !menuVisible && !status.processingData && !loader" class="filterArrow">
+					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !menuVisible && !status.processingData && !loader" class="jd-filterArrow">
 						{{ setting.startBySearchArrowFilterText }}
 					</div>
 				</span>
 
 				<!-- Feature: View -->
-				<span v-if="setting.views.length > 0" @click="featureAction('View')" class="controlItem">
+				<span v-if="setting.views.length > 0" @click="featureAction('View')" class="jd-controlItem">
 					<i class="far fa-eye" title="View"></i>
 				</span>
 
 				<!-- Feature: Export -->
-				<span v-if="setting.export" @click="featureAction('Export')" class="controlItem">
+				<span v-if="setting.export" @click="featureAction('Export')" class="jd-controlItem">
 					<i class="fas fa-file-export" title="Export to Excel"></i>
 				</span>
 
 				<!-- Feature: Maximize/Minimize -->
-				<span v-if="setting.maxMinimize && !setting.forceMaximized" @click="featureAction('MaxMinimize')" class="controlItem">
+				<span v-if="setting.maxMinimize && !setting.forceMaximized" @click="featureAction('MaxMinimize')" class="jd-controlItem">
 					<i :class="minMaxIconClasses" :title="minMaxIconTitle"></i>
 				</span>
 
@@ -81,17 +81,17 @@
 		</div>
 
 		<!-- Layer: Options -->
-		<div class="layerOption" :style="layerOptionStyles">
+		<div class="jd-layerOption" :style="layerOptionStyles">
 
 			<!-- Option: Pagination -->
 			<transition name="jdTableSlideDown">
-				<div v-if="rendering.pagination.changingRows" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="rendering.pagination.changingRows" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Page Rows</div>
+					<div class="jd-dropdownHeader">Page Rows</div>
 
 					<!-- Pagination Row List -->
-					<div v-for="rows in rendering.pagination.pageRowOptions" @click="changePageRows( rows )" class="dropdownItem paginationItem JD-Clickable" :class="rendering.pagination.currentSelectedPageRowOption === rows ? 'selected' : ''">
+					<div v-for="rows in rendering.pagination.pageRowOptions" @click="changePageRows( rows )" class="jd-dropdownItem jd-paginationItem jd-clickable" :class="rendering.pagination.currentSelectedPageRowOption === rows ? 'jd-selected' : ''">
 						{{ rows }}
 					</div>
 
@@ -100,23 +100,23 @@
 
 			<!-- Option: Column -->
 			<transition name="jdTableSlideDown">
-				<div v-if="columns.selecting" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="columns.selecting" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Columns</div>
+					<div class="jd-dropdownHeader">Columns</div>
 
 					<!-- Error -->
-					<div v-if="columns.selectionError" class="errorMessage">You must have at least one column enabled.</div>
+					<div v-if="columns.selectionError" class="jd-errorMessage">You must have at least one column enabled.</div>
 
 					<!-- Column List -->
-					<div v-for="column in columns.list" @click="columnSelection( column )" class="dropdownItem JD-Clickable">
+					<div v-for="column in columns.list" @click="columnSelection( column )" class="jd-dropdownItem jd-clickable">
 
-						<div class="columnVisibility">
+						<div class="jd-columnVisibility">
 							<i v-if="column.enabled" class="fas fa-eye"></i>
-							<i v-else class="fas fa-eye-slash notVisible"></i>
+							<i v-else class="fas fa-eye-slash jd-notVisible"></i>
 						</div>
 
-						<div class="columnTitle">
+						<div class="jd-columnTitle">
 							{{ column.title.replace(/(<([^>]+)>)/ig,"") }}
 						</div>
 
@@ -127,17 +127,17 @@
 
 			<!-- Option: Filtering -->
 			<transition name="jdTableSlideDown">
-				<div v-if="filters.show" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="filters.show" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Filtering</div>
+					<div class="jd-dropdownHeader">Filtering</div>
 
 					<!-- Error -->
-					<div v-if="filters.error" class="errorMessage">{{ filters.errorText }}</div>
+					<div v-if="filters.error" class="jd-errorMessage">{{ filters.errorText }}</div>
 
 					<!-- Select Column Input -->
-					<div class="dropdownInput carrot JD-Clickable">
-						<div @click="filterDropdown(0)" class="label">
+					<div class="jd-dropdownInput jd-carrot jd-clickable">
+						<div @click="filterDropdown(0)" class="jd-label">
 							<span>{{ filterColumnText.replace(/(<([^>]+)>)/ig,"") }}</span>
 						</div>
 
@@ -151,8 +151,8 @@
 					</div>
 
 					<!-- Select Filter Input -->
-					<div class="dropdownInput carrot JD-Clickable">
-						<div @click="filterDropdown(1)" class="label">
+					<div class="jd-dropdownInput jd-carrot jd-clickable">
+						<div @click="filterDropdown(1)" class="jd-label">
 							<span>
 								{{ filterOptionText }}
 							</span>
@@ -168,25 +168,25 @@
 					</div>
 
 					<!-- Select Value Input -->
-					<div class="dropdownInput addPadding">
+					<div class="jd-dropdownInput jd-addPadding">
 						<input @keyup.enter="addFilter" ref="filterInput" type="text" @input="filters.error = false" v-model="filters.beingBuilt.value" placeholder="Value"/>
 					</div>
 
 					<!-- Filter Apply Buttons -->
-					<div class="dropdownRow separate">
-						<button v-on:click="clearAllFilters" type="button" class="JD-Button danger" title="Clear All Filters">Clear All</button>
-						<button v-on:click="addFilter" type="button" class="JD-Button success" title="Apply Filter">Apply</button>
+					<div class="jd-dropdownRow jd-separate">
+						<button v-on:click="clearAllFilters" type="button" class="jd-button jd-danger" title="Clear All Filters">Clear All</button>
+						<button v-on:click="addFilter" type="button" class="jd-button jd-success" title="Apply Filter">Apply</button>
 					</div>
 
 					<!-- Header -->
-					<div class="dropdownHeader subHeader">Active Filters</div>
+					<div class="jd-dropdownHeader jd-subHeader">Active Filters</div>
 
 					<!-- Filtered Results -->
-					<div class="dropdownHeader smallHeader">Filtered Results: {{ formatNumberWithCommas ( processedDataSize ) }}</div>
+					<div class="jd-dropdownHeader jd-smallHeader">Filtered Results: {{ formatNumberWithCommas ( processedDataSize ) }}</div>
 
 					<!-- Active Filters -->
-					<div class="dropdownInput disabled" v-for="( filter, index ) in filters.active">
-						<div class="label" :title="filter.column.title.replace(/(<([^>]+)>)/ig,'') + ' .. ' + filter.option + ' .. ' + filter.value">
+					<div class="jd-dropdownInput jd-disabled" v-for="( filter, index ) in filters.active">
+						<div class="jd-label" :title="filter.column.title.replace(/(<([^>]+)>)/ig,'') + ' .. ' + filter.option + ' .. ' + filter.value">
 							<span>
 								{{ filter.column.title.replace(/(<([^>]+)>)/ig,"") }}
 
@@ -201,7 +201,7 @@
 							</span>
 						</div>
 
-						<i v-on:click="removeFilter( index )" class="fas fa-minus-circle removeIcon JD-Clickable" title="Remove Filter"></i>
+						<i v-on:click="removeFilter( index )" class="fas fa-minus-circle jd-removeIcon jd-clickable" title="Remove Filter"></i>
 					</div>
 
 				</div>
@@ -209,13 +209,13 @@
 
 			<!-- Option: View -->
 			<transition name="jdTableSlideDown">
-				<div v-if="rendering.views.changingViews" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="rendering.views.changingViews" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Views</div>
+					<div class="jd-dropdownHeader">Views</div>
 
 					<!-- View List -->
-					<div v-for="row in rendering.views.list" @click="changeViews( row )" class="dropdownItem paginationItem JD-Clickable" :class="rendering.views.currentSelectedView === row.viewName ? 'selected' : ''">
+					<div v-for="row in rendering.views.list" @click="changeViews( row )" class="jd-dropdownItem jd-paginationItem jd-clickable" :class="rendering.views.currentSelectedView === row.viewName ? 'jd-selected' : ''">
 						{{ row.viewName }}
 					</div>
 
@@ -225,37 +225,37 @@
 		</div>
 
 		<!-- Layer: Content -->
-		<div class="layerContent" ref="contentFrame" :style="layerContentStyles">
+		<div class="jd-layerContent" ref="contentFrame" :style="layerContentStyles">
 
 			<!-- Table Content: Table -->
-			<div class="table" :style="tableStyles">
+			<div class="jd-contentTable" :style="tableStyles">
 
 				<!-- Table: Head -->
-				<div class="head" :style="tableHeadStyles">
+				<div class="jd-head" :style="tableHeadStyles">
 
-					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="cell" :class="columns.activeHover === index ? ( 'hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
+					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="jd-cell" :class="columns.activeHover === index ? ( 'jd-hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
 
-						<div class="cellText">
-							<div class="title" v-html="column.title"></div>
+						<div class="jd-cellText">
+							<div class="jd-title" v-html="column.title"></div>
 							<i v-if="setting.columnSort && columns.activeSortIndex === index && !columns.activeSortAsc" class="fas fa-sort-alpha-up"></i>
 							<i v-if="setting.columnSort && columns.activeSortIndex === index && columns.activeSortAsc" class="fas fa-sort-alpha-down"></i>
-							<i v-if="setting.columnSort && columns.activeSortIndex !== index" class="fas fa-sort-alpha-down hoverSort"></i>
+							<i v-if="setting.columnSort && columns.activeSortIndex !== index" class="fas fa-sort-alpha-down jd-hoverSort"></i>
 						</div>
 
-						<div v-if="resizable" class="resize" @mousedown="resizeStart( index, $event )" @mousemove="resizeDrag( index, $event )" :class="index === columns.activeResize ? 'selected' : ''"></div>
+						<div v-if="resizable" class="jd-resize" @mousedown="resizeStart( index, $event )" @mousemove="resizeDrag( index, $event )" :class="index === columns.activeResize ? 'jd-selected' : ''"></div>
 
 					</div>
 
 				</div>
 
 				<!-- Table Body -->
-				<div class="body" ref="bodyData" :style="tableBodyStyles" @scroll="virtualScroll( $event )" @mouseleave="bodyLeave">
+				<div class="jd-body" ref="bodyData" :style="tableBodyStyles" @scroll="virtualScroll( $event )" @mouseleave="bodyLeave">
 
-					<div v-if="rendering.engine === 0" class="virtualBody" :style="bodyVirtualStyles"></div>
+					<div v-if="rendering.engine === 0" class="jd-virtualBody" :style="bodyVirtualStyles"></div>
 
 					<div ref="viewData" :style="bodyViewStyles">
-						<div v-if="isViewAvailable" v-for="row in currentTableData" @dblclick="rowAction( row.index )" class="row" :class="viewRowClasses" :style="viewRowStyles">
-							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
+						<div v-if="isViewAvailable" v-for="row in currentTableData" @dblclick="rowAction( row.index )" class="jd-row" :class="viewRowClasses" :style="viewRowStyles">
+							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="jd-cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
 								{{ row.data[column.name] }}
 							</div>
 						</div>
@@ -268,51 +268,51 @@
 		</div>
 
 		<!-- Layer: Footer -->
-		<div v-if="setting.footer" class="layerFooter JD-NoneSelectable" :style="layerFooterStyles">
+		<div v-if="setting.footer" class="jd-layerFooter jd-noneSelectable" :style="layerFooterStyles">
 
-			<div v-if="rendering.engine === 2 && processedDataSize" class="pagination">
-				<div class="paginationDirection left" :class="rendering.pagination.currentPage === 1 ? 'disabled' : ''">
-					<i @click="paginationFirst" class="fas fa-fast-backward start" title="First Page"></i>
+			<div v-if="rendering.engine === 2 && processedDataSize" class="jd-pagination">
+				<div class="jd-paginationDirection jd-left" :class="rendering.pagination.currentPage === 1 ? 'jd-disabled' : ''">
+					<i @click="paginationFirst" class="fas fa-fast-backward jd-start" title="First Page"></i>
 					<i @click="paginationPrevious" class="fas fa-backward" title="Previous Page"></i>
 				</div>
 
-				<div v-if="!status.mobileSize" class="paginationRows">
+				<div v-if="!status.mobileSize" class="jd-paginationRows">
 					Rows&nbsp;<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }} of&nbsp;</span>{{ formatNumberWithCommas( processedDataSize ) }}
 				</div>
-				<div v-else class="paginationRows">
+				<div v-else class="jd-paginationRows">
 					<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }}</span>
 				</div>
 
-				<div class="paginationArea">
+				<div class="jd-paginationArea">
 
-					<div v-if="!status.mobileSize" class="paginationList">
-						<div v-if="rendering.pagination.leftPages[0] > 1" class="paginationPage">
+					<div v-if="!status.mobileSize" class="jd-paginationList">
+						<div v-if="rendering.pagination.leftPages[0] > 1" class="jd-paginationPage">
 							<i class="fas fa-ellipsis-h"></i>
 						</div>
-						<div v-for="page in rendering.pagination.leftPages" @click="paginationChange( page )" class="paginationPage addHover" :class="page === rendering.pagination.currentPageHightlight ? 'selected' : ''">
+						<div v-for="page in rendering.pagination.leftPages" @click="paginationChange( page )" class="jd-paginationPage jd-addHover" :class="page === rendering.pagination.currentPageHightlight ? 'jd-selected' : ''">
 							<span>{{ page }}</span>
 						</div>
 					</div>
 
-					<div v-if="!status.mobileSize" class="paginationList">
-						<div v-for="page in rendering.pagination.rightPages" @click="paginationChange( page )" class="paginationPage addHover" :class="page === rendering.pagination.currentPageHightlight ? 'selected' : ''">
+					<div v-if="!status.mobileSize" class="jd-paginationList">
+						<div v-for="page in rendering.pagination.rightPages" @click="paginationChange( page )" class="jd-paginationPage jd-addHover" :class="page === rendering.pagination.currentPageHightlight ? 'jd-selected' : ''">
 							<span>{{ page }}</span>
 						</div>
-						<div v-if="rendering.pagination.rightPages[rendering.pagination.rightPages.length - 1] < rendering.pagination.availablePages" class="paginationPage">
+						<div v-if="rendering.pagination.rightPages[rendering.pagination.rightPages.length - 1] < rendering.pagination.availablePages" class="jd-paginationPage">
 							<i class="fas fa-ellipsis-h"></i>
 						</div>
 					</div>
 
 				</div>
 
-				<div class="paginationDirection right" :class="rendering.pagination.currentPage === rendering.pagination.availablePages ? 'disabled' : ''">
+				<div class="jd-paginationDirection jd-right" :class="rendering.pagination.currentPage === rendering.pagination.availablePages ? 'jd-disabled' : ''">
 					<i @click="paginationNext" class="fas fa-forward" title="Next Page"></i>
-					<i @click="paginationLast" class="fas fa-fast-forward end" title="Last Page"></i>
+					<i @click="paginationLast" class="fas fa-fast-forward jd-end" title="Last Page"></i>
 				</div>
 
 			</div>
 			<div v-if="( rendering.engine === 0 || rendering.engine === 1 ) && processedDataSize">
-				<div class="resultRows" v-show="!filters.show">Rows: {{ formatNumberWithCommas( processedDataSize ) }}</div>
+				<div class="jd-resultRows" v-show="!filters.show">Rows: {{ formatNumberWithCommas( processedDataSize ) }}</div>
 			</div>
 
 		</div>
@@ -320,45 +320,45 @@
 		<!-- Layer: Popup -->
 		<transition name="jdTableFade">
 			<!-- Table Error -->
-			<div v-if="status.tableError" class="layerPopup fullFrame">
-				<div class="errorMessage">
+			<div v-if="status.tableError" class="jd-layerPopup jd-fullFrame">
+				<div class="jd-errorMessage">
 					{{ status.tableError }}
 				</div>
 			</div>
 
 			<!-- No Data Message -->
-			<div v-if="noDataMessage" class="layerPopup contentFrame">
-				<div class="noDataFrame">
-					<div class="title">
+			<div v-if="noDataMessage" class="jd-layerPopup jd-contentFrame">
+				<div class="jd-noDataFrame">
+					<div class="jd-title">
 						No Data Available
 					</div>
 
-					<div v-if="filtering" class="filters">
+					<div v-if="filtering" class="jd-filters">
 						Try changing your applied filters.
 					</div>
 				</div>
 			</div>
 
 			<!-- Loader -->
-			<div v-if="loader" class="layerPopup fullFrame JD-Loader">
+			<div v-if="loader" class="jd-layerPopup jd-fullFrame jd-loader">
 				<div class="fulfilling-square-spinner">
 					<div class="spinner-inner"></div>
 				</div>
 
-				<span class="loadingText">Loading ...</span>
+				<span class="jd-loadingText">Loading ...</span>
 			</div>
 
 			<!-- Processing -->
-			<div v-if="status.processingData" class="layerPopup contentFrame JD-Loader">
+			<div v-if="status.processingData" class="jd-layerPopup jd-contentFrame jd-loader">
 				<div class="fulfilling-square-spinner">
 					<div class="spinner-inner"></div>
 				</div>
 
-				<span class="loadingText">Processing</span>
+				<span class="jd-loadingText">Processing</span>
 			</div>
 
 			<!-- Searching -->
-			<div v-if="status.searching" class="layerPopup contentFrame JD-Loader">
+			<div v-if="status.searching" class="jd-layerPopup jd-contentFrame jd-loader">
 				<div class="self-building-square-spinner">
 					<div class="square"></div>
 					<div class="square"></div>
@@ -371,65 +371,65 @@
 					<div class="square"></div>
 				</div>
 
-				<span class="loadingText">Searching</span>
+				<span class="jd-loadingText">Searching</span>
 			</div>
 
 			<!-- Updating -->
-			<div v-if="status.updatingPage" class="layerPopup contentFrame JD-Loader">
+			<div v-if="status.updatingPage" class="jd-layerPopup jd-contentFrame jd-loader">
 				<div class="looping-rhombuses-spinner">
 					<div class="rhombus"></div>
 					<div class="rhombus"></div>
 					<div class="rhombus"></div>
 				</div>
 
-				<span class="loadingText">Updating</span>
+				<span class="jd-loadingText">Updating</span>
 			</div>
 
 			<!-- Get Started Messaging -->
-			<div v-if="gettingStarted" class="layerPopup contentFrame">
-				<div class="tableMessage" v-html="setting.startBySearchMessage"></div>
+			<div v-if="gettingStarted" class="jd-layerPopup jd-contentFrame">
+				<div class="jd-tableMessage" v-html="setting.startBySearchMessage"></div>
 			</div>
 		</transition>
 
 		<!-- Layer: Quick View -->
 		<transition name="jdTableFade">
-			<div v-if="row.selectedIndex !== null && !status.processingData && !status.searching && !status.updatingPage" class="layerPopup fullFrame fullFrameZone">
+			<div v-if="row.selectedIndex !== null && !status.processingData && !status.searching && !status.updatingPage" class="jd-layerPopup jd-fullFrame jd-fullFrameZone">
 
-				<div class="quickView">
+				<div class="jd-quickView">
 
-					<div class="quickViewHighlight_1"></div>
-					<div class="quickViewHighlight_2"></div>
+					<div class="jd-quickViewHighlight_1"></div>
+					<div class="jd-quickViewHighlight_2"></div>
 
-					<div class="quickViewControl">
-						<div @click="print('quickViewContent')" class="controlAction">
+					<div class="jd-quickViewControl">
+						<div @click="print('quickViewContent')" class="jd-controlAction">
 							<i class="fas fa-print"></i>
 						</div>
 
-						<div class="controlTitle">Quick View</div>
+						<div class="jd-controlTitle">Quick View</div>
 
-						<div @click="row.selectedIndex = null" class="controlAction">
+						<div @click="row.selectedIndex = null" class="jd-controlAction">
 							<i class="fas fa-times"></i>
 						</div>
 					</div>
 
-					<div ref="quickViewContent" class="quickViewContent" :style="quickViewContentStyles">
-						<div v-for="column in columns.list" class="contentRow">
-							<div class="rowTitle">{{ column.title.replace(/(<([^>]+)>)/ig,"") }}</div>
-							<div class="rowData">{{ data[row.selectedIndex][column.name] }}</div>
+					<div ref="quickViewContent" class="jd-quickViewContent" :style="quickViewContentStyles">
+						<div v-for="column in columns.list" class="jd-contentRow">
+							<div class="jd-rowTitle">{{ column.title.replace(/(<([^>]+)>)/ig,"") }}</div>
+							<div class="jd-rowData">{{ data[row.selectedIndex][column.name] }}</div>
 						</div>
 					</div>
 
-					<div class="quickViewFooter">
-						<div @click="quickViewPrevious" class="footerDirection previous">
+					<div class="jd-quickViewFooter">
+						<div @click="quickViewPrevious" class="jd-footerDirection jd-previous">
 							<i class="fas fa-backward"></i>
 						</div>
-						<div v-if="setting.dataProvider === 1" class="footerItem">
+						<div v-if="setting.dataProvider === 1" class="jd-footerItem">
 							{{ row.selectedIndex + rendering.pagination.currentStartIndex + 1 }} of {{ processedDataSize }}
 						</div>
-						<div v-else class="footerItem">
+						<div v-else class="jd-footerItem">
 							{{ row.selectedIndex + 1 }} of {{ processedDataSize }}
 						</div>
-						<div @click="quickViewNext" class="footerDirection next">
+						<div @click="quickViewNext" class="jd-footerDirection jd-next">
 							<i class="fas fa-forward"></i>
 						</div>
 					</div>
@@ -3683,12 +3683,12 @@
 			{
 				if ( this.feature.maximized )
 				{
-					return 'maximized';
+					return 'jd-maximized';
 				}
 
 				if ( !this.setting.dataHeight )
 				{
-					return 'fullBody';
+					return 'jd-fullBody';
 				}
 
 				return null;
@@ -3729,7 +3729,7 @@
 			{
 				if ( this.feature.searching )
 				{
-					return 'searching';
+					return 'jd-searching';
 				}
 
 				return null;
@@ -3742,12 +3742,12 @@
 
 				if ( this.filters.show )
 				{
-					classes = 'selected';
+					classes = 'jd-selected';
 				}
 
 				if ( this.filtering )
 				{
-					classes += ' active';
+					classes += ' jd-active';
 				}
 
 				return classes;
@@ -3760,22 +3760,22 @@
 
 				if ( this.setting.forceSearchOpen )
 				{
-					classes += ' noSelect';
+					classes += ' jd-noSelect';
 				}
 
 				if ( this.feature.searching )
 				{
-					classes += ' search selected';
+					classes += ' jd-search jd-selected';
 				}
 
 				if ( this.search.searching )
 				{
-					classes += ' active';
+					classes += ' jd-active';
 				}
 
 				if ( !this.feature.searching && !this.setting.forceSearchOpen )
 				{
-					classes += ' notActive'
+					classes += ' jd-notActive'
 				}
 
 				return classes;
@@ -3797,7 +3797,7 @@
 			{
 				if ( this.feature.searching )
 				{
-					return 'searching';
+					return 'jd-searching';
 				}
 
 				return null;
@@ -3890,12 +3890,12 @@
 
 				if ( this.setting.columnSort )
 				{
-					classes += ' sort';
+					classes += ' jd-sort';
 				}
 
 				if ( this.status.tableScroll )
 				{
-					classes += ' scrollBuffer';
+					classes += ' jd-scrollBuffer';
 				}
 
 				return classes;
@@ -3954,7 +3954,7 @@
 
 				if ( this.setting.rowZebra )
 				{
-					classes += ' zebra';
+					classes += ' jd-zebra';
 				}
 
 				return classes;
@@ -3983,7 +3983,7 @@
 
 				if ( this.setting.rowFlex )
 				{
-					classes = 'rowFlex';
+					classes = 'jd-rowFlex';
 				}
 
 				return classes;

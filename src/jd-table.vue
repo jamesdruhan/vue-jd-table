@@ -1682,18 +1682,21 @@
 										{
 											let searchMatch = false;
 
-											// For each item in the row/column.
-											row[column.name].forEach( ( item ) =>
+											if ( row[column.name] && row[column.name].length > 0 )
 											{
-												let searchText = String( item ).toLowerCase();
-
-												// Casts number variables to strings to make the searchable with Strings.
-												if ( !searchMatch && searchText.includes( searchTerm ) )
+												// For each item in the row/column.
+												row[column.name].forEach( ( item ) =>
 												{
-													searchMatch = true;
-												}
-											});
+													let searchText = String( item ).toLowerCase();
 
+													// Casts number variables to strings to make the searchable with Strings.
+													if ( !searchMatch && searchText.includes( searchTerm ) )
+													{
+														searchMatch = true;
+													}
+												});
+											}
+											
 											return searchMatch;
 										}
 										// Search a column which is made up of strings or numbers.

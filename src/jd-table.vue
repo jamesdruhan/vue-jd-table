@@ -36,6 +36,11 @@
 			<!-- Control: Feature -->
 			<div class="jd-controlFeature" :class="controlFeatureClasses">
 
+				<!-- Feature: Add New -->
+				<span v-if="setting.addNew" @click="featureAction('AddNew')" class="jd-controlItem">
+					<i class="fas fa-plus-square" title="Add New"></i>
+				</span>
+
 				<!-- Feature: Refresh -->
 				<span v-if="setting.refresh" @click="featureAction('Refresh')" class="jd-controlItem">
 					<i class="fas fa-sync-alt" title="Refresh"></i>
@@ -402,7 +407,7 @@
 
 		<!-- Layer: Quick View -->
 		<transition name="jdTableFade">
-			<div v-if="row.selectedIndex !== null && !status.processingData && !status.searching && !status.updatingPage" class="jd-layerPopup jd-fullFrame jd-fullFrameZone">
+			<div v-if="row.selectedIndex !== null && !status.processingData && !status.searching && !status.updatingPage" class="jd-layerPopup jd-fullBrowser jd-fullFrame jd-fullFrameZone">
 
 				<div class="jd-quickView">
 
@@ -421,7 +426,7 @@
 						</div>
 					</div>
 
-					<div ref="quickViewContent" class="jd-quickViewContent" :style="quickViewContentStyles">
+					<div ref="quickViewContent" class="jd-quickViewContent">
 						<div v-for="column in columns.list" class="jd-contentRow">
 							<div class="jd-rowTitle">{{ column.title.replace(/(<([^>]+)>)/ig,"") }}</div>
 
@@ -652,6 +657,11 @@
 		// Value       : [BOOLEAN]
 		// Default     : True
 		// Description : Enables/disables the min/maximize feature button.
+		//
+		// Prop        : option.addNew
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the Add New feature button.
 		//
 		// Prop        : option.refresh
 		// Value       : [BOOLEAN]
@@ -1371,6 +1381,15 @@
 					}
 				};
 
+				// Emits a add new event to the parent.
+				const ADDNEW = () =>
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'AddNew';
+
+					this.$emit( 'event-from-jd-table', this.componentState );
+				};
+
 				// Emits a refresh event to the parent.
 				const REFRESH = () =>
 				{
@@ -1511,6 +1530,15 @@
 					VIEW_CLEAN_UP();
 
 					SEARCH();
+				}
+				else if ( name === 'AddNew' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					ADDNEW();
 				}
 				else if ( name === 'Refresh' )
 				{
@@ -1696,7 +1724,7 @@
 													}
 												});
 											}
-											
+
 											return searchMatch;
 										}
 										// Search a column which is made up of strings or numbers.
@@ -3643,6 +3671,7 @@
 						refresh                      : true,
 						search                       : true,
 						columnSelect                 : true,
+						addNew                       : false,
 						resize                       : true,
 						filter                       : true,
 						export                       : true,
@@ -4215,23 +4244,6 @@
 					{
 						styles['max-width'] = this.tableWidth + 'px';
 					}
-				}
-
-				return styles;
-			},
-
-			// Returns the styles for the quickViewContent div.
-			quickViewContentStyles : function ()
-			{
-				let styles = {};
-
-				if ( this.feature.maximized )
-				{
-					styles['max-height'] = ( this.$refs.bodyData.clientHeight * 0.8 ) + 'px';
-				}
-				else
-				{
-					styles['max-height'] = this.setting.dataHeight + 'px';
 				}
 
 				return styles;

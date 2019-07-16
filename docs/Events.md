@@ -173,7 +173,7 @@ Full Example:
 />
 ```
 
-> With the exception of the "Refresh" event, all other events are intended for external data processing (dataProvider = 1 option).
+> With the exception of the "Refresh" and "AddNew" event, all other events are intended for external data processing (dataProvider = 1 option).
 
 In the example above, whenever JD-Table emit's an event it will trigger the processEventFromApp() method with the event details in $event.
 
@@ -211,6 +211,7 @@ As all events are sent to a single callback function you must manage the
 
 #### JD-Table Events
 
+- [AddNew](#AddNew)
 - [Refresh](#Refresh)
 - [ExcelExport](#ExcelExport)
 - [PaginationGoToSpecificPage](#PaginationGoToSpecificPage)
@@ -228,6 +229,36 @@ As all events are sent to a single callback function you must manage the
 - [ClearSearch](#ClearSearch)
 
 > **REMINDER**: When performing any event, be sure to remember to modify your API calls for data based on the componentState values like search, filter and pagination.
+
+#### AddNew
+
+- **Trigger**: This event is emitted when the user clicks the 'Add New' button in JD-Table. The intention of this button is to redirect a user to a form/page in order to add a new record to the table.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form that allows them to insert a new record.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'AddNew' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
 
 #### Refresh
 

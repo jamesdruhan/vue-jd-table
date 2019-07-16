@@ -736,6 +736,8 @@
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 0.5rem; }
+    .jd-table .jd-layerPopup.jd-fullBrowser {
+      position: fixed; }
     .jd-table .jd-layerPopup.jd-fullFrame {
       z-index: 9998; }
     .jd-table .jd-layerPopup.jd-contentFrame {
@@ -773,7 +775,8 @@
     .jd-table .jd-layerPopup .jd-quickView {
       position: relative;
       min-width: 314px;
-      max-width: 600px;
+      max-width: 95%;
+      max-height: 95%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -785,16 +788,19 @@
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewHighlight_1 {
         width: 100%;
         height: 0.3375rem;
+        min-height: 0.3375rem;
         background-color: #494949;
         border-top-right-radius: 0.5rem;
         border-top-left-radius: 0.5rem; }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewHighlight_2 {
         width: 100%;
-        height: 0.675rem;
+        height: 0.225rem;
+        min-height: 0.225rem;
         background-color: #C00; }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl {
         width: 100%;
         height: 2.5rem;
+        min-height: 2.5rem;
         background-color: #757575;
         display: flex;
         flex-direction: row;
@@ -821,7 +827,6 @@
           font-size: 1.17rem; }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent {
         width: 100%;
-        max-height: 320px;
         overflow: auto;
         background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px); }
         .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent .jd-contentRow {
@@ -853,6 +858,7 @@
         justify-content: space-between;
         align-items: center;
         height: 2rem;
+        min-height: 2rem;
         background-color: #494949;
         color: #FFFFFF;
         border-bottom-right-radius: 0.5rem;

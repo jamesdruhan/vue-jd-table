@@ -1173,6 +1173,11 @@
 		background-color : $jdTable_MaximizedBackgroundColour;
 		border-radius    : $jdTable_BaseCornerRadius;
 
+		&.jd-fullBrowser
+		{
+			position : fixed;
+		}
+
 		&.jd-fullFrame
 		{
 			z-index : 9998;
@@ -1238,7 +1243,8 @@
 		{
 			position         : relative;
 			min-width        : 314px;
-			max-width        : 600px;
+			max-width        : 95%;
+			max-height       : 95%;
 			display          : flex;
 			flex-direction   : column;
 			align-items      : center;
@@ -1252,6 +1258,7 @@
 			{
 				width                   : 100%;
 				height                  : $jdTable_HighLightHeight * 0.75;
+				min-height              : $jdTable_HighLightHeight * 0.75;
 				background-color        : $jdTable_HighLightBackgroundColour;
 				border-top-right-radius : $jdTable_BaseCornerRadius;
 				border-top-left-radius  : $jdTable_BaseCornerRadius;
@@ -1260,7 +1267,8 @@
 			.jd-quickViewHighlight_2
 			{
 				width            : 100%;
-				height           : $jdTable_HighLightHeight * 1.5;
+				height           : $jdTable_HighLightHeight * 0.5;
+				min-height       : $jdTable_HighLightHeight * 0.5;
 				background-color : $jdTable_BaseThemeBackgroundColour;
 			}
 
@@ -1268,6 +1276,7 @@
 			{
 				width                 : 100%;
 				height                : $jdTable_ControlHeight;
+				min-height            : $jdTable_ControlHeight;
 				background-color      : $jdTable_ControlBackgroundColour;
 				display               : flex;
 				flex-direction        : row;
@@ -1306,7 +1315,6 @@
 			.jd-quickViewContent
 			{
 				width      : 100%;
-				max-height : 320px;
 				overflow   : auto;
 				background : repeating-linear-gradient( 45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px );
 
@@ -1353,6 +1361,7 @@
 				justify-content            : space-between;
 				align-items                : center;
 				height                     : $jdTable_FooterHeight;
+				min-height                 : $jdTable_FooterHeight;
 				background-color           : $jdTable_FooterBackgroundColour;
 				color                      : $jdTable_FooterTextColour;
 				border-bottom-right-radius : $jdTable_BaseCornerRadius;

@@ -767,6 +767,36 @@ data ()
     <a href="#table-of-contents">Back to Table of Contents</a>
 </p>
 
+- ##### addNew
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the add new feature button. Clicking this button causes a $emit to the parent. Enable this button if you want to be able to redirect the user to a form in order to insert a new record to a table. Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the add new button in the control bar.
+        - False: Disables the add new button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              addNew : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### refresh
 
     - **Type**: [TYPEHERE]
@@ -1404,6 +1434,7 @@ data ()
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>
 </p>
+
 - ##### virtualEngineRowStart
 
     - **Type**: [Number]

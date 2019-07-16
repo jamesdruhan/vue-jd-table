@@ -89,9 +89,11 @@ data ()
         - **order** [Number]: Indicates the order that the column will be displayed in from left to right, one (1) being the first (left-most) column. **Required**.
         - **sort** [Boolean]: Indicates if this is the column that should be initially sorted on when displaying results.
         - **sortDirection** [String]: Indicates the direction of the sort: '**asc**' or '**desc**'.
-        - **type** [String]: Indicates the type of data that is in this column: '**String**' or '**Number**'.
+        - **type** [String]: Indicates the type of data that is in this column: '**String**', '**Number**' or '**Array**'.
         - **filterable** [Boolean]: Determines if this column can be filterable. **Required**.
         - **enabled** [Boolean]: Determines if the column is initally visible in the table. Set to FALSE to hide the column. Users can later add the column into the view by enabling it in using the columns feature. **Required**.
+    <br><br>        
+        > **Note**: Columns of type **Array** can be a array of strings or numbers only ( numbers will be cast as strings for search ). Array columns will appear as a list in the row of data and be fully searchable. When sorting a column that is of type array, the data will be sorted by the first item of the array for each row.
     <br><br>
     - **Example**:
     

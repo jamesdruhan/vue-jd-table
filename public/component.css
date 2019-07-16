@@ -571,6 +571,9 @@
               content: '';
               min-height: inherit;
               font-size: 0; }
+            .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row .jd-cell .jd-list {
+              list-style-type: circle;
+              padding-left: 1rem; }
         .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-virtualBody {
           position: absolute;
           opacity: 0;
@@ -840,6 +843,9 @@
             min-height: 2rem;
             padding: 0.5rem 1rem;
             word-break: break-all; }
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent .jd-contentRow .jd-rowData ul {
+              list-style-type: circle;
+              padding-left: 1rem; }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter {
         width: 100%;
         display: flex;

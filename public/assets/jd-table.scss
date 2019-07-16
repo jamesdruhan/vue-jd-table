@@ -901,6 +901,12 @@
 							min-height : inherit;
 							font-size  : 0;
 						}
+
+						.jd-list
+						{
+							list-style-type : circle;
+							padding-left    : 1rem;
+						}
 					}
 				}
 
@@ -1329,6 +1335,12 @@
 						min-height  : 2rem;
 						padding     : 0.5rem 1rem;
 						word-break  : break-all;
+
+						ul
+						{
+							list-style-type : circle;
+							padding-left    : 1rem;
+						}
 					}
 				}
 			}

@@ -256,7 +256,16 @@
 					<div ref="viewData" :style="bodyViewStyles">
 						<div v-if="isViewAvailable" v-for="row in currentTableData" @dblclick="rowAction( row.index )" class="jd-row" :class="viewRowClasses" :style="viewRowStyles">
 							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="jd-cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
-								{{ row.data[column.name] }}
+								<!-- List Items -->
+								<span v-if="column.type === 'Array'">
+									<ul class="jd-list">
+										<li v-for="item in row.data[column.name]">
+											{{ item }}
+										</li>
+									</ul>
+								</span>
+								<!-- String Items -->
+								<span v-else>{{ row.data[column.name] }}</span>
 							</div>
 						</div>
 					</div>
@@ -415,7 +424,18 @@
 					<div ref="quickViewContent" class="jd-quickViewContent" :style="quickViewContentStyles">
 						<div v-for="column in columns.list" class="jd-contentRow">
 							<div class="jd-rowTitle">{{ column.title.replace(/(<([^>]+)>)/ig,"") }}</div>
-							<div class="jd-rowData">{{ data[row.selectedIndex][column.name] }}</div>
+
+							<!-- List Items -->
+							<div v-if="column.type === 'Array'" class="jd-rowData">
+								<ul>
+									<li v-for="item in data[row.selectedIndex][column.name]">
+										{{ item }}
+									</li>
+								</ul>
+							</div>
+							<!-- String Items -->
+							<div v-else class="jd-rowData">{{ data[row.selectedIndex][column.name] }}</div>
+
 						</div>
 					</div>
 
@@ -1200,7 +1220,7 @@
 							this.status.tableError = 'Error: External data provider is only supported by the Pagination render engine. Please change your settings.';
 						}
 					}
-				}
+				};
 
 				// Configure the search option.
 				const SETUP_SEARCH = () =>
@@ -1306,7 +1326,7 @@
 							}
 						});
 					}
-				}
+				};
 
 				INIT_ENGINE();
 				INIT_COLUMNS();
@@ -1660,7 +1680,21 @@
 										// Search a column which is made up of an array or strings.
 										if ( column.type === 'Array' )
 										{
+											let searchMatch = false;
 
+											// For each item in the row/column.
+											row[column.name].forEach( ( item ) =>
+											{
+												let searchText = String( item ).toLowerCase();
+
+												// Casts number variables to strings to make the searchable with Strings.
+												if ( !searchMatch && searchText.includes( searchTerm ) )
+												{
+													searchMatch = true;
+												}
+											});
+
+											return searchMatch;
 										}
 										// Search a column which is made up of strings or numbers.
 										else
@@ -1739,7 +1773,7 @@
 								// Performs filter: Contains (String Based).
 								const FILTER_CONTAINS = ( row, columnFilter ) =>
 								{
-									return ( String( row[columnFilter.column.name]).toLowerCase().includes(String(columnFilter.value).toLowerCase()) );
+									return ( String( row[columnFilter.column.name]).toLowerCase().includes( String( columnFilter.value ).toLowerCase() ) );
 								};
 
 								// Performs filter: Greater and Less/Equal To (Number Based).
@@ -2957,12 +2991,12 @@
 
 								if ( stringX < stringY )
 								{
-									return -1;
+									return ( ( !this.columns.activeSortAsc ) ? 1 : -1 );
 								}
 
 								if ( stringX > stringY )
 								{
-									return 1;
+									return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
 								}
 
 								// Strings are the same.
@@ -4051,6 +4085,16 @@
 					}
 
 					return ['Equals To', 'Contains', 'Not Equals To', 'Begins With'];
+				}
+
+				if ( this.filters.beingBuilt.column.type === 'Array' )
+				{
+					if ( this.setting.dataProvider === 1 )
+					{
+						return ['Contains'];
+					}
+
+					return ['Contains'];
 				}
 
 				if ( this.filters.beingBuilt.column.type === 'Number' )

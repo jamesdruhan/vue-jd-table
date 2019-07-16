@@ -106,7 +106,7 @@
 							name       : 'column4',
 							title      : 'Column 4',
 							order      : 4,
-							type       : 'String',
+							type       : 'Array',
 							filterable : true,
 							enabled    : true,
 							width      : 100,
@@ -221,7 +221,7 @@
 								column1 : String(i),
 								column2 : String(i * i),
 								column3 : String(i + i),
-								column4 : String(i + i + i),
+								column4 : [ `Value #${i}`, `Value #${i+1}` ]
 							})
 						}
 

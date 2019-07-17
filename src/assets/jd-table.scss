@@ -875,6 +875,12 @@
 						background-color : darken( $jdTable_BaseBGColour, 5% );
 					}
 
+					&.jd-rowSelect
+					{
+						background-color : darken( $jdTable_ContentCellHighlightBackgroundColour, 20% ) !important;
+						color            : $jdTable_ContentCellHighlightTextColour;
+					}
+
 					.jd-cell
 					{
 						position      : relative;
@@ -1278,6 +1284,7 @@
 				height                : $jdTable_ControlHeight;
 				min-height            : $jdTable_ControlHeight;
 				background-color      : $jdTable_ControlBackgroundColour;
+				position              : relative;
 				display               : flex;
 				flex-direction        : row;
 				justify-content       : space-between;
@@ -1291,24 +1298,34 @@
 
 				.jd-controlAction
 				{
-					font-size       : $jdTable_BaseFontSize;
-					display         : flex;
-					justify-content : center;
-					width           : $jdTable_ControlHeight * 0.8;
-					cursor          : pointer;
 					height          : 100%;
-					align-items     : center;
+					display         : flex;
+					flex-direction  : row;
 
-					&:hover
+					span
 					{
-						background-color : lighten( $jdTable_ControlBackgroundColour, 15% );
+						width           : $jdTable_ControlHeight * 0.8;
+						font-size       : $jdTable_BaseFontSize;
+						display         : flex;
+						justify-content : center;
+						align-items     : center;
+						height          : 100%;
+						cursor          : pointer;
+
+						&:hover
+						{
+							background-color : lighten( $jdTable_ControlBackgroundColour, 15% );
+						}
 					}
 				}
 
 				.jd-controlTitle
 				{
-					text-transform : uppercase;
-					font-size      : $jdTable_BaseFontSize * 1.3;
+					position  : absolute;
+					left      : 50%;
+					top       : 50%;
+					transform : translate(-50%, -50%);
+					font-size : $jdTable_BaseFontSize * 1.3;
 				}
 			}
 
@@ -1429,6 +1446,39 @@
 			60%
 			{
 				transform : translateY(15px);
+			}
+		}
+	}
+
+	// ---------------------------
+	// Context Menu (Right Click).
+	// ---------------------------
+	.jd-contextMenu
+	{
+		width      : auto;
+		box-shadow : 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+		position   : fixed;
+		z-index    : 9998;
+		background : #FFF;
+
+		.jd-contextMenuOptions
+		{
+			list-style : none;
+			padding    : 10px 0;
+			z-index    : 1;
+
+			.jd-contextMenuOption
+			{
+				font-weight : 500;
+				z-index     : 1;
+				font-size   : 14px;
+				padding     : 10px 40px 10px 20px;
+				cursor      : pointer;
+
+				&:hover
+				{
+					background : rgba(0, 0, 0, 0.2);
+				}
 			}
 		}
 	}

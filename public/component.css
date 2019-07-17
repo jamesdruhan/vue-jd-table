@@ -553,6 +553,9 @@
             color: #FFFFFF; }
           .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row.jd-zebra:nth-child(even) {
             background-color: #f2f2f2; }
+          .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row.jd-rowSelect {
+            background-color: #e60000 !important;
+            color: #FFFFFF; }
           .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row .jd-cell {
             position: relative;
             font-size: 0.81rem;
@@ -802,6 +805,7 @@
         height: 2.5rem;
         min-height: 2.5rem;
         background-color: #757575;
+        position: relative;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -813,17 +817,24 @@
         -moz-user-select: none;
         -ms-user-select: none; }
         .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction {
-          font-size: 0.9rem;
-          display: flex;
-          justify-content: center;
-          width: 2rem;
-          cursor: pointer;
           height: 100%;
-          align-items: center; }
-          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction:hover {
-            background-color: #9b9b9b; }
+          display: flex;
+          flex-direction: row; }
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction span {
+            width: 2rem;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            cursor: pointer; }
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction span:hover {
+              background-color: #9b9b9b; }
         .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlTitle {
-          text-transform: uppercase;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
           font-size: 1.17rem; }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent {
         width: 100%;
@@ -897,6 +908,24 @@
     transform: translateY(30px); }
   60% {
     transform: translateY(15px); } }
+  .jd-table .jd-contextMenu {
+    width: auto;
+    box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    z-index: 9998;
+    background: #FFF; }
+    .jd-table .jd-contextMenu .jd-contextMenuOptions {
+      list-style: none;
+      padding: 10px 0;
+      z-index: 1; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption {
+        font-weight: 500;
+        z-index: 1;
+        font-size: 14px;
+        padding: 10px 40px 10px 20px;
+        cursor: pointer; }
+        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption:hover {
+          background: rgba(0, 0, 0, 0.2); }
 
 .jd-reset * {
   box-sizing: border-box; }

@@ -131,17 +131,20 @@
 						startBySearchArrowSearchText : 'Search Here!',
 						startBySearchArrowFilterText : 'Filter by Column',
 
-						maxMinimize         : true,
-						addNew              : true,
-						refresh             : true,
-						search              : true,
-						columnSelect        : true,
-						resize              : true,
-						filter              : true,
-						export              : true,
-						exportLimit         : 5000,
-						columnSort          : true,
-						quickView           : true,
+						maxMinimize           : true,
+						addNew                : false,
+						editItem              : false,
+						refresh               : true,
+						search                : true,
+						columnSelect          : true,
+						resize                : true,
+						filter                : true,
+						export                : true,
+						exportLimit           : 5000,
+						columnSort            : true,
+						quickView             : 1,
+						contextMenuLeft       : false,
+						contextMenuRight      : true,
 
 						renderEngine          : 2,
 						responsiveFrame       : false,
@@ -222,7 +225,7 @@
 								column1 : String(i),
 								column2 : String(i * i),
 								column3 : String(i + i),
-								column4 : [ `Value #${i}`, `Value #${i+1}` ]
+								column4 : [ 'Value #' + i, 'Value #' + (i + 1) ]
 							})
 						}
 
@@ -247,7 +250,7 @@
 						this.eventFromAppTrigger = true;
 
 						// Reset the trigger event.
-						this.$nextTick( () =>
+						this.$nextTick( function ()
 						{
 							this.eventFromAppTrigger = false;
 						});

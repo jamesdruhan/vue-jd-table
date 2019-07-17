@@ -238,7 +238,7 @@
 				<!-- Table: Head -->
 				<div class="jd-head" :style="tableHeadStyles">
 
-					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="jd-cell" :class="columns.activeHover === index ? ( 'jd-hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
+					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="jd-cell" :class="columns.activeHoverIndex === index ? ( 'jd-hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
 
 						<div class="jd-cellText">
 							<div class="jd-title" v-html="column.title"></div>
@@ -259,7 +259,7 @@
 					<div v-if="rendering.engine === 0" class="jd-virtualBody" :style="bodyVirtualStyles"></div>
 
 					<div ref="viewData" :style="bodyViewStyles">
-						<div v-if="isViewAvailable" v-for="row in currentTableData" @dblclick="rowAction( row.index )" class="jd-row" :class="viewRowClasses" :style="viewRowStyles">
+						<div v-if="isViewAvailable" v-for="row in currentTableData" @click="rowActionSingle( row.index )" @dblclick="rowActionDouble( row.index )" @mouseover="rowHover( row.index, $event )" class="jd-row" :class="viewRowClasses" :style="viewRowStyles">
 							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="jd-cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
 								<!-- List Items -->
 								<span v-if="column.type === 'Array'">
@@ -416,13 +416,20 @@
 
 					<div class="jd-quickViewControl">
 						<div @click="print('quickViewContent')" class="jd-controlAction">
-							<i class="fas fa-print"></i>
+							<span>
+								<i class="fas fa-print"></i>
+							</span>
 						</div>
 
 						<div class="jd-controlTitle">Quick View</div>
 
-						<div @click="row.selectedIndex = null" class="jd-controlAction">
-							<i class="fas fa-times"></i>
+						<div class="jd-controlAction">
+							<span v-if="setting.editItem" @click="featureAction('EditItem')">
+								<i class="fas fa-pencil-alt"></i>
+							</span>
+							<span @click="quickViewClose">
+								<i class="fas fa-times"></i>
+							</span>
 						</div>
 					</div>
 
@@ -464,6 +471,17 @@
 			</div>
 		</transition>
 
+		<!-- Layer: Right Click / Context Menu -->
+		<transition name="jdTableFade">
+			<div v-show="( setting.contextMenuLeft || setting.contextMenuRight ) && status.contextMenu" class="jd-contextMenu" ref="jd_contextMenu">
+				<ul class="jd-contextMenuOptions">
+					<li v-if="setting.contextMenuQuickView" @click="contextQuickView" class="jd-contextMenuOption jd-noneSelectable">Quick View</li>
+					<li v-if="setting.contextMenuView" @click="contextView" class="jd-contextMenuOption jd-noneSelectable">View</li>
+					<li v-if="setting.contextMenuEdit" @click="contextEdit" class="jd-contextMenuOption jd-noneSelectable">Edit</li>
+					<li v-if="setting.contextMenuAdd" @click="contextAdd" class="jd-contextMenuOption jd-noneSelectable">Add</li>
+				</ul>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -486,6 +504,7 @@
 					isIE11         : false,
 					tableScroll    : false,
 					lastAction     : null,
+					contextMenu    : false,
 				},
 
 				currentTableData : [],
@@ -545,13 +564,17 @@
 
 				row :
 				{
-					selectedIndex : null
+					selectedIndex        : null,
+					activeHoverIndex     : null,
+					activeHoverElement   : null,
+					activeContextIndex   : null,
+					activeContextElement : null
 				},
 
 				columns :
 				{
 					list               : [],
-					activeHover        : null,
+					activeHoverIndex   : null,
 					activeResize       : null,
 					activeResizeStart  : null,
 					activeSortIndex    : 0,
@@ -663,6 +686,11 @@
 		// Default     : False
 		// Description : Enables/disables the Add New feature button.
 		//
+		// Prop        : option.editItem
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the Edit Item feature button (quick view).
+		//
 		// Prop        : option.refresh
 		// Value       : [BOOLEAN]
 		// Default     : True
@@ -704,9 +732,40 @@
 		// Description : Enables/disables the ability to sort by column.
 		//
 		// Prop        : option.quickView
+		// Value       : [NUMBER]
+		// Default     : 1
+		// Description : Enables/disables the ability to click or double click a row to see the quick view.
+		//
+		// -----
+		// | 0 | NONE         : Disables quick view.
+		// | 1 | CLICK        : Quick view appears on single (left) click.
+		// | 2 | DOUBLE CLICK : Quick view appears on double (left) click.
+		// -----
+		//
+		// Prop        : option.contextMenu
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables a row context menu for when a user right clicks on a row.
+		//
+		// Prop        : option.contextMenuQuickView
 		// Value       : [BOOLEAN]
 		// Default     : True
-		// Description : Enables/disables the ability to double click on a row and show a quick view of all its data.
+		// Description : Enables/disables the row context menu option for Quick Viewing the row data.
+		//
+		// Prop        : option.contextMenuView
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Viewing the row data.
+		//
+		// Prop        : option.contextMenuEdit
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Editing the row data.
+		//
+		// Prop        : option.contextMenuAdd
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Adding a row of data.
 		//
 		// Prop        : option.renderEngine
 		// Value       : [NUMBER]
@@ -949,6 +1008,11 @@
 					this.checkMobile();
 				}, 750 );
 			});
+
+			if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
+			{
+				this.initializeContextMenu();
+			}
 		},
 
 		methods :
@@ -1348,6 +1412,108 @@
 				BUILD_VIEWS();
 			},
 
+			// Configures the table context menu (right/left click).
+			initializeContextMenu : function ()
+			{
+				// LEFT CLICK
+				if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
+				{
+					window.addEventListener( "click", e =>
+					{
+						// If the menu is visible already ..
+						if ( this.status.contextMenu )
+						{
+							this.hideContextMenu();
+						}
+
+						if ( this.setting.contextMenuLeft && e.target.closest( '.jd-body' ) )
+						{
+							// Get the location of the right click.
+							const clickLocation =
+							{
+								left : e.pageX,
+								top  : e.pageY
+							};
+
+							// Show the menu at the click location.
+							this.showContextMenu( clickLocation );
+						}
+					});
+				}
+
+				// RIGHT CLICK
+				if ( this.setting.contextMenuRight )
+				{
+					// Register context menu (right click) event.
+					window.addEventListener( "contextmenu", e =>
+					{
+						// If the click takes places in the table body ..
+						if ( e.target.closest( '.jd-body' ) )
+						{
+							// Prevent the regular menu.
+							e.preventDefault();
+
+							// Clear previous context (if any).
+							if ( this.status.contextMenu )
+							{
+								this.hideContextMenu();
+							}
+
+							// Close any feature menu.
+							this.featureAction( null );
+
+							// Get the location of the right click.
+							const clickLocation =
+							{
+								left : e.pageX,
+								top  : e.pageY
+							};
+
+							// Show the menu at the click location.
+							this.showContextMenu( clickLocation );
+
+							return false;
+						}
+					});
+				}
+			},
+
+			// Enables the context menu at the coordinates passed.
+			showContextMenu : function ( { top, left } )
+			{
+				// Close any feature menu.
+				this.featureAction( null );
+
+				this.$refs.jd_contextMenu.style.left = `${ left }px`;
+				this.$refs.jd_contextMenu.style.top  = `${ top }px`;
+
+				// Update the index of the row right clicked on.
+				this.row.activeContextIndex   = this.row.activeHoverIndex;
+				this.row.activeContextElement = this.row.activeHoverElement;
+
+				// Make the row red.
+				this.row.activeContextElement.classList.add('jd-rowSelect');
+
+				// Show the context menu,
+				this.status.contextMenu = true;
+			},
+
+			// Disabled (hides) the context menu.
+			hideContextMenu : function ()
+			{
+				if ( !this.row.selectedIndex )
+				{
+					// Remove the row red.
+					this.row.activeContextElement.classList.remove('jd-rowSelect');
+
+					// Update the index of the row right clicked on.
+					this.row.activeContextIndex   = null;
+					this.row.activeContextElement = null;
+				}
+
+				this.status.contextMenu = false;
+			},
+
 			// Manages all feature actions.
 			featureAction : function ( name )
 			{
@@ -1386,6 +1552,15 @@
 				{
 					// Update the last action performed.
 					this.status.lastAction = 'AddNew';
+
+					this.$emit( 'event-from-jd-table', this.componentState );
+				};
+
+				// Emits a add new event to the parent.
+				const EDITITEM = () =>
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'EditItem';
 
 					this.$emit( 'event-from-jd-table', this.componentState );
 				};
@@ -1540,6 +1715,15 @@
 
 					ADDNEW();
 				}
+				else if ( name === 'EditItem' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					EDITITEM();
+				}
 				else if ( name === 'Refresh' )
 				{
 					FILTER_CLEAN_UP();
@@ -1589,6 +1773,13 @@
 					PAGINATION_CLEAN_UP();
 
 					VIEW();
+				}
+				else
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
 				}
 			},
 
@@ -2795,10 +2986,17 @@
 				}, 220);
 			},
 
+			// Sets the row index that is currently being hovered over.
+			rowHover : function ( rowIndex, e )
+			{
+				this.row.activeHoverIndex   = rowIndex;
+				this.row.activeHoverElement = e.srcElement.closest('.jd-row');
+			},
+
 			// Sets the column that is currently being hovered over.
 			cellHover : function ( columnIndex )
 			{
-				this.columns.activeHover = columnIndex;
+				this.columns.activeHoverIndex = columnIndex;
 			},
 
 			// Checks if the body of the table has a scroll bar. This is important to align the head + body.
@@ -2824,7 +3022,7 @@
 					return;
 				}
 
-				this.columns.activeHover = null;
+				this.columns.activeHoverIndex = null;
 			},
 
 			// Triggers the start of a resize event. Records the column to be resized and the starting X position.
@@ -3426,20 +3624,114 @@
 				});
 			},
 
-			// Called when user clicks on a data row. Accepts the index of the data on the this.data.
-			rowAction : function ( rowIndex )
+			// Called when user selects the "Quick View" option from the left/right click context menu of a row.
+			contextQuickView : function ()
 			{
-				if ( this.setting.quickView )
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Show the quick view.
+				this.row.selectedIndex = this.row.activeContextIndex;
+			},
+
+			// Called when user selects the "View" option from the left/right click context menu of a row.
+			contextView : function ()
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'ViewItem';
+
+				this.$emit( 'event-from-jd-table', this.componentState );
+			},
+
+			// Called when user selects the "Edit" option from the left/right click context menu of a row.
+			contextEdit : function ()
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'EditItem';
+
+				this.$emit( 'event-from-jd-table', this.componentState );
+			},
+
+			// Called when user selects the "Add" option from the left/right click context menu of a row.
+			contextAdd : function ()
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'AddItem';
+
+				this.$emit( 'event-from-jd-table', this.componentState );
+			},
+
+			// Called when user single (left) clicks on a data row. Accepts the index of the data on the this.data.
+			rowActionSingle : function ( rowIndex )
+			{
+				if ( this.setting.quickView === 1 && !this.setting.contextMenuLeft )
 				{
-					// Clean up other potential menus.
-					this.columns.selecting = false;
-					this.filters.error     = false;
-					this.filters.errorText = '';
-					this.filters.show      = false;
+					// If the menu is visible already ..
+					if ( this.status.contextMenu )
+					{
+						this.hideContextMenu();
+					}
+
+					this.featureAction( null );
+
+					// Add a highlight to the quick view row.
+					this.row.activeContextIndex   = this.row.activeHoverIndex;
+					this.row.activeContextElement = this.row.activeHoverElement;
+
+					// Make the row red.
+					this.row.activeContextElement.classList.add('jd-rowSelect');
 
 					// Show the quick view.
 					this.row.selectedIndex = rowIndex;
 				}
+			},
+
+			// Called when user double clicks on a data row. Accepts the index of the data on the this.data.
+			rowActionDouble : function ( rowIndex )
+			{
+				if ( this.setting.quickView === 2 && !this.setting.contextMenuLeft )
+				{
+					// If the menu is visible already ..
+					if ( this.status.contextMenu )
+					{
+						this.hideContextMenu();
+					}
+
+					this.featureAction( null );
+
+					// Add a highlight to the quick view row.
+					this.row.activeContextIndex   = this.row.activeHoverIndex;
+					this.row.activeContextElement = this.row.activeHoverElement;
+
+					// Make the row red.
+					this.row.activeContextElement.classList.add('jd-rowSelect');
+
+					// Show the quick view.
+					this.row.selectedIndex = rowIndex;
+				}
+			},
+
+			// Called when the quick view window is closed.
+			quickViewClose : function ()
+			{
+				// Remove the row red.
+				this.row.activeContextElement.classList.remove('jd-rowSelect');
+
+				// Update the index of the row right clicked on.
+				this.row.activeContextIndex   = null;
+				this.row.activeContextElement = null;
+
+				// Hide the quick view.
+				this.row.selectedIndex = null;
 			},
 
 			// Called when the NEXT button is pressed on the quick view.
@@ -3672,12 +3964,19 @@
 						search                       : true,
 						columnSelect                 : true,
 						addNew                       : false,
+						editItem                     : false,
 						resize                       : true,
 						filter                       : true,
 						export                       : true,
 						exportLimit                  : null,
 						columnSort                   : true,
-						quickView			         : true,
+						quickView			         : 1,
+						contextMenuRight             : false,
+						contextMenuLeft              : false,
+						contextMenuQuickView         : true,
+						contextMenuView              : true,
+						contextMenuEdit              : true,
+						contextMenuAdd               : true,
 
 						// Rendering
 						renderEngine                   : 2,
@@ -4292,14 +4591,16 @@
 			componentState : function ()
 			{
 				return {
-					searchApplied     : this.search.searching,
-					searchText        : this.search.text,
-					filterApplied     : this.filters.active,
-					pageLimit         : this.rendering.pagination.currentSelectedPageRowOption,
-					currentPage       : this.rendering.pagination.currentPage,
-					lastAction        : this.status.lastAction,
-					sortColumn        : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
-					sortDirection     : this.columns.activeSortAsc ? 'ASC' : 'DESC'
+					searchApplied : this.search.searching,
+					searchText    : this.search.text,
+					filterApplied : this.filters.active,
+					pageLimit     : this.rendering.pagination.currentSelectedPageRowOption,
+					currentPage   : this.rendering.pagination.currentPage,
+					lastAction    : this.status.lastAction,
+					sortColumn    : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
+					sortDirection : this.columns.activeSortAsc ? 'ASC' : 'DESC',
+					selectedItem  : this.row.selectedIndex !== null ? this.data[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.data[ this.row.activeContextIndex ] : null,
+					selectedIndex : this.row.selectedIndex !== null ? this.row.selectedIndex : this.row.activeContextIndex !== null  ? this.row.activeContextIndex : null
 				}
 			}
 		},

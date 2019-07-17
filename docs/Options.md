@@ -48,6 +48,11 @@ data ()
 - [paginationRowLimits](#paginationRowLimits)
 - [paginationRowStart](#paginationRowStart)
 - [quickView](#quickView)
+- [contextMenu](#contextMenu)
+- [contextMenuView](#contextMenuView)
+- [contextMenuEdit](#contextMenuEdit)
+- [addNew](#addNew)
+- [editItem](#editItem)
 - [refresh](#refresh)
 - [renderEngine](#renderEngine)
 - [resize](#resize)
@@ -736,13 +741,16 @@ data ()
 
     - **Type**: [Boolean]
     <br><br>
-    -  **Default**: True
+    -  **Default**: 1
     <br><br>
-    - **Details**: Controls the ability to double click on a row and show a quick view of all its data. This is a good idea to enable when you may have many, many columns of data but only disable a handful in the actual table. Double clicking the row will allow the user to view all the row data (even on columns that are currently selected as hidden).
+    - **Details**: Controls the ability to click or double click a row to see the Quick View. This is a good idea to enable when you may have many, many columns of data but only disable a handful in the actual table. Configure this setting to 1 (single click) or 2 (double click) to the row and it will allow the user to view all the row data (even on columns that are currently selected as hidden).
     <br><br>
     - **Options**:
-        - True: Enables double clicking of a row to display the row data.
-        - False: Disables quick viewing of rows.
+        - 0: Diables quick view.
+        - 1: Quick view appears on single (left) click.
+        - 2: Quick view appears on double (left) click.
+    <br><br>
+    > **Note**: When contextMenuLeft is enabled, it will superseed this setting.
     <br><br>
     - **Example**:
     
@@ -767,6 +775,188 @@ data ()
     <a href="#table-of-contents">Back to Table of Contents</a>
 </p>
 
+- ##### contextMenuLeft
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the ability to show a left click (context menu) when the user right clicks on a row. Available options for the context menu include View and Edit controllable with their own options contextMenuView and contextMenuEdit.
+    <br><br>
+    - **Options**:
+        - True: Enables the left click context menu.
+        - False: Disables the left click context menu.
+    <br><br>
+    > **Note**: When this setting is enabled, it will superseed the quickMenu setting.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenu : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuRight
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the ability to show a right click (context menu) when the user right clicks on a row. Available options for the context menu include View and Edit controllable with their own options contextMenuView and contextMenuEdit.
+    <br><br>
+    - **Options**:
+        - True: Enables the right click context menu.
+        - False: Disables the right click context menu.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenu : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuQuickView
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Quick View" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. Users clicking "Quick View" in the context menu will be shown the Quick View data for that row.
+    <br><br>
+    - **Options**:
+        - True: Enables the "Quick View" option in the context menu for a row.
+        - False: Disables the "Quick View" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuQuickView : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuView
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "View" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "View" option of a row context menu the event "ViewItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "View" option in the context menu for a row.
+        - False: Disables the "View" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuView : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuEdit
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Edit" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Edit" option of a row context menu the event "EditItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "Edit" option in the context menu for a row.
+        - False: Disables the "Edit" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuEdit : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuAdd
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Add" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Add" option of a row context menu the event "AddItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "Add" option in the context menu for a row.
+        - False: Disables the "Add" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuAdd : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### addNew
 
     - **Type**: [TYPEHERE]
@@ -774,6 +964,36 @@ data ()
     -  **Default**: False
     <br><br>
     - **Details**: Controls the add new feature button. Clicking this button causes a $emit to the parent. Enable this button if you want to be able to redirect the user to a form in order to insert a new record to a table. Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the add new button in the control bar.
+        - False: Disables the add new button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              addNew : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### editItem
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the edit item feature button in the quick view. Clicking this button causes a $emit to the parent. Enable this button if you want to be able to redirect the user to a form in order to edit a the record in the table. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex". Read more about events from JD-Table here.
     <br><br>
     - **Options**:
         - True: Enables the add new button in the control bar.

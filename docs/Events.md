@@ -212,6 +212,7 @@ As all events are sent to a single callback function you must manage the
 #### JD-Table Events
 
 - [AddNew](#AddNew)
+- [EditItem](#EditItem)
 - [Refresh](#Refresh)
 - [ExcelExport](#ExcelExport)
 - [PaginationGoToSpecificPage](#PaginationGoToSpecificPage)
@@ -235,6 +236,66 @@ As all events are sent to a single callback function you must manage the
 - **Trigger**: This event is emitted when the user clicks the 'Add New' button in JD-Table. The intention of this button is to redirect a user to a form/page in order to add a new record to the table.
 
 - **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form that allows them to insert a new record.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'AddNew' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### ViewItem
+
+- **Trigger**: This event is emitted when the user clicks the 'View' button in the left/right context menu. The intention of this button is to redirect a user to a form/page in order to view the record in the table.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form that allows them to view the record. You can get the row details of the item to be viewed in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'AddNew' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### EditItem
+
+- **Trigger**: This event is emitted when the user clicks the 'Edit' button in Quick View. The intention of this button is to redirect a user to a form/page in order to edit the record in the table.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form that allows them to edits the record. You can get the row details of the item to be edited in the componentState using the selectedItem and selectedIndex keys.
     
 ##### Example
 

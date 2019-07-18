@@ -51,8 +51,12 @@ data ()
 - [contextMenu](#contextMenu)
 - [contextMenuView](#contextMenuView)
 - [contextMenuEdit](#contextMenuEdit)
+- [contextMenuDelete](#contextMenuDelete)
+- [contextMenuAdd](#contextMenuAdd)
 - [addNew](#addNew)
+- [viewItem](#viewItem)
 - [editItem](#editItem)
+- [deleteItem](#deleteItem)
 - [refresh](#refresh)
 - [renderEngine](#renderEngine)
 - [resize](#resize)
@@ -94,6 +98,9 @@ data ()
         - **order** [Number]: Indicates the order that the column will be displayed in from left to right, one (1) being the first (left-most) column. **Required**.
         - **sort** [Boolean]: Indicates if this is the column that should be initially sorted on when displaying results.
         - **sortDirection** [String]: Indicates the direction of the sort: '**asc**' or '**desc**'.
+        - **sortSpecial** [String]: Indicates special sort options.
+            - **Custom Sort Options**:
+                - **IP**: Sorts string and array types according to how a human would read sorted IP's. In the case of an array of IP's the first element of each item is sorted.
         - **type** [String]: Indicates the type of data that is in this column: '**String**', '**Number**' or '**Array**'.
         - **filterable** [Boolean]: Determines if this column can be filterable. **Required**.
         - **enabled** [Boolean]: Determines if the column is initally visible in the table. Set to FALSE to hide the column. Users can later add the column into the view by enabling it in using the columns feature. **Required**.
@@ -873,7 +880,7 @@ data ()
     <br><br>
     -  **Default**: True
     <br><br>
-    - **Details**: Controls the ability to show the option "View" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "View" option of a row context menu the event "ViewItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    - **Details**: Controls the ability to show the option "View" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "View" option of a row context menu the event "ViewItem" will be sent to the parent ("ViewItemNewWindow" will be triggered if they click the View in New Window option). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
     <br><br>
     - **Options**:
         - True: Enables the "View" option in the context menu for a row.
@@ -903,7 +910,7 @@ data ()
     <br><br>
     -  **Default**: True
     <br><br>
-    - **Details**: Controls the ability to show the option "Edit" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Edit" option of a row context menu the event "EditItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    - **Details**: Controls the ability to show the option "Edit" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Edit" option of a row context menu the event "EditItem" will be sent to the parent ("EditItemNewWindow" will be triggered if they click the View in New Window option). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
     <br><br>
     - **Options**:
         - True: Enables the "Edit" option in the context menu for a row.
@@ -927,13 +934,43 @@ data ()
     <a href="#table-of-contents">Back to Table of Contents</a>
 </p>
 
+- ##### contextMenuDelete
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Delete" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Delete" option of a row context menu the event "DeleteItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "Delete" option in the context menu for a row.
+        - False: Disables the "Delete" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuDelete : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### contextMenuAdd
 
     - **Type**: [Boolean]
     <br><br>
     -  **Default**: True
     <br><br>
-    - **Details**: Controls the ability to show the option "Add" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Add" option of a row context menu the event "AddItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    - **Details**: Controls the ability to show the option "Add" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Add" option of a row context menu the event "AddItem" will be sent to the parent ("AddItemNewWindow" will be triggered if they click the View in New Window option). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
     <br><br>
     - **Options**:
         - True: Enables the "Add" option in the context menu for a row.
@@ -987,6 +1024,36 @@ data ()
     <a href="#table-of-contents">Back to Table of Contents</a>
 </p>
 
+- ##### viewItem
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the view item feature button in the quick view. Clicking this button causes a $emit to the parent. Enable this button if you want to be able to redirect the user to a form in order to view a the record in the table. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex". Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the add new button in the control bar.
+        - False: Disables the add new button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              viewItem : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
 - ##### editItem
 
     - **Type**: [TYPEHERE]
@@ -1008,6 +1075,36 @@ data ()
             tableOptions :
             {
               addNew : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### deleteItem
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the edit item feature button in the quick view. Clicking this button causes a $emit to the parent. Enable this button if you want to delete a record from the table (you will need to implement your own confirmation). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex". Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the delete button in the control bar.
+        - False: Disables the delete button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              deleteItem : true
             }
         }
     }

@@ -238,7 +238,7 @@
 				<!-- Table: Head -->
 				<div class="jd-head" :style="tableHeadStyles">
 
-					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="jd-cell" :class="columns.activeHoverIndex === index ? ( 'jd-hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
+					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name, column.sortSpecial )" :title="sortTitle( index )" class="jd-cell" :class="columns.activeHoverIndex === index ? ( 'jd-hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
 
 						<div class="jd-cellText">
 							<div class="jd-title" v-html="column.title"></div>
@@ -415,15 +415,21 @@
 					<div class="jd-quickViewHighlight_2"></div>
 
 					<div class="jd-quickViewControl">
-						<div @click="print('quickViewContent')" class="jd-controlAction">
-							<span>
+						<div class="jd-controlAction">
+							<span @click="print('quickViewContent')" >
 								<i class="fas fa-print"></i>
+							</span>
+							<span v-if="setting.viewItem" @click="featureAction('ViewItem')">
+								<i class="far fa-arrow-alt-circle-up"></i>
 							</span>
 						</div>
 
 						<div class="jd-controlTitle">Quick View</div>
 
 						<div class="jd-controlAction">
+							<span v-if="setting.deleteItem" @click="featureAction('DeleteItem')">
+								<i class="fas fa-trash-alt"></i>
+							</span>
 							<span v-if="setting.editItem" @click="featureAction('EditItem')">
 								<i class="fas fa-pencil-alt"></i>
 							</span>
@@ -475,10 +481,30 @@
 		<transition name="jdTableFade">
 			<div v-show="( setting.contextMenuLeft || setting.contextMenuRight ) && status.contextMenu" class="jd-contextMenu" ref="jd_contextMenu">
 				<ul class="jd-contextMenuOptions">
-					<li v-if="setting.contextMenuQuickView" @click="contextQuickView" class="jd-contextMenuOption jd-noneSelectable">Quick View</li>
-					<li v-if="setting.contextMenuView" @click="contextView" class="jd-contextMenuOption jd-noneSelectable">View</li>
-					<li v-if="setting.contextMenuEdit" @click="contextEdit" class="jd-contextMenuOption jd-noneSelectable">Edit</li>
-					<li v-if="setting.contextMenuAdd" @click="contextAdd" class="jd-contextMenuOption jd-noneSelectable">Add</li>
+					<li v-if="setting.contextMenuQuickView || setting.contextMenuView || setting.contextMenuEdit || setting.contextMenuDelete" class="jd-contextMenuHeader jd-noneSelectable">
+						<span>Row Options</span>
+					</li>
+					<li v-if="setting.contextMenuQuickView" @click="contextQuickView" class="jd-contextMenuOption jd-noneSelectable" title="Open Quick View">
+						<span>Quick View</span>
+					</li>
+					<li v-if="setting.contextMenuView"  class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextView(false)" title="View Record">View</span>
+						<span @click="contextView(true)" title="View (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+					</li>
+					<li v-if="setting.contextMenuEdit" class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextEdit(false)" title="Edit Record">Edit</span>
+						<span @click="contextEdit(true)" title="Edit (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+					</li>
+					<li v-if="setting.contextMenuDelete" class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextDelete" title="Delete Record">Delete</span>
+					</li>
+					<li v-if="setting.contextMenuAdd" class="jd-contextMenuHeader jd-noneSelectable">
+						<span>Table Options</span>
+					</li>
+					<li v-if="setting.contextMenuAdd" class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextAdd(false)" title="Add Record">Add</span>
+						<span @click="contextAdd(true)" title="Add (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+					</li>
 				</ul>
 			</div>
 		</transition>
@@ -580,6 +606,7 @@
 					activeSortIndex    : 0,
 					activeSortName     : null,
 					activeSortAsc      : false,
+					activeSortSpecial  : null,
 					selecting          : false,
 					selectionItemWidth : 25,
 					selectionError     : false
@@ -691,6 +718,16 @@
 		// Default     : False
 		// Description : Enables/disables the Edit Item feature button (quick view).
 		//
+		// Prop        : option.viewItem
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the View Item feature button (quick view).
+		//
+		// Prop        : option.deleteItem
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the Delete Item feature button (quick view).
+		//
 		// Prop        : option.refresh
 		// Value       : [BOOLEAN]
 		// Default     : True
@@ -761,6 +798,11 @@
 		// Value       : [BOOLEAN]
 		// Default     : True
 		// Description : Enables/disables the row context menu option for Editing the row data.
+		//
+		// Prop        : option.contextMenuDelete
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Delete the row data.
 		//
 		// Prop        : option.contextMenuAdd
 		// Value       : [BOOLEAN]
@@ -984,6 +1026,8 @@
 
 		created : function ()
 		{
+			this.polyfillClosest();
+
 			this.checkBrowser();
 
 			this.initializeTable();
@@ -1013,10 +1057,35 @@
 			{
 				this.initializeContextMenu();
 			}
+
+			if ( this.setting.quickView )
+			{
+				this.initializeQuickMenu();
+			}
 		},
 
 		methods :
 		{
+			// Polyfills the element function "closest" (IE11).
+			polyfillClosest : function ()
+			{
+				if ( window.Element && !Element.prototype.closest )
+				{
+					Element.prototype.closest = function ( s )
+					{
+						let matches = ( this.document || this.ownerDocument ).querySelectorAll( s ), i, el = this;
+
+						do
+						{
+							i = matches.length;
+							while ( --i >= 0 && matches.item( i ) !== el ) {};
+						} while ( (i < 0) && ( el = el.parentElement ) );
+
+						return el;
+					};
+				}
+			},
+
 			// Configures the table according to the init props.
 			initializeTable : function ()
 			{
@@ -1092,6 +1161,7 @@
 								dataStyles    : {},
 								sort          : userColumn.sort ? userColumn.sort : false,
 								sortDirection : userColumn.sortDirection ? userColumn.sortDirection : null,
+								sortSpecial   : userColumn.sortSpecial ? userColumn.sortSpecial : null
 							});
 						});
 
@@ -1132,8 +1202,9 @@
 							// Sets the column as default sorted.
 							if ( viewColumn.sort )
 							{
-								this.columns.activeSortIndex = viewIndex;
-								this.columns.activeSortName  = viewColumn.name;
+								this.columns.activeSortIndex    = viewIndex;
+								this.columns.activeSortName     = viewColumn.name;
+								this.columns.activeSortSpecial  = viewColumn.sortSpecial;
 
 								if ( typeof( viewColumn.sortDirection ) === 'string' )
 								{
@@ -1152,9 +1223,10 @@
 						// No sorting set, use first column.
 						if ( !hasBeenSorted )
 						{
-							this.columns.activeSortIndex = 0;
-							this.columns.activeSortAsc   = true;
-							this.columns.activeSortName  = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortIndex    = 0;
+							this.columns.activeSortAsc      = true;
+							this.columns.activeSortName     = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortSpecial  = this.rendering.views.currentView.schema[0].sortSpecial;
 						}
 					}
 					else
@@ -1478,6 +1550,23 @@
 				}
 			},
 
+			// Configures a click listener to close quick menu when clicked out of it.
+			initializeQuickMenu : function ()
+			{
+				window.addEventListener( "click", e =>
+				{
+					// Don't run this when clicking in the table body.
+					if ( !e.target.closest( '.jd-body' ) )
+					{
+						// Ensure user clicks outside the popup window.
+						if ( this.row.selectedIndex && e.target.classList.contains('jd-layerPopup') )
+						{
+							this.quickViewClose();
+						}
+					}
+				});
+			},
+
 			// Enables the context menu at the coordinates passed.
 			showContextMenu : function ( { top, left } )
 			{
@@ -1496,6 +1585,34 @@
 
 				// Show the context menu,
 				this.status.contextMenu = true;
+
+				// Context menu position correction.
+				setTimeout( () =>
+				{
+					let contextWidth  = this.$refs.jd_contextMenu.offsetWidth;
+					let contextHeight = this.$refs.jd_contextMenu.offsetHeight;
+					let windowWidth   = window.innerWidth;
+					let windowHeight  = window.innerHeight;
+
+					if ( ( windowWidth - left ) < contextWidth )
+					{
+						this.$refs.jd_contextMenu.style.left = windowWidth - contextWidth + "px";
+					}
+					else
+					{
+						this.$refs.jd_contextMenu.style.left = left + "px";
+					}
+
+					if ( (windowHeight - top ) < contextHeight )
+					{
+						this.$refs.jd_contextMenu.style.top = windowHeight - contextHeight + "px";
+					}
+					else
+					{
+						this.$refs.jd_contextMenu.style.top = top + "px";
+					}
+
+				}, 50, { top, left } );
 			},
 
 			// Disabled (hides) the context menu.
@@ -1551,18 +1668,27 @@
 				const ADDNEW = () =>
 				{
 					// Update the last action performed.
-					this.status.lastAction = 'AddNew';
+					this.status.lastAction = 'AddItem';
 
 					this.$emit( 'event-from-jd-table', this.componentState );
 				};
 
 				// Emits a add new event to the parent.
+				const VIEWITEM = () =>
+				{
+					this.contextView();
+				};
+
+				// Emits a add new event to the parent.
 				const EDITITEM = () =>
 				{
-					// Update the last action performed.
-					this.status.lastAction = 'EditItem';
+					this.contextEdit();
+				};
 
-					this.$emit( 'event-from-jd-table', this.componentState );
+				// Emits a add new event to the parent.
+				const DELETEITEM = () =>
+				{
+					this.contextDelete();
 				};
 
 				// Emits a refresh event to the parent.
@@ -1715,6 +1841,15 @@
 
 					ADDNEW();
 				}
+				else if ( name === 'ViewItem' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					VIEWITEM();
+				}
 				else if ( name === 'EditItem' )
 				{
 					FILTER_CLEAN_UP();
@@ -1723,6 +1858,15 @@
 					VIEW_CLEAN_UP();
 
 					EDITITEM();
+				}
+				else if ( name === 'DeleteItem' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					DELETEITEM();
 				}
 				else if ( name === 'Refresh' )
 				{
@@ -2827,9 +2971,10 @@
 						{
 							if ( viewColumn.sort )
 							{
-								this.columns.activeSortIndex = viewIndex;
-								this.columns.activeSortName  = viewColumn.name;
-								hasBeenSorted                = true;
+								this.columns.activeSortIndex    = viewIndex;
+								this.columns.activeSortName     = viewColumn.name;
+								this.columns.activeSortSpecial  = viewColumn.sortSpecial;
+								hasBeenSorted                   = true;
 
 								if ( typeof( viewColumn.sortDirection ) === 'string' )
 								{
@@ -2845,9 +2990,10 @@
 
 						if ( !hasBeenSorted )
 						{
-							this.columns.activeSortIndex = 0;
-							this.columns.activeSortAsc   = true
-							this.columns.activeSortName  = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortIndex   = 0;
+							this.columns.activeSortAsc     = true
+							this.columns.activeSortName    = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortSpecial = this.rendering.views.currentView.schema[0].sortSpecial;
 						}
 
 						if ( this.setting.dataProvider === 1 )
@@ -3118,7 +3264,7 @@
 			},
 
 			// Changes the sort column and/or direction.
-			changeSort : function ( columnIndex, columnName )
+			changeSort : function ( columnIndex, columnName, sortSpecial )
 			{
 				// Update the last action performed.
 				this.status.lastAction = 'ChangeSort';
@@ -3142,9 +3288,10 @@
 				// Sort the new column ascending.
 				else
 				{
-					this.columns.activeSortIndex = columnIndex;
-					this.columns.activeSortName  = columnName;
-					this.columns.activeSortAsc   = true;
+					this.columns.activeSortIndex   = columnIndex;
+					this.columns.activeSortName    = columnName;
+					this.columns.activeSortAsc     = true;
+					this.columns.activeSortSpecial = sortSpecial;
 				}
 
 				if ( this.setting.dataProvider === 1 )
@@ -3165,8 +3312,9 @@
 			{
 				if ( this.setting.dataProvider === 0 )
 				{
-					let columnName     = this.rendering.views.currentView.schema[this.columns.activeSortIndex].name;
-					let columnSortType = this.rendering.views.currentView.schema[this.columns.activeSortIndex].type;
+					let columnName        = this.rendering.views.currentView.schema[this.columns.activeSortIndex].name;
+					let columnSortType    = this.rendering.views.currentView.schema[this.columns.activeSortIndex].type;
+					let columnSortSpecial = this.rendering.views.currentView.schema[this.columns.activeSortIndex].sortSpecial;
 
 					if ( this.processedDataSize > 0 )
 					{
@@ -3175,31 +3323,72 @@
 							// Sort the data with null values.
 							const sortByNull = ( x, y ) =>
 							{
-								if ( !x[columnName] )
+								if ( columnSortType === 'Array' )
 								{
-									return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
-								}
+									if ( !x[columnName] || !x[columnName][0] )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 
-								if ( !y[columnName] )
+									if ( !y[columnName] || !y[columnName][0] )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+								}
+								else
 								{
-									return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									if ( !x[columnName] )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+
+									if ( !y[columnName] )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 								}
 							};
 
 							// Sort the data by string.
 							const sortByString = ( x, y ) =>
 							{
-								let stringX = x[columnName].toUpperCase();
-								let stringY = y[columnName].toUpperCase();
-
-								if ( stringX < stringY )
+								// Special Sorting
+								if ( columnSortSpecial )
 								{
-									return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									// IP
+									if ( columnSortSpecial.toLowerCase() === 'ip' )
+									{
+										x = x[columnName].split( '.' );
+										y = y[columnName].split( '.' );
+
+										for ( let i = 0; i < x.length; i++ )
+										{
+											if ( ( x[i] = parseInt( x[i] ) ) < ( y[i] = parseInt( y[i] ) ) )
+											{
+												return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+											else if ( x[i] > y[i] )
+											{
+												return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+										}
+									}
 								}
-
-								if ( stringX > stringY )
+								// Normal String Sort
+								else
 								{
-									return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									x = x[columnName].toUpperCase();
+									y = y[columnName].toUpperCase();
+
+									if ( x < y )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+
+									if ( x > y )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 								}
 
 								// Strings are the same.
@@ -3215,17 +3404,43 @@
 							// Sort the data by array. Sorts the first string in the array.
 							const sortByArray = ( x, y ) =>
 							{
-								let stringX = x[columnName][0].toUpperCase();
-								let stringY = y[columnName][0].toUpperCase();
-
-								if ( stringX < stringY )
+								// Special IP Sort
+								if ( columnSortSpecial )
 								{
-									return ( ( !this.columns.activeSortAsc ) ? 1 : -1 );
+									// IP
+									if ( columnSortSpecial.toLowerCase() === 'ip' )
+									{
+										x = x[columnName][0].split( '.' );
+										y = y[columnName][0].split( '.' );
+
+										for ( let i = 0; i < x.length; i++ )
+										{
+											if ( ( x[i] = parseInt( x[i] ) ) < ( y[i] = parseInt( y[i] ) ) )
+											{
+												return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+											else if ( x[i] > y[i] )
+											{
+												return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+										}
+									}
 								}
-
-								if ( stringX > stringY )
+								// Normal String Sort
+								else
 								{
-									return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									x = x[columnName][0].toUpperCase();
+									y = y[columnName][0].toUpperCase();
+
+									if ( x < y )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? 1 : -1 );
+									}
+
+									if ( x > y )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 								}
 
 								// Strings are the same.
@@ -3233,9 +3448,19 @@
 							};
 
 							// Check for nulls.
-							if ( !a[columnName] || !b[columnName] )
+							if ( columnSortType === 'Array' )
 							{
-								return sortByNull ( a, b );
+								if ( !a[columnName] || !a[columnName][0] || !b[columnName] || !b[columnName][0] )
+								{
+									return sortByNull ( a, b );
+								}
+							}
+							else
+							{
+								if ( !a[columnName] || !b[columnName] )
+								{
+									return sortByNull ( a, b );
+								}
 							}
 
 							// If the column is a string, sort using string function.
@@ -3635,7 +3860,7 @@
 			},
 
 			// Called when user selects the "View" option from the left/right click context menu of a row.
-			contextView : function ()
+			contextView : function ( newWindow )
 			{
 				// Reset any visible feature options.
 				this.featureAction( null );
@@ -3643,11 +3868,17 @@
 				// Update the last action performed.
 				this.status.lastAction = 'ViewItem';
 
+				if ( newWindow )
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'ViewItemNewWindow';
+				}
+
 				this.$emit( 'event-from-jd-table', this.componentState );
 			},
 
 			// Called when user selects the "Edit" option from the left/right click context menu of a row.
-			contextEdit : function ()
+			contextEdit : function ( newWindow )
 			{
 				// Reset any visible feature options.
 				this.featureAction( null );
@@ -3655,17 +3886,41 @@
 				// Update the last action performed.
 				this.status.lastAction = 'EditItem';
 
+				if ( newWindow )
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'EditItemNewWindow';
+				}
+
+				this.$emit( 'event-from-jd-table', this.componentState );
+			},
+
+			// Called when user selects the "Delete" option from the left/right click context menu of a row.
+			contextDelete : function ()
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'DeleteItem';
+
 				this.$emit( 'event-from-jd-table', this.componentState );
 			},
 
 			// Called when user selects the "Add" option from the left/right click context menu of a row.
-			contextAdd : function ()
+			contextAdd : function ( newWindow )
 			{
 				// Reset any visible feature options.
 				this.featureAction( null );
 
 				// Update the last action performed.
 				this.status.lastAction = 'AddItem';
+
+				if ( newWindow )
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'AddItemNewWindow';
+				}
 
 				this.$emit( 'event-from-jd-table', this.componentState );
 			},
@@ -3965,6 +4220,8 @@
 						columnSelect                 : true,
 						addNew                       : false,
 						editItem                     : false,
+						viewItem                     : false,
+						deleteItem                   : false,
 						resize                       : true,
 						filter                       : true,
 						export                       : true,
@@ -3976,6 +4233,7 @@
 						contextMenuQuickView         : true,
 						contextMenuView              : true,
 						contextMenuEdit              : true,
+						contextMenuDelete            : true,
 						contextMenuAdd               : true,
 
 						// Rendering
@@ -4599,6 +4857,7 @@
 					lastAction    : this.status.lastAction,
 					sortColumn    : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
 					sortDirection : this.columns.activeSortAsc ? 'ASC' : 'DESC',
+					sortSpecial   : this.columns.activeSortSpecial ? this.columns.activeSortSpecial : null,
 					selectedItem  : this.row.selectedIndex !== null ? this.data[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.data[ this.row.activeContextIndex ] : null,
 					selectedIndex : this.row.selectedIndex !== null ? this.row.selectedIndex : this.row.activeContextIndex !== null  ? this.row.activeContextIndex : null
 				}

@@ -212,7 +212,12 @@ As all events are sent to a single callback function you must manage the
 #### JD-Table Events
 
 - [AddNew](#AddNew)
+- [AddItemNewWindow](#AddItemNewWindow)
+- [ViewItem](#ViewItem)
+- [ViewItemNewWindow](#ViewItemNewWindow)
 - [EditItem](#EditItem)
+- [EditItemNewWindow](#EditItemNewWindow)
+- [DeleteItem](#DeleteItem)
 - [Refresh](#Refresh)
 - [ExcelExport](#ExcelExport)
 - [PaginationGoToSpecificPage](#PaginationGoToSpecificPage)
@@ -231,7 +236,7 @@ As all events are sent to a single callback function you must manage the
 
 > **REMINDER**: When performing any event, be sure to remember to modify your API calls for data based on the componentState values like search, filter and pagination.
 
-#### AddNew
+#### AddItem
 
 - **Trigger**: This event is emitted when the user clicks the 'Add New' button in JD-Table. The intention of this button is to redirect a user to a form/page in order to add a new record to the table.
 
@@ -249,7 +254,37 @@ export default
         // Triggered when the JD-Table emits a "eventFromJDTable" event.
         processEventFromApp : function ( componentState )
         {
-            if ( componentState.lastAction === 'AddNew' )
+            if ( componentState.lastAction === 'AddItem' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### AddItemNewWindow
+
+- **Trigger**: This event is emitted when the user clicks the 'Add New' button in JD-Table. The intention of this button is to redirect a user to a form/page in order to add a new record to the table in a new tab/window.
+
+- **What You Should Do**: You should implement a function that redirects (in a new tab/window) the user to a new page or displays a form that allows them to insert a new record.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'AddItemNewWindow' )
             {
             	// Using Vue Router
                 router.push('addTableItem');
@@ -279,7 +314,37 @@ export default
         // Triggered when the JD-Table emits a "eventFromJDTable" event.
         processEventFromApp : function ( componentState )
         {
-            if ( componentState.lastAction === 'AddNew' )
+            if ( componentState.lastAction === 'ViewItem' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### ViewItemNewWindow
+
+- **Trigger**: This event is emitted when the user clicks the 'View (New Window)' button in the left/right context menu. The intention of this button is to redirect a user to a form/page in order to view the record in the table in a new tab/window.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form (in a new tab/window) that allows them to view the record. You can get the row details of the item to be viewed in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'ViewItemNewWindow' )
             {
             	// Using Vue Router
                 router.push('addTableItem');
@@ -310,6 +375,66 @@ export default
         processEventFromApp : function ( componentState )
         {
             if ( componentState.lastAction === 'AddNew' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### EditItemNewWindow
+
+- **Trigger**: This event is emitted when the user clicks the 'Edit (New Window)' button in Quick View. The intention of this button is to redirect a user to a form/page in order to edit the record in the table in a new window/tab.
+
+- **What You Should Do**: You should implement a function that redirects (in a new tab or window) the user to a new page or displays a form that allows them to edits the record. You can get the row details of the item to be edited in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'EditItemNewWindow' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### DeleteItem
+
+- **Trigger**: This event is emitted when the user clicks the 'Delete' button in Quick View. The intention of this button is process the deletion of a row record.
+
+- **What You Should Do**: You should implement a function deletes the row data (you should most likely confirm the action first). You can get the row details of the item to be deleted in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'DeleteItem' )
             {
             	// Using Vue Router
                 router.push('addTableItem');

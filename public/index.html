@@ -75,7 +75,7 @@
 					[
 						{
 							name       : 'column1',
-							title      : 'Column 1',
+							title      : 'Numbers',
 							order      : 1,
 							type       : 'Number',
 							filterable : true,
@@ -86,7 +86,7 @@
 						},
 						{
 							name        : 'column2',
-							title       : 'Column 2',
+							title       : 'Strings',
 							order       : 2,
 							type        : 'String',
 							filterable  : true,
@@ -94,17 +94,18 @@
 							width       : 100,
 						},
 						{
-							name       : 'column3',
-							title      : 'Column 3',
-							order      : 3,
-							type       : 'String',
-							filterable : true,
-							enabled    : true,
-							width      : 100,
+							name        : 'column3',
+							title       : 'IP Sorting',
+							order       : 3,
+							type        : 'String',
+							filterable  : true,
+							enabled     : true,
+							width       : 100,
+							sortSpecial : 'IP',
 						},
 						{
 							name       : 'column4',
-							title      : 'Column 4',
+							title      : 'Arrays',
 							order      : 4,
 							type       : 'Array',
 							filterable : true,
@@ -145,6 +146,9 @@
 						quickView             : 1,
 						contextMenuLeft       : false,
 						contextMenuRight      : true,
+						viewItem              : true,
+						editItem              : true,
+						deleteItem            : true,
 
 						renderEngine          : 2,
 						responsiveFrame       : false,
@@ -180,7 +184,7 @@
 								[
 									{
 										name          : 'column1',
-										title         : 'Column 1',
+										title         : 'Numbers',
 										order         : 1,
 										type          : 'String',
 										filterable    : true,
@@ -191,7 +195,7 @@
 									},
 									{
 										name        : 'column2',
-										title       : 'Column 2',
+										title       : 'Strings',
 										order       : 2,
 										type        : 'String',
 										filterable  : true,
@@ -218,16 +222,78 @@
 
 						var data = [];
 
-						for( var i = 0; i < 1000; i++ )
+						for( var i = 0; i < 30; i++ )
 						{
 							data.push
 							({
 								column1 : String(i),
-								column2 : String(i * i),
-								column3 : String(i + i),
 								column4 : [ 'Value #' + i, 'Value #' + (i + 1) ]
 							})
 						}
+
+						// Strings
+						data[0].column2 = 'Harper-Rose Garrison';
+						data[1].column2 = 'Milena Frey';
+						data[2].column2 = 'Vincent Kaye';
+						data[3].column2 = 'Livia Campos';
+						data[4].column2 = 'Hashim Floyd';
+						data[5].column2 = 'Finnlay Russell';
+						data[6].column2 = 'Niyah Palmer';
+						data[7].column2 = 'Divine Harrison';
+						data[8].column2 = 'Dawud Bouvet';
+						data[9].column2 = 'Nadia Millar';
+						data[10].column2 = 'Codey Hampton';
+						data[11].column2 = 'Gabriel Paul';
+						data[12].column2 = 'Aiesha Anderson';
+						data[13].column2 = 'Alyce Davison';
+						data[14].column2 = 'Kendra Howarth';
+						data[15].column2 = 'Kenya Oakley';
+						data[16].column2 = 'Keanan Rice';
+						data[17].column2 = 'Georgina Winters';
+						data[18].column2 = 'Myron Grainger';
+						data[19].column2 = 'Justine Mcdonald';
+						data[20].column2 = 'Sadia Adam';
+						data[21].column2 = 'Betsy Hills';
+						data[22].column2 = 'Jacob Zuniga';
+						data[23].column2 = 'Colleen Wong';
+						data[24].column2 = 'Kieron Young';
+						data[25].column2 = 'Meredith Douglas';
+						data[26].column2 = 'Milton Harvey';
+						data[27].column2 = 'Anne-Marie Edwards';
+						data[28].column2 = 'Ella-Mai Torres';
+						data[29].column2 = 'Roland Trevino';
+
+						// IP's
+						data[0].column3 = null;
+						data[1].column3 = null;
+						data[2].column3 = '10.124.100.155';
+						data[3].column3 = '10.124.100.211';
+						data[4].column3 = '10.124.9.33';
+						data[5].column3 = '10.124.100.12';
+						data[6].column3 = null;
+						data[7].column3 = '10.124.100.2';
+						data[8].column3 = '10.124.100.10';
+						data[9].column3 = '10.124.12.10';
+						data[10].column3 = null;
+						data[11].column3 = '10.124.25.160';
+						data[12].column3 = '10.124.25.163';
+						data[13].column3 = '146.184.248.92';
+						data[14].column3 = null;
+						data[15].column3 = '10.164.100.10';
+						data[16].column3 = '124124';
+						data[17].column3 = '10.125.2.199';
+						data[18].column3 = '10.124.200.10';
+						data[19].column3 = null;
+						data[20].column3 = '156.144.28.111';
+						data[21].column3 = '146.184.121.114';
+						data[22].column3 = '10.68.7.216';
+						data[23].column3 = '';
+						data[24].column3 = '156.34.18.111';
+						data[25].column3 = '146.184.163.124';
+						data[26].column3 = null;
+						data[27].column3 = '146.184.163.44';
+						data[28].column3 = '146.184.164.35';
+						data[29].column3 = '10.124.25.164';
 
 						data = JSON.stringify( data );
 

@@ -831,11 +831,14 @@
             .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction span:hover {
               background-color: #9b9b9b; }
         .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlTitle {
+          font-size: 0.9rem;
           position: absolute;
           left: 50%;
           top: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 1.17rem; }
+          transform: translate(-50%, -50%); }
+          @media only screen and (max-width: 350px) {
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlTitle {
+              display: none; } }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent {
         width: 100%;
         overflow: auto;
@@ -910,22 +913,52 @@
     transform: translateY(15px); } }
   .jd-table .jd-contextMenu {
     width: auto;
+    min-width: 10rem;
     box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
     position: fixed;
     z-index: 9998;
-    background: #FFF; }
+    background: #FFF;
+    border-radius: 0.5rem; }
     .jd-table .jd-contextMenu .jd-contextMenuOptions {
       list-style: none;
-      padding: 10px 0;
       z-index: 1; }
       .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption {
+        width: 100%;
+        height: 100%;
         font-weight: 500;
         z-index: 1;
         font-size: 14px;
-        padding: 10px 40px 10px 20px;
-        cursor: pointer; }
-        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption:hover {
-          background: rgba(0, 0, 0, 0.2); }
+        cursor: pointer;
+        display: flex; }
+        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span {
+          display: block;
+          height: 100%;
+          padding: 8px 12px 8px 12px;
+          white-space: nowrap; }
+          .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span:hover {
+            background: rgba(0, 0, 0, 0.2); }
+          .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span:first-child {
+            width: 100%; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuHeader {
+        width: 100%;
+        height: 100%;
+        font-weight: 500;
+        z-index: 1;
+        font-size: 14px;
+        display: flex;
+        background: #494949;
+        color: #FFFFFF; }
+        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuHeader span {
+          display: block;
+          height: 100%;
+          width: 100%;
+          padding: 10px;
+          white-space: nowrap;
+          text-align: center; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions li:last-child span:first-child {
+        border-bottom-left-radius: 0.5rem; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions li:last-child span:last-child {
+        border-bottom-right-radius: 0.5rem; }
 
 .jd-reset * {
   box-sizing: border-box; }

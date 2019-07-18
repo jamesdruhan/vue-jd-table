@@ -1559,7 +1559,7 @@
 					if ( !e.target.closest( '.jd-body' ) )
 					{
 						// Ensure user clicks outside the popup window.
-						if ( this.row.selectedIndex && e.target.classList.contains('jd-layerPopup') )
+						if ( this.row.selectedIndex !== null && e.target.classList.contains('jd-layerPopup') )
 						{
 							this.quickViewClose();
 						}
@@ -1618,7 +1618,7 @@
 			// Disabled (hides) the context menu.
 			hideContextMenu : function ()
 			{
-				if ( !this.row.selectedIndex )
+				if ( this.row.selectedIndex === null )
 				{
 					// Remove the row red.
 					this.row.activeContextElement.classList.remove('jd-rowSelect');
@@ -2310,9 +2310,6 @@
 				{
 					let eventError = false;
 
-					// Clear any messaging/statuses.
-					this.updateStatus( null, null );
-
 					// Clear the current view.
 					this.currentTableData = [];
 
@@ -2377,6 +2374,9 @@
 							eventError = true;
 						}
 					}
+
+					// Clear any messaging/statuses.
+					this.updateStatus( null, null );
 
 					if ( eventError )
 					{
@@ -4823,7 +4823,7 @@
 			// Returns the status for displaying the no data message.
 			noDataMessage : function ()
 			{
-				if ( !this.status.processingData && !this.loader && !this.isViewAvailable && !this.status.updatingPage && !this.status.searching)
+				if ( !this.status.processingData && !this.processedDataSize && !this.loader && !this.isViewAvailable && !this.status.updatingPage && !this.status.searching )
 				{
 					if ( !this.gettingStarted )
 					{

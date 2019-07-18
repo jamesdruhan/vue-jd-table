@@ -553,6 +553,9 @@
             color: #FFFFFF; }
           .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row.jd-zebra:nth-child(even) {
             background-color: #f2f2f2; }
+          .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row.jd-rowSelect {
+            background-color: #e60000 !important;
+            color: #FFFFFF; }
           .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row .jd-cell {
             position: relative;
             font-size: 0.81rem;
@@ -736,6 +739,8 @@
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 0.5rem; }
+    .jd-table .jd-layerPopup.jd-fullBrowser {
+      position: fixed; }
     .jd-table .jd-layerPopup.jd-fullFrame {
       z-index: 9998; }
     .jd-table .jd-layerPopup.jd-contentFrame {
@@ -773,7 +778,8 @@
     .jd-table .jd-layerPopup .jd-quickView {
       position: relative;
       min-width: 314px;
-      max-width: 600px;
+      max-width: 95%;
+      max-height: 95%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -785,17 +791,21 @@
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewHighlight_1 {
         width: 100%;
         height: 0.3375rem;
+        min-height: 0.3375rem;
         background-color: #494949;
         border-top-right-radius: 0.5rem;
         border-top-left-radius: 0.5rem; }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewHighlight_2 {
         width: 100%;
-        height: 0.675rem;
+        height: 0.225rem;
+        min-height: 0.225rem;
         background-color: #C00; }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl {
         width: 100%;
         height: 2.5rem;
+        min-height: 2.5rem;
         background-color: #757575;
+        position: relative;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -807,21 +817,30 @@
         -moz-user-select: none;
         -ms-user-select: none; }
         .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction {
-          font-size: 0.9rem;
-          display: flex;
-          justify-content: center;
-          width: 2rem;
-          cursor: pointer;
           height: 100%;
-          align-items: center; }
-          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction:hover {
-            background-color: #9b9b9b; }
+          display: flex;
+          flex-direction: row; }
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction span {
+            width: 2rem;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            cursor: pointer; }
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction span:hover {
+              background-color: #9b9b9b; }
         .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlTitle {
-          text-transform: uppercase;
-          font-size: 1.17rem; }
+          font-size: 0.9rem;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%); }
+          @media only screen and (max-width: 350px) {
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlTitle {
+              display: none; } }
       .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent {
         width: 100%;
-        max-height: 320px;
         overflow: auto;
         background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px); }
         .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent .jd-contentRow {
@@ -853,6 +872,7 @@
         justify-content: space-between;
         align-items: center;
         height: 2rem;
+        min-height: 2rem;
         background-color: #494949;
         color: #FFFFFF;
         border-bottom-right-radius: 0.5rem;
@@ -891,6 +911,54 @@
     transform: translateY(30px); }
   60% {
     transform: translateY(15px); } }
+  .jd-table .jd-contextMenu {
+    width: auto;
+    min-width: 10rem;
+    box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    z-index: 9998;
+    background: #FFF;
+    border-radius: 0.5rem; }
+    .jd-table .jd-contextMenu .jd-contextMenuOptions {
+      list-style: none;
+      z-index: 1; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption {
+        width: 100%;
+        height: 100%;
+        font-weight: 500;
+        z-index: 1;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex; }
+        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span {
+          display: block;
+          height: 100%;
+          padding: 8px 12px 8px 12px;
+          white-space: nowrap; }
+          .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span:hover {
+            background: rgba(0, 0, 0, 0.2); }
+          .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span:first-child {
+            width: 100%; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuHeader {
+        width: 100%;
+        height: 100%;
+        font-weight: 500;
+        z-index: 1;
+        font-size: 14px;
+        display: flex;
+        background: #494949;
+        color: #FFFFFF; }
+        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuHeader span {
+          display: block;
+          height: 100%;
+          width: 100%;
+          padding: 10px;
+          white-space: nowrap;
+          text-align: center; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions li:last-child span:first-child {
+        border-bottom-left-radius: 0.5rem; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions li:last-child span:last-child {
+        border-bottom-right-radius: 0.5rem; }
 
 .jd-reset * {
   box-sizing: border-box; }

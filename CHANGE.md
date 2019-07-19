@@ -26,6 +26,11 @@
     - Added "Delete" context item.
     - Added "Add" context item.
     - Added a polyfill for the Element.closest function for IE11 support.
+- Fixed bug that caused "No Data" message to display when refreshing.
+- Fixed bug that caused event listeners to multiple when component is destroyed then created.
+- Changed emitted events to occur for most all table actions regardless of dataProvider state.
+- Changed sendData event to accept componentState.
+- Added new event (Parent to JD-Table) called 'setState'
 
 #### v1.0.3
 - Initial Release

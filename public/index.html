@@ -222,7 +222,7 @@
 
 						var data = [];
 
-						for( var i = 0; i < 30; i++ )
+						for( let i = 0; i < 300; i++ )
 						{
 							data.push
 							({
@@ -299,14 +299,54 @@
 
 						this.eventFromApp =
 						{
-							name    : 'sendData',
-							payload : JSON.parse( data )
+							name           : 'sendData',
+							payload        : JSON.parse( data ),
+							componentState :
+							{
+								searchApplied   : null,
+								searchText      : null,
+								filterApplied   : null,
+								pageLimit       : null,
+								currentPage     : null,
+								sortColumn      : null,
+								sortColumnIndex : null,
+								sortDirection   : null,
+								sortSpecial     : null,
+								currentView     : null
+							}
 						};
+
+						console.log( 1 );
 
 						this.triggerEvent();
 
 						// Disable the table loader.
 						this.tableLoader = false;
+					},
+
+					setTableState : function ()
+					{
+						this.eventFromApp =
+						{
+							name           : 'setState',
+							componentState :
+							{
+								searchApplied : true,
+								searchText    : 'Testing',
+								filterApplied : null,
+								pageLimit     : null,
+								currentPage   : null,
+								lastAction    : null,
+								sortColumn    : null,
+								sortDirection : null,
+								sortSpecial   : null,
+								selectedItem  : null,
+								selectedIndex : null,
+								currentView   : null
+							}
+						};
+
+						this.triggerEvent();
 					},
 
 					// Triggers the currently queued JD-Table event to run.

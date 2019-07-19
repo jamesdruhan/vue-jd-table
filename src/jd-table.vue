@@ -1036,22 +1036,7 @@
 		mounted : function ()
 		{
 			// Add an event listener to watch for a window resize. If detected, re-render the list.
-			window.addEventListener( 'resize', ()=>
-			{
-				// Clear the scrolling timer.
-				clearTimeout( this.rendering.isResizing );
-
-				this.rendering.isResizing = setTimeout( () =>
-				{
-					// If auto rendering is the engine, re-render.
-					if ( this.rendering.engine === 0 )
-					{
-						this.renderView( this.rendering.virtual.rowMiddleIndex );
-					}
-
-					this.checkMobile();
-				}, 750 );
-			});
+			window.addEventListener( 'resize', this.resizeListener );
 
 			if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
 			{
@@ -1062,6 +1047,33 @@
 			{
 				this.initializeQuickMenu();
 			}
+		},
+
+		// Clean up custom listeners.
+		beforeDestroy : function ()
+		{
+			// Context Listener - LEFT CLICK
+			if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
+			{
+				window.removeEventListener( "click", this.contextListenerLeftClick );
+			}
+
+			// Context Listener - RIGHT CLICK
+			if ( this.setting.contextMenuRight )
+			{
+				// Register context menu (right click) event.
+				window.removeEventListener( "contextmenu", this.contextListenerRightClick );
+			}
+
+			// Quick Menu Listener
+			window.removeEventListener( "click", this.quickMenuListenerLeftClick );
+
+			// Filter Dropdown
+			window.removeEventListener( 'mouseup', this.clearFilterDropdown, false );
+
+			// Resize Listeners
+			window.removeEventListener( 'resize', this.resizeListener );
+			window.removeEventListener( 'mouseup', this.resizeStop , false );
 		},
 
 		methods :
@@ -1490,81 +1502,114 @@
 				// LEFT CLICK
 				if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
 				{
-					window.addEventListener( "click", e =>
-					{
-						// If the menu is visible already ..
-						if ( this.status.contextMenu )
-						{
-							this.hideContextMenu();
-						}
-
-						if ( this.setting.contextMenuLeft && e.target.closest( '.jd-body' ) )
-						{
-							// Get the location of the right click.
-							const clickLocation =
-							{
-								left : e.pageX,
-								top  : e.pageY
-							};
-
-							// Show the menu at the click location.
-							this.showContextMenu( clickLocation );
-						}
-					});
+					window.addEventListener( "click", this.contextListenerLeftClick );
 				}
 
 				// RIGHT CLICK
 				if ( this.setting.contextMenuRight )
 				{
 					// Register context menu (right click) event.
-					window.addEventListener( "contextmenu", e =>
+					window.addEventListener( "contextmenu", this.contextListenerRightClick );
+				}
+			},
+
+			// Emits the current state of the component.
+			emitState : function ()
+			{
+				this.$emit( 'event-from-jd-table', this.componentState );
+			},
+
+			// JavaScript listener for resizing the window.
+			resizeListener : function ( e )
+			{
+				// Clear the scrolling timer.
+				clearTimeout( this.rendering.isResizing );
+
+				this.rendering.isResizing = setTimeout( () =>
+				{
+					// If auto rendering is the engine, re-render.
+					if ( this.rendering.engine === 0 )
 					{
-						// If the click takes places in the table body ..
-						if ( e.target.closest( '.jd-body' ) )
-						{
-							// Prevent the regular menu.
-							e.preventDefault();
+						this.renderView( this.rendering.virtual.rowMiddleIndex );
+					}
 
-							// Clear previous context (if any).
-							if ( this.status.contextMenu )
-							{
-								this.hideContextMenu();
-							}
+					this.checkMobile();
+				}, 750 );
+			},
 
-							// Close any feature menu.
-							this.featureAction( null );
+			// JavaScript listener for left clicking (context menu).
+			contextListenerLeftClick : function ( e )
+			{
+				// If the menu is visible already ..
+				if ( this.status.contextMenu )
+				{
+					this.hideContextMenu();
+				}
 
-							// Get the location of the right click.
-							const clickLocation =
-							{
-								left : e.pageX,
-								top  : e.pageY
-							};
+				if ( this.setting.contextMenuLeft && e.target.closest( '.jd-body' ) )
+				{
+					// Get the location of the right click.
+					const clickLocation =
+					{
+						left : e.pageX,
+						top  : e.pageY
+					};
 
-							// Show the menu at the click location.
-							this.showContextMenu( clickLocation );
+					// Show the menu at the click location.
+					this.showContextMenu( clickLocation );
+				}
+			},
 
-							return false;
-						}
-					});
+			// JavaScript listener for right clicking (context menu).
+			contextListenerRightClick : function ( e )
+			{
+				// If the click takes places in the table body ..
+				if ( e.target.closest( '.jd-body' ) )
+				{
+					// Prevent the regular menu.
+					e.preventDefault();
+
+					// Clear previous context (if any).
+					if ( this.status.contextMenu )
+					{
+						this.hideContextMenu();
+					}
+
+					// Close any feature menu.
+					this.featureAction( null );
+
+					// Get the location of the right click.
+					const clickLocation =
+					{
+						left : e.pageX,
+						top  : e.pageY
+					};
+
+					// Show the menu at the click location.
+					this.showContextMenu( clickLocation );
+
+					return false;
+				}
+			},
+
+			// JavaScript listener for left clicking (quick menu).
+			quickMenuListenerLeftClick : function ( e )
+			{
+				// Don't run this when clicking in the table body.
+				if ( !e.target.closest( '.jd-body' ) )
+				{
+					// Ensure user clicks outside the popup window.
+					if ( this.row.selectedIndex !== null && e.target.classList.contains('jd-layerPopup') )
+					{
+						this.quickViewClose();
+					}
 				}
 			},
 
 			// Configures a click listener to close quick menu when clicked out of it.
 			initializeQuickMenu : function ()
 			{
-				window.addEventListener( "click", e =>
-				{
-					// Don't run this when clicking in the table body.
-					if ( !e.target.closest( '.jd-body' ) )
-					{
-						// Ensure user clicks outside the popup window.
-						if ( this.row.selectedIndex !== null && e.target.classList.contains('jd-layerPopup') )
-						{
-							this.quickViewClose();
-						}
-					}
-				});
+				window.addEventListener( "click", this.quickMenuListenerLeftClick );
 			},
 
 			// Enables the context menu at the coordinates passed.
@@ -1670,7 +1715,7 @@
 					// Update the last action performed.
 					this.status.lastAction = 'AddItem';
 
-					this.$emit( 'event-from-jd-table', this.componentState );
+					this.emitState();
 				};
 
 				// Emits a add new event to the parent.
@@ -1700,7 +1745,7 @@
 					// Update table status.
 					this.updateStatus( 'updatingPage', true );
 
-					this.$emit( 'event-from-jd-table', this.componentState );
+					this.emitState();
 				};
 
 				// Show/Hide the filtering view.
@@ -1762,6 +1807,9 @@
 				// Exports the current available data to excel.
 				const EXPORT = () =>
 				{
+					// Update the last action performed.
+					this.status.lastAction = 'ExcelExport';
+
 					// Check if a limit is set.
 					if ( this.setting.exportLimit )
 					{
@@ -1801,17 +1849,14 @@
 
 					if ( this.setting.dataProvider === 1 )
 					{
-						// Update the last action performed.
-						this.status.lastAction = 'ExcelExport';
-
 						this.updateStatus( 'processingData', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					else
 					{
 						this.exportExcel( this.processedData );
 					}
+
+					this.emitState();
 				};
 
 				if ( name === 'MaxMinimize' )
@@ -2331,6 +2376,11 @@
 								{
 									// Render the data.
 									this.renderView();
+
+									if ( typeof this.eventFromApp.componentState !== 'undefined' )
+									{
+										this.changeState( this.eventFromApp.componentState );
+									}
 								});
 							}
 							else
@@ -2362,6 +2412,11 @@
 								{
 									// Render the data.
 									this.renderView();
+
+									if ( typeof this.eventFromApp.componentState !== 'undefined' )
+									{
+										this.changeState( this.eventFromApp.componentState );
+									}
 								});
 							}
 							else
@@ -2406,6 +2461,86 @@
 
 					// Clear any messaging/statuses.
 					this.updateStatus( null, null );
+				}
+
+				// Sets the component state.
+				if ( !this.status.tableError && name === 'setState' )
+				{
+					if ( this.eventFromApp.componentState !== null && this.eventFromApp.componentState.constructor.name === 'Object' )
+					{
+						this.changeState( this.eventFromApp.componentState );
+					}
+				}
+			},
+
+			changeState : function ( newState )
+			{
+				// Search Text
+				if ( typeof newState.searchText !== 'undefined' && newState.searchText )
+				{
+					this.search.text = String ( newState.searchText );
+				}
+
+				// Searching
+				if ( typeof newState.searchApplied !== 'undefined' && newState.searchApplied !== null && newState.searchApplied.constructor.name === 'Boolean' )
+				{
+					this.performSearch();
+				}
+
+				// Active Filters
+				if ( typeof newState.filterApplied !== 'undefined' && newState.filterApplied !== null && newState.filterApplied.constructor.name === 'Array' )
+				{
+					this.filters.active = newState.filterApplied;
+
+					// Process the data through filters/search.
+					this.processData().then( () =>
+					{
+						// Render the new view.
+						this.renderView();
+					});
+				}
+
+				// Page Limit
+				if ( typeof newState.pageLimit !== 'undefined' && newState.pageLimit !== null && newState.pageLimit.constructor.name === 'Number' )
+				{
+					this.changePageRows( newState.pageLimit )
+				}
+
+				// Current Page
+				if ( typeof newState.currentPage !== 'undefined' && newState.currentPage !== null && newState.currentPage.constructor.name === 'Number' )
+				{
+					this.rendering.pagination.currentPage = newState.currentPage;
+
+					// Re-render the view.
+					this.renderView();
+				}
+
+				// Column Sort
+				if ( typeof newState.sortColumnIndex !== 'undefined' && newState.sortColumnIndex !== null && newState.sortColumnIndex.constructor.name === 'Number' )
+				{
+					this.columns.activeSortIndex = newState.sortColumnIndex;
+
+					// Sorted Direction
+					if ( typeof newState.sortDirection !== 'undefined' && newState.sortDirection !== null && newState.sortDirection.constructor.name === 'String' )
+					{
+						if ( newState.sortDirection === 'ASC' )
+						{
+							this.columns.activeSortAsc = true;
+						}
+						else
+						{
+							this.columns.activeSortAsc = false;
+						}
+
+						// Re-render the view.
+						this.renderView();
+					}
+				}
+
+				// Current Selected View
+				if ( typeof newState.currentView !== 'undefined' && newState.currentView !== null )
+				{
+					this.changeView( newState.currentView );
 				}
 			},
 
@@ -2759,8 +2894,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2768,20 +2901,22 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
 			// Checks and processes the next page of paginated data.
 			paginationNext : function ()
 			{
+				// Update the last action performed.
+				this.status.lastAction = 'PaginationGoToNextPage';
+
 				let nextPage = this.rendering.pagination.currentPage + 1;
 
 				// Ensure not going beyond available pages.
 				if ( nextPage <= this.rendering.pagination.availablePages )
 				{
-					// Update the last action performed.
-					this.status.lastAction = 'PaginationGoToNextPage';
-
 					// Increase the page.
 					this.rendering.pagination.currentPage++;
 
@@ -2789,8 +2924,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2798,6 +2931,8 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2816,8 +2951,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2825,20 +2958,22 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
 			// Checks and processes the previous page of paginated data.
 			paginationPrevious : function ()
 			{
+				// Update the last action performed.
+				this.status.lastAction = 'PaginationGoToPreviousPage';
+
 				let previousPage = this.rendering.pagination.currentPage - 1;
 
 				// Ensure not going beyond available pages.
 				if ( previousPage >= 1 )
 				{
-					// Update the last action performed.
-					this.status.lastAction = 'PaginationGoToPreviousPage';
-
 					// Increase the page.
 					this.rendering.pagination.currentPage--;
 
@@ -2846,8 +2981,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2855,6 +2988,8 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2873,8 +3008,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2882,6 +3015,8 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2918,14 +3053,14 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
 					{
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2999,8 +3134,6 @@
 						if ( this.setting.dataProvider === 1 )
 						{
 							this.updateStatus( 'updatingPage', true );
-
-							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						else
 						{
@@ -3011,6 +3144,8 @@
 				}
 
 				this.rendering.views.changingViews = false;
+
+				this.emitState();
 			},
 
 			// Virtual Engine: Sets the next top and bottom re-rendering position points in pixels.
@@ -3297,14 +3432,14 @@
 				if ( this.setting.dataProvider === 1 )
 				{
 					this.updateStatus( 'updatingPage', true );
-
-					this.$emit( 'event-from-jd-table', this.componentState );
 				}
 				else
 				{
 					// Re-render the view.
 					this.renderView();
 				}
+
+				this.emitState();
 			},
 
 			// Sorts the original data.
@@ -3640,8 +3775,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -3655,6 +3788,8 @@
 							this.renderView();
 						});
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -3674,8 +3809,6 @@
 				if ( this.setting.dataProvider === 1 )
 				{
 					this.updateStatus( 'updatingPage', true );
-
-					this.$emit( 'event-from-jd-table', this.componentState );
 				}
 				// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 				else
@@ -3689,6 +3822,8 @@
 						this.renderView();
 					});
 				}
+
+				this.emitState();
 			},
 
 			// Clears all active filters and being built.
@@ -3713,8 +3848,6 @@
 				if ( this.setting.dataProvider === 1 )
 				{
 					this.updateStatus( 'updatingPage', true );
-
-					this.$emit( 'event-from-jd-table', this.componentState );
 				}
 				// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 				else
@@ -3726,6 +3859,8 @@
 						this.renderView();
 					});
 				}
+
+				this.emitState();
 			},
 
 			// Changes the column visibility. Adds/removes column from view.
@@ -3803,8 +3938,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.search.searching = true;
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Perform search using JD-Table.
 					else
@@ -3819,6 +3952,8 @@
 						});
 					}
 				}
+
+				this.emitState();
 			},
 
 			// Clears the search.
@@ -3839,13 +3974,13 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					else
 					{
 						this.renderView();
 					}
+
+					this.emitState();
 				});
 			},
 
@@ -3874,7 +4009,7 @@
 					this.status.lastAction = 'ViewItemNewWindow';
 				}
 
-				this.$emit( 'event-from-jd-table', this.componentState );
+				this.emitState();
 			},
 
 			// Called when user selects the "Edit" option from the left/right click context menu of a row.
@@ -3892,7 +4027,7 @@
 					this.status.lastAction = 'EditItemNewWindow';
 				}
 
-				this.$emit( 'event-from-jd-table', this.componentState );
+				this.emitState();
 			},
 
 			// Called when user selects the "Delete" option from the left/right click context menu of a row.
@@ -3904,7 +4039,7 @@
 				// Update the last action performed.
 				this.status.lastAction = 'DeleteItem';
 
-				this.$emit( 'event-from-jd-table', this.componentState );
+				this.emitState();
 			},
 
 			// Called when user selects the "Add" option from the left/right click context menu of a row.
@@ -3922,7 +4057,7 @@
 					this.status.lastAction = 'AddItemNewWindow';
 				}
 
-				this.$emit( 'event-from-jd-table', this.componentState );
+				this.emitState();
 			},
 
 			// Called when user single (left) clicks on a data row. Accepts the index of the data on the this.data.
@@ -4849,17 +4984,19 @@
 			componentState : function ()
 			{
 				return {
-					searchApplied : this.search.searching,
-					searchText    : this.search.text,
-					filterApplied : this.filters.active,
-					pageLimit     : this.rendering.pagination.currentSelectedPageRowOption,
-					currentPage   : this.rendering.pagination.currentPage,
-					lastAction    : this.status.lastAction,
-					sortColumn    : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
-					sortDirection : this.columns.activeSortAsc ? 'ASC' : 'DESC',
-					sortSpecial   : this.columns.activeSortSpecial ? this.columns.activeSortSpecial : null,
-					selectedItem  : this.row.selectedIndex !== null ? this.data[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.data[ this.row.activeContextIndex ] : null,
-					selectedIndex : this.row.selectedIndex !== null ? this.row.selectedIndex : this.row.activeContextIndex !== null  ? this.row.activeContextIndex : null
+					searchApplied   : this.search.searching,
+					searchText      : this.search.text,
+					filterApplied   : this.filters.active,
+					pageLimit       : this.rendering.pagination.currentSelectedPageRowOption,
+					currentPage     : this.rendering.pagination.currentPage,
+					lastAction      : this.status.lastAction,
+					sortColumn      : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
+					sortColumnIndex : this.columns.activeSortIndex ? this.columns.activeSortIndex : 0,
+					sortDirection   : this.columns.activeSortAsc ? 'ASC' : 'DESC',
+					sortSpecial     : this.columns.activeSortSpecial ? this.columns.activeSortSpecial : null,
+					selectedItem    : this.row.selectedIndex !== null ? this.data[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.data[ this.row.activeContextIndex ] : null,
+					selectedIndex   : this.row.selectedIndex !== null ? this.row.selectedIndex : this.row.activeContextIndex !== null  ? this.row.activeContextIndex : null,
+					currentView     : this.rendering.views.currentView
 				}
 			}
 		},
@@ -4871,6 +5008,7 @@
 			{
 				if ( from === false && to === true && this.eventFromApp.name )
 				{
+					console.log( this.eventFromApp.name );
 					this.processEvent( this.eventFromApp.name );
 				}
 			}

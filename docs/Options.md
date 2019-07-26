@@ -62,6 +62,7 @@ data ()
 - [resize](#resize)
 - [resizeForceMinWidth](#resizeForceMinWidth)
 - [responsiveFrame](#responsiveFrame)
+- [responsiveFrameForceFullWidth](#responsiveFrameForceFullWidth)
 - [responsiveTable](#responsiveTable)
 - [rowFlex](#rowFlex)
 - [rowHeight](#rowHeight)
@@ -1254,7 +1255,7 @@ data ()
    <br><br>
    -  **Default**: True
    <br><br>
-   - **Details**: Renders the entire JD-Table frame responsively or not. When set to false you must also configure the frameWidth option.
+   - **Details**: Renders the entire JD-Table frame responsively or not. When set to false you must also configure the frameWidth option. When set to True, JD-Table frame will fit it parent unless the number of visible columns have a total width less then the parents full width. In this case, the entire table will shrink to perfectly match the column widths.
    <br><br>
    - **Related Options**: frameWidth
    <br><br>
@@ -1272,6 +1273,38 @@ data ()
            {
              responsiveFrame : false,
              frameWidth : 1000,
+           }
+       }
+   }
+   ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### responsiveFrameForceFullWidth
+
+   - **Type**: [Boolean]
+   <br><br>
+   -  **Default**: False
+   <br><br>
+   - **Details**: Forces JD-Table to stay 100% width of its parent when responsiveFrame is set to true AND the number of columns shrink to a total width smaller than the parent.
+   <br><br>
+   - **Related Options**: frameWidth
+   <br><br>
+   - **Options**:
+       - True: Frame will always fit parent.
+       - False: Frame will fit parent until the total visible column widths are smaller than parent width.
+   <br><br>
+   - **Example**:
+   
+   ```javascript
+   data ()
+   {
+       return {
+           tableOptions :
+           {
+             responsiveFrameForceFullWidth : true
            }
        }
    }

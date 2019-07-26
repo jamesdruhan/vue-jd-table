@@ -531,6 +531,7 @@
 					tableScroll    : false,
 					lastAction     : null,
 					contextMenu    : false,
+					tableReady     : false
 				},
 
 				currentTableData : [],
@@ -837,6 +838,13 @@
 		// | TRUE  | : Renders the entire JD-Table responsively. It will fit to the parent container.
 		// | FALSE | : Renders the entire JD-Table to the width set to the option.frameWidth in pixels.
 		// ---------
+		//
+		// Prop        : option.responsiveFrameForceFullWidth
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : When responsiveFrame is set to true and the number of columns in the table shrink the entire table will as well
+		//             : (according it its parent). However sometimes you want the table to be 100% no matter what. Set this option to
+		//             : True and it will force the table to ignore column widths when the table shrinks.
 		//
 		// Prop        : option.responsiveTable
 		// Value       : [BOOLEAN]
@@ -1581,8 +1589,8 @@
 					// Get the location of the right click.
 					const clickLocation =
 					{
-						left : e.pageX,
-						top  : e.pageY
+						left : e.x,
+						top  : e.y
 					};
 
 					// Show the menu at the click location.
@@ -2381,11 +2389,15 @@
 									{
 										this.changeState( this.eventFromApp.componentState );
 									}
+
+									this.tableReady = true;
 								});
 							}
 							else
 							{
 								this.currentTableData = [];
+
+								this.tableReady = true;
 							}
 						}
 						else
@@ -2417,11 +2429,15 @@
 									{
 										this.changeState( this.eventFromApp.componentState );
 									}
+
+									this.tableReady = true;
 								});
 							}
 							else
 							{
 								this.currentTableData = [];
+
+								this.tableReady = true;
 							}
 						}
 						else
@@ -2473,6 +2489,7 @@
 				}
 			},
 
+			// Updates the state of JD-Table
 			changeState : function ( newState )
 			{
 				// Search Text
@@ -4374,6 +4391,7 @@
 						// Rendering
 						renderEngine                   : 2,
 						responsiveFrame                : true,
+						responsiveFrameForceFullWidth  : false,
 						responsiveTable                : true,
 						virtualEngineRowStart          : 250,
 						frameWidth                     : null,
@@ -4475,7 +4493,10 @@
 					// Ensures the frame does get larger then the sum of all the column width's in PX.
 					if ( this.setting.responsiveFrame && !this.setting.responsiveTable )
 					{
-						styles['max-width'] = this.tableWidth + 'px';
+						if ( !this.setting.responsiveFrameForceFullWidth )
+						{
+							styles['max-width'] = this.tableWidth + 'px';
+						}
 					}
 				}
 
@@ -4958,7 +4979,7 @@
 			// Returns the status for displaying the no data message.
 			noDataMessage : function ()
 			{
-				if ( !this.status.processingData && !this.processedDataSize && !this.loader && !this.isViewAvailable && !this.status.updatingPage && !this.status.searching )
+				if ( !this.status.processingData && !this.processedDataSize && !this.loader && !this.isViewAvailable && !this.status.updatingPage && !this.status.searching && this.tableReady )
 				{
 					if ( !this.gettingStarted )
 					{
@@ -5008,7 +5029,6 @@
 			{
 				if ( from === false && to === true && this.eventFromApp.name )
 				{
-					console.log( this.eventFromApp.name );
 					this.processEvent( this.eventFromApp.name );
 				}
 			}

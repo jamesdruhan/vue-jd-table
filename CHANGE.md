@@ -2,7 +2,7 @@
 
 ### Change Log
 
-#### v1.0.4
+#### v1.1.0
 - Added prefix "jd-" to all table classes.
 - Added "Add New" button feature to control bar.
 - Added support for Array type data.

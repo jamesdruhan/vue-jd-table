@@ -45,6 +45,8 @@
         height: 100%;
         flex-grow: 0;
         flex-shrink: 1; }
+      .jd-table.jd-maximized .jd-layerContent .jd-contentTable .jd-body {
+        height: 100%; }
     .jd-table.jd-maximized .jd-layerFooter {
       min-width: 320px; }
     .jd-table.jd-maximized .jd-layerPopup {

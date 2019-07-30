@@ -10,11 +10,11 @@
 
 <p align="center">
   <br>
-  <img src="./assets/jd-table-example.png" alt="Example of JD-Table">
+  <img src="./docs/assets/jd-table-example.png" alt="Example of JD-Table">
   <br>
 </p>
 
-### [View Demos](Demos.md)
+### [View Demos](docs/Demos.md)
 
 ### Table of Contents
 
@@ -56,7 +56,7 @@
 - Column views
 - Column sorting
 - Column resizing
-- Left/Right click context menus
+- Left/Right click context menusgit 
 - Excel exportation
 - Full screen/minimize
 - Row 'Quick View'
@@ -243,11 +243,11 @@ The following shows an example of how to use JD-Table your HTML files directly. 
 
 #### Configure Options
 
-[Dedicated Page - Click Here](Options.md)
+[Dedicated Page - Click Here](docs/Options.md)
 
 #### Display Data
 
-[Dedicated Page - Click Here](Data.md)
+[Dedicated Page - Click Here](docs/Data.md)
 
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>
@@ -260,15 +260,15 @@ The following shows an example of how to use JD-Table your HTML files directly. 
 JD-Table accepts the following props/properties:
 
 - **option** [Object]
-    - An object containing key/value pairs representing the options/settings for the table. Check out the [options](Options.md) to learn more about the available choices.
+    - An object containing key/value pairs representing the options/settings for the table. Check out the [options](docs/Options.md) to learn more about the available choices.
 - **loader** [Boolean]
     - A true/false setting which will enable or disable a loading message in the JD-Table. Use this while waiting to get a response from a REST call for data.
 - **event-from-app**  [Object]
-    - An object containing two keys "name" (string) and "payload" (string/object). Use this to send events to JD-Table such as sending data. Learn more about how to send events and what is available [here](Events.md).
+    - An object containing two keys "name" (string) and "payload" (string/object). Use this to send events to JD-Table such as sending data. Learn more about how to send events and what is available [here](docs/Events.md).
 - **event-from-app-trigger** [Boolean]
-    - A true/false setting which tells JD-Table to execute a event-from-app event. Learn more about triggering events [here](Events.md).
+    - A true/false setting which tells JD-Table to execute a event-from-app event. Learn more about triggering events [here](docs/Events.md).
 - **event-from-jd-table** [Event/Function/Callback]
-    - A event that that is triggered using a Vue $emit call. Learn more about how to process these events [here](Events.md).
+    - A event that that is triggered using a Vue $emit call. Learn more about how to process these events [here](docs/Events.md).
 
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>

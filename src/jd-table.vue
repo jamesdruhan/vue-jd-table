@@ -1,78 +1,83 @@
 <template>
-	<div class="JD-Reset JD-Table" :class="frameClasses" :style="frameStyles">
+	<div class="jd-reset jd-table" :class="frameClasses" :style="frameStyles">
 
-		<div v-if="setting.title !== null" class="layerTitle">{{ setting.title }}</div>
+		<div v-if="setting.title !== null" class="jd-layerTitle">{{ setting.title }}</div>
 
 		<!-- Layer: Highlight -->
-		<div v-if="setting.highlight" class="layerHighlight JD-NoneSelectable" :style="layerHighlightStyles"></div>
+		<div v-if="setting.highlight" class="jd-layerHighlight jd-noneSelectable" :style="layerHighlightStyles"></div>
 
 		<!-- Layer: Controls -->
-		<div v-if="setting.controls" class="layerControl JD-NoneSelectable" :style="layerControlStyles">
+		<div v-if="setting.controls" class="jd-layerControl jd-noneSelectable" :style="layerControlStyles">
 
 			<!-- Control: Search -->
-			<div v-if="setting.search" class="controlSearch" :class="controlSearchClasses">
+			<div v-if="setting.search" class="jd-controlSearch" :class="controlSearchClasses">
 
-				<span @click="featureAction('Search')" class="controlItem" :class="searchIconClasses" :title="searchIconTitle">
+				<span @click="featureAction('Search')" class="jd-controlItem" :class="searchIconClasses" :title="searchIconTitle">
 					<i  class="fas fa-search"></i>
 
 					<!-- Control: Get Started with Search Reminder -->
-					<div v-if="gettingStarted && setting.startBySearchArrowSearch && !status.processingData && !loader" class="searchArrow">
+					<div v-if="gettingStarted && setting.startBySearchArrowSearch && !status.processingData && !loader" class="jd-searchArrow">
 					{{ setting.startBySearchArrowSearchText }}
 				</div>
 				</span>
 
 				<input v-show="feature.searching" @keyup.enter="performSearch" v-model="search.text" type="search" ref="searchField" :placeholder="setting.searchPlaceHolder ? setting.searchPlaceHolder : 'Search Here ..'" :disabled="status.processingData">
 
-				<span v-show="feature.searching && !search.searching" @click="performSearch" class="controlItem search" title="Perform Search">
+				<span v-show="feature.searching && !search.searching" @click="performSearch" class="jd-controlItem jd-search" title="Perform Search">
 					<i  class="fas fa-angle-right"></i>
 				</span>
 
-				<span v-show="feature.searching && search.searching" @click="clearSearch" class="controlItem clearSearch" title="Clear Search">
+				<span v-show="feature.searching && search.searching" @click="clearSearch" class="jd-controlItem jd-clearSearch" title="Clear Search">
 					<i  class="fas fa-times-circle"></i>
 				</span>
 
 			</div>
 
 			<!-- Control: Feature -->
-			<div class="controlFeature" :class="controlFeatureClasses">
+			<div class="jd-controlFeature" :class="controlFeatureClasses">
+
+				<!-- Feature: Add New -->
+				<span v-if="setting.addNew" @click="featureAction('AddNew')" class="jd-controlItem">
+					<i class="fas fa-plus-square" title="Add New"></i>
+				</span>
 
 				<!-- Feature: Refresh -->
-				<span v-if="setting.refresh" @click="featureAction('Refresh')" class="controlItem">
+				<span v-if="setting.refresh" @click="featureAction('Refresh')" class="jd-controlItem">
 					<i class="fas fa-sync-alt" title="Refresh"></i>
 				</span>
 
 				<!-- Feature: Pagination Select -->
-				<span v-if="rendering.engine === 2" @click="featureAction('Pagination')" class="controlItem" :class="rendering.pagination.changingRows ? 'selected' : ''">
+				<span v-if="rendering.engine === 2" @click="featureAction('Pagination')" class="jd-controlItem" :class="rendering.pagination.changingRows ? 'jd-selected' : ''">
 					<i class="fas fa-scroll" title="Rows Per Page"></i>
 				</span>
 
 				<!-- Feature: Column Select -->
-				<span v-if="setting.columnSelect" @click="featureAction('Columns')" class="controlItem" :class="columns.selecting ? 'selected' : ''">
+				<span v-if="setting.columnSelect" @click="featureAction('Columns')" class="jd-controlItem" :class="columns.selecting ? 'jd-selected' : ''">
 					<i class="fas fa-columns" title="Columns"></i>
 				</span>
 
 				<!-- Feature: Filter -->
-				<span v-if="setting.filter" @click="featureAction('Filter')" class="controlItem" :class="controlFilterClasses">
+				<span v-if="setting.filter" @click="featureAction('Filter')" class="jd-controlItem" :class="controlFilterClasses">
 					<i class="fas fa-filter" title="Filter"></i>
 
 					<!-- Control: Get Started with Filter Reminder -->
-					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !menuVisible && !status.processingData && !loader" class="filterArrow">
+					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !menuVisible && !status.processingData && !loader" class="jd-filterArrow">
 						{{ setting.startBySearchArrowFilterText }}
 					</div>
 				</span>
 
 				<!-- Feature: View -->
-				<span v-if="setting.views.length > 0" @click="featureAction('View')" class="controlItem">
+				<span v-if="setting.views.length > 0" @click="featureAction('View')" class="jd-controlItem">
 					<i class="far fa-eye" title="View"></i>
 				</span>
 
 				<!-- Feature: Export -->
-				<span v-if="setting.export" @click="featureAction('Export')" class="controlItem">
+				<span v-if="setting.export" @click="featureAction('Export')" class="jd-controlItem">
 					<i class="fas fa-file-export" title="Export to Excel"></i>
 				</span>
 
 				<!-- Feature: Maximize/Minimize -->
-				<span v-if="setting.maxMinimize && !setting.forceMaximized" @click="featureAction('MaxMinimize')" class="controlItem">
+				<span v-if="setting.maxMinimize && !setting.forceMaximized" @click="featureAction('MaxMinimize')" class="jd-controlItem">
 					<i :class="minMaxIconClasses" :title="minMaxIconTitle"></i>
 				</span>
 
@@ -81,17 +86,17 @@
 		</div>
 
 		<!-- Layer: Options -->
-		<div class="layerOption" :style="layerOptionStyles">
+		<div class="jd-layerOption" :style="layerOptionStyles">
 
 			<!-- Option: Pagination -->
 			<transition name="jdTableSlideDown">
-				<div v-if="rendering.pagination.changingRows" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="rendering.pagination.changingRows" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Page Rows</div>
+					<div class="jd-dropdownHeader">Page Rows</div>
 
 					<!-- Pagination Row List -->
-					<div v-for="rows in rendering.pagination.pageRowOptions" @click="changePageRows( rows )" class="dropdownItem paginationItem JD-Clickable" :class="rendering.pagination.currentSelectedPageRowOption === rows ? 'selected' : ''">
+					<div v-for="rows in rendering.pagination.pageRowOptions" @click="changePageRows( rows )" class="jd-dropdownItem jd-paginationItem jd-clickable" :class="rendering.pagination.currentSelectedPageRowOption === rows ? 'jd-selected' : ''">
 						{{ rows }}
 					</div>
 
@@ -100,23 +105,23 @@
 
 			<!-- Option: Column -->
 			<transition name="jdTableSlideDown">
-				<div v-if="columns.selecting" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="columns.selecting" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Columns</div>
+					<div class="jd-dropdownHeader">Columns</div>
 
 					<!-- Error -->
-					<div v-if="columns.selectionError" class="errorMessage">You must have at least one column enabled.</div>
+					<div v-if="columns.selectionError" class="jd-errorMessage">You must have at least one column enabled.</div>
 
 					<!-- Column List -->
-					<div v-for="column in columns.list" @click="columnSelection( column )" class="dropdownItem JD-Clickable">
+					<div v-for="column in columns.list" @click="columnSelection( column )" class="jd-dropdownItem jd-clickable">
 
-						<div class="columnVisibility">
+						<div class="jd-columnVisibility">
 							<i v-if="column.enabled" class="fas fa-eye"></i>
-							<i v-else class="fas fa-eye-slash notVisible"></i>
+							<i v-else class="fas fa-eye-slash jd-notVisible"></i>
 						</div>
 
-						<div class="columnTitle">
+						<div class="jd-columnTitle">
 							{{ column.title.replace(/(<([^>]+)>)/ig,"") }}
 						</div>
 
@@ -127,17 +132,17 @@
 
 			<!-- Option: Filtering -->
 			<transition name="jdTableSlideDown">
-				<div v-if="filters.show" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="filters.show" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Filtering</div>
+					<div class="jd-dropdownHeader">Filtering</div>
 
 					<!-- Error -->
-					<div v-if="filters.error" class="errorMessage">{{ filters.errorText }}</div>
+					<div v-if="filters.error" class="jd-errorMessage">{{ filters.errorText }}</div>
 
 					<!-- Select Column Input -->
-					<div class="dropdownInput carrot JD-Clickable">
-						<div @click="filterDropdown(0)" class="label">
+					<div class="jd-dropdownInput jd-carrot jd-clickable">
+						<div @click="filterDropdown(0)" class="jd-label">
 							<span>{{ filterColumnText.replace(/(<([^>]+)>)/ig,"") }}</span>
 						</div>
 
@@ -151,8 +156,8 @@
 					</div>
 
 					<!-- Select Filter Input -->
-					<div class="dropdownInput carrot JD-Clickable">
-						<div @click="filterDropdown(1)" class="label">
+					<div class="jd-dropdownInput jd-carrot jd-clickable">
+						<div @click="filterDropdown(1)" class="jd-label">
 							<span>
 								{{ filterOptionText }}
 							</span>
@@ -168,25 +173,25 @@
 					</div>
 
 					<!-- Select Value Input -->
-					<div class="dropdownInput addPadding">
+					<div class="jd-dropdownInput jd-addPadding">
 						<input @keyup.enter="addFilter" ref="filterInput" type="text" @input="filters.error = false" v-model="filters.beingBuilt.value" placeholder="Value"/>
 					</div>
 
 					<!-- Filter Apply Buttons -->
-					<div class="dropdownRow separate">
-						<button v-on:click="clearAllFilters" type="button" class="JD-Button danger" title="Clear All Filters">Clear All</button>
-						<button v-on:click="addFilter" type="button" class="JD-Button success" title="Apply Filter">Apply</button>
+					<div class="jd-dropdownRow jd-separate">
+						<button v-on:click="clearAllFilters" type="button" class="jd-button jd-danger" title="Clear All Filters">Clear All</button>
+						<button v-on:click="addFilter" type="button" class="jd-button jd-success" title="Apply Filter">Apply</button>
 					</div>
 
 					<!-- Header -->
-					<div class="dropdownHeader subHeader">Active Filters</div>
+					<div class="jd-dropdownHeader jd-subHeader">Active Filters</div>
 
 					<!-- Filtered Results -->
-					<div class="dropdownHeader smallHeader">Filtered Results: {{ formatNumberWithCommas ( processedDataSize ) }}</div>
+					<div class="jd-dropdownHeader jd-smallHeader">Filtered Results: {{ formatNumberWithCommas ( processedDataSize ) }}</div>
 
 					<!-- Active Filters -->
-					<div class="dropdownInput disabled" v-for="( filter, index ) in filters.active">
-						<div class="label" :title="filter.column.title.replace(/(<([^>]+)>)/ig,'') + ' .. ' + filter.option + ' .. ' + filter.value">
+					<div class="jd-dropdownInput jd-disabled" v-for="( filter, index ) in filters.active">
+						<div class="jd-label" :title="filter.column.title.replace(/(<([^>]+)>)/ig,'') + ' .. ' + filter.option + ' .. ' + filter.value">
 							<span>
 								{{ filter.column.title.replace(/(<([^>]+)>)/ig,"") }}
 
@@ -201,7 +206,7 @@
 							</span>
 						</div>
 
-						<i v-on:click="removeFilter( index )" class="fas fa-minus-circle removeIcon JD-Clickable" title="Remove Filter"></i>
+						<i v-on:click="removeFilter( index )" class="fas fa-minus-circle jd-removeIcon jd-clickable" title="Remove Filter"></i>
 					</div>
 
 				</div>
@@ -209,13 +214,13 @@
 
 			<!-- Option: View -->
 			<transition name="jdTableSlideDown">
-				<div v-if="rendering.views.changingViews" class="optionDropdown" :style="optionDropdownStyles">
+				<div v-if="rendering.views.changingViews" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="dropdownHeader">Views</div>
+					<div class="jd-dropdownHeader">Views</div>
 
 					<!-- View List -->
-					<div v-for="row in rendering.views.list" @click="changeViews( row )" class="dropdownItem paginationItem JD-Clickable" :class="rendering.views.currentSelectedView === row.viewName ? 'selected' : ''">
+					<div v-for="row in rendering.views.list" @click="changeViews( row )" class="jd-dropdownItem jd-paginationItem jd-clickable" :class="rendering.views.currentSelectedView === row.viewName ? 'jd-selected' : ''">
 						{{ row.viewName }}
 					</div>
 
@@ -225,38 +230,47 @@
 		</div>
 
 		<!-- Layer: Content -->
-		<div class="layerContent" ref="contentFrame" :style="layerContentStyles">
+		<div class="jd-layerContent" ref="contentFrame" :style="layerContentStyles">
 
 			<!-- Table Content: Table -->
-			<div class="table" :style="tableStyles">
+			<div class="jd-contentTable" :style="tableStyles">
 
 				<!-- Table: Head -->
-				<div class="head" :style="tableHeadStyles">
+				<div class="jd-head" :style="tableHeadStyles">
 
-					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name )" :title="sortTitle( index )" class="cell" :class="columns.activeHover === index ? ( 'hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
+					<div v-for="( column, index ) in rendering.views.currentView.schema" v-if="column.enabled" @click="changeSort( index, column.name, column.sortSpecial )" :title="sortTitle( index )" class="jd-cell" :class="columns.activeHoverIndex === index ? ( 'jd-hoverAssist' + headCellClasses) : headCellClasses" :style="column.headerStyles">
 
-						<div class="cellText">
-							<div class="title" v-html="column.title"></div>
+						<div class="jd-cellText">
+							<div class="jd-title" v-html="column.title"></div>
 							<i v-if="setting.columnSort && columns.activeSortIndex === index && !columns.activeSortAsc" class="fas fa-sort-alpha-up"></i>
 							<i v-if="setting.columnSort && columns.activeSortIndex === index && columns.activeSortAsc" class="fas fa-sort-alpha-down"></i>
-							<i v-if="setting.columnSort && columns.activeSortIndex !== index" class="fas fa-sort-alpha-down hoverSort"></i>
+							<i v-if="setting.columnSort && columns.activeSortIndex !== index" class="fas fa-sort-alpha-down jd-hoverSort"></i>
 						</div>
 
-						<div v-if="resizable" class="resize" @mousedown="resizeStart( index, $event )" @mousemove="resizeDrag( index, $event )" :class="index === columns.activeResize ? 'selected' : ''"></div>
+						<div v-if="resizable" class="jd-resize" @mousedown="resizeStart( index, $event )" @mousemove="resizeDrag( index, $event )" :class="index === columns.activeResize ? 'jd-selected' : ''"></div>
 
 					</div>
 
 				</div>
 
 				<!-- Table Body -->
-				<div class="body" ref="bodyData" :style="tableBodyStyles" @scroll="virtualScroll( $event )" @mouseleave="bodyLeave">
+				<div class="jd-body" ref="bodyData" :style="tableBodyStyles" @scroll="virtualScroll( $event )" @mouseleave="bodyLeave">
 
-					<div v-if="rendering.engine === 0" class="virtualBody" :style="bodyVirtualStyles"></div>
+					<div v-if="rendering.engine === 0" class="jd-virtualBody" :style="bodyVirtualStyles"></div>
 
 					<div ref="viewData" :style="bodyViewStyles">
-						<div v-if="isViewAvailable" v-for="row in currentTableData" @dblclick="rowAction( row.index )" class="row" :class="viewRowClasses" :style="viewRowStyles">
-							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
-								{{ row.data[column.name] }}
+						<div v-if="isViewAvailable" v-for="row in currentTableData" @click="rowActionSingle( row.index )" @dblclick="rowActionDouble( row.index )" @mouseover="rowHover( row.index, $event )" class="jd-row" :class="viewRowClasses" :style="viewRowStyles">
+							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="jd-cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
+								<!-- List Items -->
+								<span v-if="column.type === 'Array'">
+									<ul class="jd-list">
+										<li v-for="item in row.data[column.name]">
+											{{ item }}
+										</li>
+									</ul>
+								</span>
+								<!-- String Items -->
+								<span v-else>{{ row.data[column.name] }}</span>
 							</div>
 						</div>
 					</div>
@@ -268,51 +282,51 @@
 		</div>
 
 		<!-- Layer: Footer -->
-		<div v-if="setting.footer" class="layerFooter JD-NoneSelectable" :style="layerFooterStyles">
+		<div v-if="setting.footer" class="jd-layerFooter jd-noneSelectable" :style="layerFooterStyles">
 
-			<div v-if="rendering.engine === 2 && processedDataSize" class="pagination">
-				<div class="paginationDirection left" :class="rendering.pagination.currentPage === 1 ? 'disabled' : ''">
-					<i @click="paginationFirst" class="fas fa-fast-backward start" title="First Page"></i>
+			<div v-if="rendering.engine === 2 && processedDataSize" class="jd-pagination">
+				<div class="jd-paginationDirection jd-left" :class="rendering.pagination.currentPage === 1 ? 'jd-disabled' : ''">
+					<i @click="paginationFirst" class="fas fa-fast-backward jd-start" title="First Page"></i>
 					<i @click="paginationPrevious" class="fas fa-backward" title="Previous Page"></i>
 				</div>
 
-				<div v-if="!status.mobileSize" class="paginationRows">
+				<div v-if="!status.mobileSize" class="jd-paginationRows">
 					Rows&nbsp;<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }} of&nbsp;</span>{{ formatNumberWithCommas( processedDataSize ) }}
 				</div>
-				<div v-else class="paginationRows">
+				<div v-else class="jd-paginationRows">
 					<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }}</span>
 				</div>
 
-				<div class="paginationArea">
+				<div class="jd-paginationArea">
 
-					<div v-if="!status.mobileSize" class="paginationList">
-						<div v-if="rendering.pagination.leftPages[0] > 1" class="paginationPage">
+					<div v-if="!status.mobileSize" class="jd-paginationList">
+						<div v-if="rendering.pagination.leftPages[0] > 1" class="jd-paginationPage">
 							<i class="fas fa-ellipsis-h"></i>
 						</div>
-						<div v-for="page in rendering.pagination.leftPages" @click="paginationChange( page )" class="paginationPage addHover" :class="page === rendering.pagination.currentPageHightlight ? 'selected' : ''">
+						<div v-for="page in rendering.pagination.leftPages" @click="paginationChange( page )" class="jd-paginationPage jd-addHover" :class="page === rendering.pagination.currentPageHightlight ? 'jd-selected' : ''">
 							<span>{{ page }}</span>
 						</div>
 					</div>
 
-					<div v-if="!status.mobileSize" class="paginationList">
-						<div v-for="page in rendering.pagination.rightPages" @click="paginationChange( page )" class="paginationPage addHover" :class="page === rendering.pagination.currentPageHightlight ? 'selected' : ''">
+					<div v-if="!status.mobileSize" class="jd-paginationList">
+						<div v-for="page in rendering.pagination.rightPages" @click="paginationChange( page )" class="jd-paginationPage jd-addHover" :class="page === rendering.pagination.currentPageHightlight ? 'jd-selected' : ''">
 							<span>{{ page }}</span>
 						</div>
-						<div v-if="rendering.pagination.rightPages[rendering.pagination.rightPages.length - 1] < rendering.pagination.availablePages" class="paginationPage">
+						<div v-if="rendering.pagination.rightPages[rendering.pagination.rightPages.length - 1] < rendering.pagination.availablePages" class="jd-paginationPage">
 							<i class="fas fa-ellipsis-h"></i>
 						</div>
 					</div>
 
 				</div>
 
-				<div class="paginationDirection right" :class="rendering.pagination.currentPage === rendering.pagination.availablePages ? 'disabled' : ''">
+				<div class="jd-paginationDirection jd-right" :class="rendering.pagination.currentPage === rendering.pagination.availablePages ? 'jd-disabled' : ''">
 					<i @click="paginationNext" class="fas fa-forward" title="Next Page"></i>
-					<i @click="paginationLast" class="fas fa-fast-forward end" title="Last Page"></i>
+					<i @click="paginationLast" class="fas fa-fast-forward jd-end" title="Last Page"></i>
 				</div>
 
 			</div>
 			<div v-if="( rendering.engine === 0 || rendering.engine === 1 ) && processedDataSize">
-				<div class="resultRows" v-show="!filters.show">Rows: {{ formatNumberWithCommas( processedDataSize ) }}</div>
+				<div class="jd-resultRows" v-show="!filters.show">Rows: {{ formatNumberWithCommas( processedDataSize ) }}</div>
 			</div>
 
 		</div>
@@ -320,45 +334,45 @@
 		<!-- Layer: Popup -->
 		<transition name="jdTableFade">
 			<!-- Table Error -->
-			<div v-if="status.tableError" class="layerPopup fullFrame">
-				<div class="errorMessage">
+			<div v-if="status.tableError" class="jd-layerPopup jd-fullFrame">
+				<div class="jd-errorMessage">
 					{{ status.tableError }}
 				</div>
 			</div>
 
 			<!-- No Data Message -->
-			<div v-if="noDataMessage" class="layerPopup contentFrame">
-				<div class="noDataFrame">
-					<div class="title">
+			<div v-if="noDataMessage" class="jd-layerPopup jd-contentFrame">
+				<div class="jd-noDataFrame">
+					<div class="jd-title">
 						No Data Available
 					</div>
 
-					<div v-if="filtering" class="filters">
+					<div v-if="filtering" class="jd-filters">
 						Try changing your applied filters.
 					</div>
 				</div>
 			</div>
 
 			<!-- Loader -->
-			<div v-if="loader" class="layerPopup fullFrame JD-Loader">
+			<div v-if="loader" class="jd-layerPopup jd-fullFrame jd-loader">
 				<div class="fulfilling-square-spinner">
 					<div class="spinner-inner"></div>
 				</div>
 
-				<span class="loadingText">Loading ...</span>
+				<span class="jd-loadingText">Loading ...</span>
 			</div>
 
 			<!-- Processing -->
-			<div v-if="status.processingData" class="layerPopup contentFrame JD-Loader">
+			<div v-if="status.processingData" class="jd-layerPopup jd-contentFrame jd-loader">
 				<div class="fulfilling-square-spinner">
 					<div class="spinner-inner"></div>
 				</div>
 
-				<span class="loadingText">Processing</span>
+				<span class="jd-loadingText">Processing</span>
 			</div>
 
 			<!-- Searching -->
-			<div v-if="status.searching" class="layerPopup contentFrame JD-Loader">
+			<div v-if="status.searching" class="jd-layerPopup jd-contentFrame jd-loader">
 				<div class="self-building-square-spinner">
 					<div class="square"></div>
 					<div class="square"></div>
@@ -371,65 +385,89 @@
 					<div class="square"></div>
 				</div>
 
-				<span class="loadingText">Searching</span>
+				<span class="jd-loadingText">Searching</span>
 			</div>
 
 			<!-- Updating -->
-			<div v-if="status.updatingPage" class="layerPopup contentFrame JD-Loader">
+			<div v-if="status.updatingPage" class="jd-layerPopup jd-contentFrame jd-loader">
 				<div class="looping-rhombuses-spinner">
 					<div class="rhombus"></div>
 					<div class="rhombus"></div>
 					<div class="rhombus"></div>
 				</div>
 
-				<span class="loadingText">Updating</span>
+				<span class="jd-loadingText">Updating</span>
 			</div>
 
 			<!-- Get Started Messaging -->
-			<div v-if="gettingStarted" class="layerPopup contentFrame">
-				<div class="tableMessage" v-html="setting.startBySearchMessage"></div>
+			<div v-if="gettingStarted" class="jd-layerPopup jd-contentFrame">
+				<div class="jd-tableMessage" v-html="setting.startBySearchMessage"></div>
 			</div>
 		</transition>
 
 		<!-- Layer: Quick View -->
 		<transition name="jdTableFade">
-			<div v-if="row.selectedIndex !== null && !status.processingData && !status.searching && !status.updatingPage" class="layerPopup fullFrame fullFrameZone">
+			<div v-if="row.selectedIndex !== null && !status.processingData && !status.searching && !status.updatingPage" class="jd-layerPopup jd-fullBrowser jd-fullFrame jd-fullFrameZone">
 
-				<div class="quickView">
+				<div class="jd-quickView">
 
-					<div class="quickViewHighlight_1"></div>
-					<div class="quickViewHighlight_2"></div>
+					<div class="jd-quickViewHighlight_1"></div>
+					<div class="jd-quickViewHighlight_2"></div>
 
-					<div class="quickViewControl">
-						<div @click="print('quickViewContent')" class="controlAction">
-							<i class="fas fa-print"></i>
+					<div class="jd-quickViewControl">
+						<div class="jd-controlAction">
+							<span @click="print('quickViewContent')" >
+								<i class="fas fa-print"></i>
+							</span>
+							<span v-if="setting.viewItem" @click="featureAction('ViewItem')">
+								<i class="far fa-arrow-alt-circle-up"></i>
+							</span>
 						</div>
 
-						<div class="controlTitle">Quick View</div>
+						<div class="jd-controlTitle">Quick View</div>
 
-						<div @click="row.selectedIndex = null" class="controlAction">
-							<i class="fas fa-times"></i>
+						<div class="jd-controlAction">
+							<span v-if="setting.deleteItem" @click="featureAction('DeleteItem')">
+								<i class="fas fa-trash-alt"></i>
+							</span>
+							<span v-if="setting.editItem" @click="featureAction('EditItem')">
+								<i class="fas fa-pencil-alt"></i>
+							</span>
+							<span @click="quickViewClose">
+								<i class="fas fa-times"></i>
+							</span>
 						</div>
 					</div>
 
-					<div ref="quickViewContent" class="quickViewContent" :style="quickViewContentStyles">
-						<div v-for="column in columns.list" class="contentRow">
-							<div class="rowTitle">{{ column.title.replace(/(<([^>]+)>)/ig,"") }}</div>
-							<div class="rowData">{{ data[row.selectedIndex][column.name] }}</div>
+					<div ref="quickViewContent" class="jd-quickViewContent">
+						<div v-for="column in columns.list" class="jd-contentRow">
+							<div class="jd-rowTitle">{{ column.title.replace(/(<([^>]+)>)/ig,"") }}</div>
+
+							<!-- List Items -->
+							<div v-if="column.type === 'Array'" class="jd-rowData">
+								<ul>
+									<li v-for="item in data[row.selectedIndex][column.name]">
+										{{ item }}
+									</li>
+								</ul>
+							</div>
+							<!-- String Items -->
+							<div v-else class="jd-rowData">{{ data[row.selectedIndex][column.name] }}</div>
+
 						</div>
 					</div>
 
-					<div class="quickViewFooter">
-						<div @click="quickViewPrevious" class="footerDirection previous">
+					<div class="jd-quickViewFooter">
+						<div @click="quickViewPrevious" class="jd-footerDirection jd-previous">
 							<i class="fas fa-backward"></i>
 						</div>
-						<div v-if="setting.dataProvider === 1" class="footerItem">
+						<div v-if="setting.dataProvider === 1" class="jd-footerItem">
 							{{ row.selectedIndex + rendering.pagination.currentStartIndex + 1 }} of {{ processedDataSize }}
 						</div>
-						<div v-else class="footerItem">
+						<div v-else class="jd-footerItem">
 							{{ row.selectedIndex + 1 }} of {{ processedDataSize }}
 						</div>
-						<div @click="quickViewNext" class="footerDirection next">
+						<div @click="quickViewNext" class="jd-footerDirection jd-next">
 							<i class="fas fa-forward"></i>
 						</div>
 					</div>
@@ -439,6 +477,37 @@
 			</div>
 		</transition>
 
+		<!-- Layer: Right Click / Context Menu -->
+		<transition name="jdTableFade">
+			<div v-show="( setting.contextMenuLeft || setting.contextMenuRight ) && status.contextMenu" class="jd-contextMenu" ref="jd_contextMenu">
+				<ul class="jd-contextMenuOptions">
+					<li v-if="setting.contextMenuQuickView || setting.contextMenuView || setting.contextMenuEdit || setting.contextMenuDelete" class="jd-contextMenuHeader jd-noneSelectable">
+						<span>Row Options</span>
+					</li>
+					<li v-if="setting.contextMenuQuickView" @click="contextQuickView" class="jd-contextMenuOption jd-noneSelectable" title="Open Quick View">
+						<span>Quick View</span>
+					</li>
+					<li v-if="setting.contextMenuView"  class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextView(false)" title="View Record">View</span>
+						<span @click="contextView(true)" title="View (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+					</li>
+					<li v-if="setting.contextMenuEdit" class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextEdit(false)" title="Edit Record">Edit</span>
+						<span @click="contextEdit(true)" title="Edit (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+					</li>
+					<li v-if="setting.contextMenuDelete" class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextDelete" title="Delete Record">Delete</span>
+					</li>
+					<li v-if="setting.contextMenuAdd" class="jd-contextMenuHeader jd-noneSelectable">
+						<span>Table Options</span>
+					</li>
+					<li v-if="setting.contextMenuAdd" class="jd-contextMenuOption jd-noneSelectable">
+						<span @click="contextAdd(false)" title="Add Record">Add</span>
+						<span @click="contextAdd(true)" title="Add (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+					</li>
+				</ul>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -461,6 +530,8 @@
 					isIE11         : false,
 					tableScroll    : false,
 					lastAction     : null,
+					contextMenu    : false,
+					tableReady     : false
 				},
 
 				currentTableData : [],
@@ -520,18 +591,23 @@
 
 				row :
 				{
-					selectedIndex : null
+					selectedIndex        : null,
+					activeHoverIndex     : null,
+					activeHoverElement   : null,
+					activeContextIndex   : null,
+					activeContextElement : null
 				},
 
 				columns :
 				{
 					list               : [],
-					activeHover        : null,
+					activeHoverIndex   : null,
 					activeResize       : null,
 					activeResizeStart  : null,
 					activeSortIndex    : 0,
 					activeSortName     : null,
 					activeSortAsc      : false,
+					activeSortSpecial  : null,
 					selecting          : false,
 					selectionItemWidth : 25,
 					selectionError     : false
@@ -633,6 +709,26 @@
 		// Default     : True
 		// Description : Enables/disables the min/maximize feature button.
 		//
+		// Prop        : option.addNew
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the Add New feature button.
+		//
+		// Prop        : option.editItem
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the Edit Item feature button (quick view).
+		//
+		// Prop        : option.viewItem
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the View Item feature button (quick view).
+		//
+		// Prop        : option.deleteItem
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables the Delete Item feature button (quick view).
+		//
 		// Prop        : option.refresh
 		// Value       : [BOOLEAN]
 		// Default     : True
@@ -674,9 +770,45 @@
 		// Description : Enables/disables the ability to sort by column.
 		//
 		// Prop        : option.quickView
+		// Value       : [NUMBER]
+		// Default     : 1
+		// Description : Enables/disables the ability to click or double click a row to see the quick view.
+		//
+		// -----
+		// | 0 | NONE         : Disables quick view.
+		// | 1 | CLICK        : Quick view appears on single (left) click.
+		// | 2 | DOUBLE CLICK : Quick view appears on double (left) click.
+		// -----
+		//
+		// Prop        : option.contextMenu
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : Enables/disables a row context menu for when a user right clicks on a row.
+		//
+		// Prop        : option.contextMenuQuickView
 		// Value       : [BOOLEAN]
 		// Default     : True
-		// Description : Enables/disables the ability to double click on a row and show a quick view of all its data.
+		// Description : Enables/disables the row context menu option for Quick Viewing the row data.
+		//
+		// Prop        : option.contextMenuView
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Viewing the row data.
+		//
+		// Prop        : option.contextMenuEdit
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Editing the row data.
+		//
+		// Prop        : option.contextMenuDelete
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Delete the row data.
+		//
+		// Prop        : option.contextMenuAdd
+		// Value       : [BOOLEAN]
+		// Default     : True
+		// Description : Enables/disables the row context menu option for Adding a row of data.
 		//
 		// Prop        : option.renderEngine
 		// Value       : [NUMBER]
@@ -706,6 +838,13 @@
 		// | TRUE  | : Renders the entire JD-Table responsively. It will fit to the parent container.
 		// | FALSE | : Renders the entire JD-Table to the width set to the option.frameWidth in pixels.
 		// ---------
+		//
+		// Prop        : option.responsiveFrameForceFullWidth
+		// Value       : [BOOLEAN]
+		// Default     : False
+		// Description : When responsiveFrame is set to true and the number of columns in the table shrink the entire table will as well
+		//             : (according it its parent). However sometimes you want the table to be 100% no matter what. Set this option to
+		//             : True and it will force the table to ignore column widths when the table shrinks.
 		//
 		// Prop        : option.responsiveTable
 		// Value       : [BOOLEAN]
@@ -895,6 +1034,8 @@
 
 		created : function ()
 		{
+			this.polyfillClosest();
+
 			this.checkBrowser();
 
 			this.initializeTable();
@@ -903,26 +1044,68 @@
 		mounted : function ()
 		{
 			// Add an event listener to watch for a window resize. If detected, re-render the list.
-			window.addEventListener( 'resize', ()=>
+			window.addEventListener( 'resize', this.resizeListener );
+
+			if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
 			{
-				// Clear the scrolling timer.
-				clearTimeout( this.rendering.isResizing );
+				this.initializeContextMenu();
+			}
 
-				this.rendering.isResizing = setTimeout( () =>
-				{
-					// If auto rendering is the engine, re-render.
-					if ( this.rendering.engine === 0 )
-					{
-						this.renderView( this.rendering.virtual.rowMiddleIndex );
-					}
+			if ( this.setting.quickView )
+			{
+				this.initializeQuickMenu();
+			}
+		},
 
-					this.checkMobile();
-				}, 750 );
-			});
+		// Clean up custom listeners.
+		beforeDestroy : function ()
+		{
+			// Context Listener - LEFT CLICK
+			if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
+			{
+				window.removeEventListener( "click", this.contextListenerLeftClick );
+			}
+
+			// Context Listener - RIGHT CLICK
+			if ( this.setting.contextMenuRight )
+			{
+				// Register context menu (right click) event.
+				window.removeEventListener( "contextmenu", this.contextListenerRightClick );
+			}
+
+			// Quick Menu Listener
+			window.removeEventListener( "click", this.quickMenuListenerLeftClick );
+
+			// Filter Dropdown
+			window.removeEventListener( 'mouseup', this.clearFilterDropdown, false );
+
+			// Resize Listeners
+			window.removeEventListener( 'resize', this.resizeListener );
+			window.removeEventListener( 'mouseup', this.resizeStop , false );
 		},
 
 		methods :
 		{
+			// Polyfills the element function "closest" (IE11).
+			polyfillClosest : function ()
+			{
+				if ( window.Element && !Element.prototype.closest )
+				{
+					Element.prototype.closest = function ( s )
+					{
+						let matches = ( this.document || this.ownerDocument ).querySelectorAll( s ), i, el = this;
+
+						do
+						{
+							i = matches.length;
+							while ( --i >= 0 && matches.item( i ) !== el ) {};
+						} while ( (i < 0) && ( el = el.parentElement ) );
+
+						return el;
+					};
+				}
+			},
+
 			// Configures the table according to the init props.
 			initializeTable : function ()
 			{
@@ -998,6 +1181,7 @@
 								dataStyles    : {},
 								sort          : userColumn.sort ? userColumn.sort : false,
 								sortDirection : userColumn.sortDirection ? userColumn.sortDirection : null,
+								sortSpecial   : userColumn.sortSpecial ? userColumn.sortSpecial : null
 							});
 						});
 
@@ -1038,8 +1222,9 @@
 							// Sets the column as default sorted.
 							if ( viewColumn.sort )
 							{
-								this.columns.activeSortIndex = viewIndex;
-								this.columns.activeSortName  = viewColumn.name;
+								this.columns.activeSortIndex    = viewIndex;
+								this.columns.activeSortName     = viewColumn.name;
+								this.columns.activeSortSpecial  = viewColumn.sortSpecial;
 
 								if ( typeof( viewColumn.sortDirection ) === 'string' )
 								{
@@ -1058,9 +1243,10 @@
 						// No sorting set, use first column.
 						if ( !hasBeenSorted )
 						{
-							this.columns.activeSortIndex = 0;
-							this.columns.activeSortAsc   = true;
-							this.columns.activeSortName  = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortIndex    = 0;
+							this.columns.activeSortAsc      = true;
+							this.columns.activeSortName     = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortSpecial  = this.rendering.views.currentView.schema[0].sortSpecial;
 						}
 					}
 					else
@@ -1200,7 +1386,7 @@
 							this.status.tableError = 'Error: External data provider is only supported by the Pagination render engine. Please change your settings.';
 						}
 					}
-				}
+				};
 
 				// Configure the search option.
 				const SETUP_SEARCH = () =>
@@ -1306,7 +1492,7 @@
 							}
 						});
 					}
-				}
+				};
 
 				INIT_ENGINE();
 				INIT_COLUMNS();
@@ -1316,6 +1502,180 @@
 				SETUP_SEARCH();
 				DATA_PROVIDER_CHECK();
 				BUILD_VIEWS();
+			},
+
+			// Configures the table context menu (right/left click).
+			initializeContextMenu : function ()
+			{
+				// LEFT CLICK
+				if ( this.setting.contextMenuLeft || this.setting.contextMenuRight )
+				{
+					window.addEventListener( "click", this.contextListenerLeftClick );
+				}
+
+				// RIGHT CLICK
+				if ( this.setting.contextMenuRight )
+				{
+					// Register context menu (right click) event.
+					window.addEventListener( "contextmenu", this.contextListenerRightClick );
+				}
+			},
+
+			// Emits the current state of the component.
+			emitState : function ()
+			{
+				this.$emit( 'event-from-jd-table', this.componentState );
+			},
+
+			// JavaScript listener for resizing the window.
+			resizeListener : function ( e )
+			{
+				// Clear the scrolling timer.
+				clearTimeout( this.rendering.isResizing );
+
+				this.rendering.isResizing = setTimeout( () =>
+				{
+					// If auto rendering is the engine, re-render.
+					if ( this.rendering.engine === 0 )
+					{
+						this.renderView( this.rendering.virtual.rowMiddleIndex );
+					}
+
+					this.checkMobile();
+				}, 750 );
+			},
+
+			// JavaScript listener for left clicking (context menu).
+			contextListenerLeftClick : function ( e )
+			{
+				// If the menu is visible already ..
+				if ( this.status.contextMenu )
+				{
+					this.hideContextMenu();
+				}
+
+				if ( this.setting.contextMenuLeft && e.target.closest( '.jd-body' ) )
+				{
+					// Get the location of the right click.
+					const clickLocation =
+					{
+						left : e.clientX,
+						top  : e.clientY
+					};
+
+					// Show the menu at the click location.
+					this.showContextMenu( clickLocation );
+				}
+			},
+
+			// JavaScript listener for right clicking (context menu).
+			contextListenerRightClick : function ( e )
+			{
+				// If the click takes places in the table body ..
+				if ( e.target.closest( '.jd-body' ) )
+				{
+					// Prevent the regular menu.
+					e.preventDefault();
+
+					// Clear previous context (if any).
+					if ( this.status.contextMenu )
+					{
+						this.hideContextMenu();
+					}
+
+					// Close any feature menu.
+					this.featureAction( null );
+
+					// Get the location of the right click.
+					const clickLocation =
+					{
+						left : e.clientX,
+						top  : e.clientY
+					};
+
+					// Show the menu at the click location.
+					this.showContextMenu( clickLocation );
+
+					return false;
+				}
+			},
+
+			// JavaScript listener for left clicking (quick menu).
+			quickMenuListenerLeftClick : function ( e )
+			{
+				// Don't run this when clicking in the table body.
+				if ( !e.target.closest( '.jd-body' ) )
+				{
+					// Ensure user clicks outside the popup window.
+					if ( this.row.selectedIndex !== null && e.target.classList.contains('jd-layerPopup') )
+					{
+						this.quickViewClose();
+					}
+				}
+			},
+
+			// Configures a click listener to close quick menu when clicked out of it.
+			initializeQuickMenu : function ()
+			{
+				window.addEventListener( "click", this.quickMenuListenerLeftClick );
+			},
+
+			// Enables the context menu at the coordinates passed.
+			showContextMenu : function ( { top, left } )
+			{
+				// Close any feature menu.
+				this.featureAction( null );
+
+				this.$refs.jd_contextMenu.style.left = `${ left }px`;
+				this.$refs.jd_contextMenu.style.top  = `${ top }px`;
+
+				// Update the index of the row right clicked on.
+				this.row.activeContextIndex   = this.row.activeHoverIndex;
+				this.row.activeContextElement = this.row.activeHoverElement;
+
+				// Make the row red.
+				this.row.activeContextElement.classList.add('jd-rowSelect');
+
+				// Show the context menu,
+				this.status.contextMenu = true;
+
+				// Context menu position correction.
+				setTimeout( () =>
+				{
+					let contextWidth  = this.$refs.jd_contextMenu.offsetWidth;
+					let contextHeight = this.$refs.jd_contextMenu.offsetHeight;
+					let windowWidth   = window.innerWidth;
+					let windowHeight  = window.innerHeight;
+
+					if ( ( windowWidth - left ) < contextWidth )
+					{
+						// 21 is subtracted to compensate for a scrollbar.
+						this.$refs.jd_contextMenu.style.left = ( windowWidth - contextWidth ) - 21 + "px";
+					}
+
+					if ( (windowHeight - top ) < contextHeight )
+					{
+						// 21 is subtracted to compensate for a scrollbar.
+						this.$refs.jd_contextMenu.style.top = ( windowHeight - contextHeight ) - 21 + "px";
+					}
+
+				}, 50, { top, left } );
+			},
+
+			// Disabled (hides) the context menu.
+			hideContextMenu : function ()
+			{
+				if ( this.row.selectedIndex === null )
+				{
+					// Remove the row red.
+					this.row.activeContextElement.classList.remove('jd-rowSelect');
+
+					// Update the index of the row right clicked on.
+					this.row.activeContextIndex   = null;
+					this.row.activeContextElement = null;
+				}
+
+				this.status.contextMenu = false;
 			},
 
 			// Manages all feature actions.
@@ -1351,6 +1711,33 @@
 					}
 				};
 
+				// Emits a add new event to the parent.
+				const ADDNEW = () =>
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'AddItem';
+
+					this.emitState();
+				};
+
+				// Emits a add new event to the parent.
+				const VIEWITEM = () =>
+				{
+					this.contextView();
+				};
+
+				// Emits a add new event to the parent.
+				const EDITITEM = () =>
+				{
+					this.contextEdit();
+				};
+
+				// Emits a add new event to the parent.
+				const DELETEITEM = () =>
+				{
+					this.contextDelete();
+				};
+
 				// Emits a refresh event to the parent.
 				const REFRESH = () =>
 				{
@@ -1360,7 +1747,7 @@
 					// Update table status.
 					this.updateStatus( 'updatingPage', true );
 
-					this.$emit( 'event-from-jd-table', this.componentState );
+					this.emitState();
 				};
 
 				// Show/Hide the filtering view.
@@ -1422,6 +1809,9 @@
 				// Exports the current available data to excel.
 				const EXPORT = () =>
 				{
+					// Update the last action performed.
+					this.status.lastAction = 'ExcelExport';
+
 					// Check if a limit is set.
 					if ( this.setting.exportLimit )
 					{
@@ -1461,17 +1851,14 @@
 
 					if ( this.setting.dataProvider === 1 )
 					{
-						// Update the last action performed.
-						this.status.lastAction = 'ExcelExport';
-
 						this.updateStatus( 'processingData', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					else
 					{
 						this.exportExcel( this.processedData );
 					}
+
+					this.emitState();
 				};
 
 				if ( name === 'MaxMinimize' )
@@ -1491,6 +1878,42 @@
 					VIEW_CLEAN_UP();
 
 					SEARCH();
+				}
+				else if ( name === 'AddNew' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					ADDNEW();
+				}
+				else if ( name === 'ViewItem' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					VIEWITEM();
+				}
+				else if ( name === 'EditItem' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					EDITITEM();
+				}
+				else if ( name === 'DeleteItem' )
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
+
+					DELETEITEM();
 				}
 				else if ( name === 'Refresh' )
 				{
@@ -1541,6 +1964,13 @@
 					PAGINATION_CLEAN_UP();
 
 					VIEW();
+				}
+				else
+				{
+					FILTER_CLEAN_UP();
+					COLUMNS_CLEAN_UP();
+					PAGINATION_CLEAN_UP();
+					VIEW_CLEAN_UP();
 				}
 			},
 
@@ -1660,7 +2090,24 @@
 										// Search a column which is made up of an array or strings.
 										if ( column.type === 'Array' )
 										{
+											let searchMatch = false;
 
+											if ( row[column.name] && row[column.name].length > 0 )
+											{
+												// For each item in the row/column.
+												row[column.name].forEach( ( item ) =>
+												{
+													let searchText = String( item ).toLowerCase();
+
+													// Casts number variables to strings to make the searchable with Strings.
+													if ( !searchMatch && searchText.includes( searchTerm ) )
+													{
+														searchMatch = true;
+													}
+												});
+											}
+
+											return searchMatch;
 										}
 										// Search a column which is made up of strings or numbers.
 										else
@@ -1739,7 +2186,7 @@
 								// Performs filter: Contains (String Based).
 								const FILTER_CONTAINS = ( row, columnFilter ) =>
 								{
-									return ( String( row[columnFilter.column.name]).toLowerCase().includes(String(columnFilter.value).toLowerCase()) );
+									return ( String( row[columnFilter.column.name]).toLowerCase().includes( String( columnFilter.value ).toLowerCase() ) );
 								};
 
 								// Performs filter: Greater and Less/Equal To (Number Based).
@@ -1910,9 +2357,6 @@
 				{
 					let eventError = false;
 
-					// Clear any messaging/statuses.
-					this.updateStatus( null, null );
-
 					// Clear the current view.
 					this.currentTableData = [];
 
@@ -1934,11 +2378,20 @@
 								{
 									// Render the data.
 									this.renderView();
+
+									if ( typeof this.eventFromApp.componentState !== 'undefined' )
+									{
+										this.changeState( this.eventFromApp.componentState );
+									}
+
+									this.tableReady = true;
 								});
 							}
 							else
 							{
 								this.currentTableData = [];
+
+								this.tableReady = true;
 							}
 						}
 						else
@@ -1965,11 +2418,20 @@
 								{
 									// Render the data.
 									this.renderView();
+
+									if ( typeof this.eventFromApp.componentState !== 'undefined' )
+									{
+										this.changeState( this.eventFromApp.componentState );
+									}
+
+									this.tableReady = true;
 								});
 							}
 							else
 							{
 								this.currentTableData = [];
+
+								this.tableReady = true;
 							}
 						}
 						else
@@ -1977,6 +2439,9 @@
 							eventError = true;
 						}
 					}
+
+					// Clear any messaging/statuses.
+					this.updateStatus( null, null );
 
 					if ( eventError )
 					{
@@ -2006,6 +2471,87 @@
 
 					// Clear any messaging/statuses.
 					this.updateStatus( null, null );
+				}
+
+				// Sets the component state.
+				if ( !this.status.tableError && name === 'setState' )
+				{
+					if ( this.eventFromApp.componentState !== null && this.eventFromApp.componentState.constructor.name === 'Object' )
+					{
+						this.changeState( this.eventFromApp.componentState );
+					}
+				}
+			},
+
+			// Updates the state of JD-Table
+			changeState : function ( newState )
+			{
+				// Search Text
+				if ( typeof newState.searchText !== 'undefined' && newState.searchText )
+				{
+					this.search.text = String ( newState.searchText );
+				}
+
+				// Searching
+				if ( typeof newState.searchApplied !== 'undefined' && newState.searchApplied !== null && newState.searchApplied.constructor.name === 'Boolean' )
+				{
+					this.performSearch();
+				}
+
+				// Active Filters
+				if ( typeof newState.filterApplied !== 'undefined' && newState.filterApplied !== null && newState.filterApplied.constructor.name === 'Array' )
+				{
+					this.filters.active = newState.filterApplied;
+
+					// Process the data through filters/search.
+					this.processData().then( () =>
+					{
+						// Render the new view.
+						this.renderView();
+					});
+				}
+
+				// Page Limit
+				if ( typeof newState.pageLimit !== 'undefined' && newState.pageLimit !== null && newState.pageLimit.constructor.name === 'Number' )
+				{
+					this.changePageRows( newState.pageLimit )
+				}
+
+				// Current Page
+				if ( typeof newState.currentPage !== 'undefined' && newState.currentPage !== null && newState.currentPage.constructor.name === 'Number' )
+				{
+					this.rendering.pagination.currentPage = newState.currentPage;
+
+					// Re-render the view.
+					this.renderView();
+				}
+
+				// Column Sort
+				if ( typeof newState.sortColumnIndex !== 'undefined' && newState.sortColumnIndex !== null && newState.sortColumnIndex.constructor.name === 'Number' )
+				{
+					this.columns.activeSortIndex = newState.sortColumnIndex;
+
+					// Sorted Direction
+					if ( typeof newState.sortDirection !== 'undefined' && newState.sortDirection !== null && newState.sortDirection.constructor.name === 'String' )
+					{
+						if ( newState.sortDirection === 'ASC' )
+						{
+							this.columns.activeSortAsc = true;
+						}
+						else
+						{
+							this.columns.activeSortAsc = false;
+						}
+
+						// Re-render the view.
+						this.renderView();
+					}
+				}
+
+				// Current Selected View
+				if ( typeof newState.currentView !== 'undefined' && newState.currentView !== null )
+				{
+					this.changeView( newState.currentView );
 				}
 			},
 
@@ -2359,8 +2905,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2368,20 +2912,22 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
 			// Checks and processes the next page of paginated data.
 			paginationNext : function ()
 			{
+				// Update the last action performed.
+				this.status.lastAction = 'PaginationGoToNextPage';
+
 				let nextPage = this.rendering.pagination.currentPage + 1;
 
 				// Ensure not going beyond available pages.
 				if ( nextPage <= this.rendering.pagination.availablePages )
 				{
-					// Update the last action performed.
-					this.status.lastAction = 'PaginationGoToNextPage';
-
 					// Increase the page.
 					this.rendering.pagination.currentPage++;
 
@@ -2389,8 +2935,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2398,6 +2942,8 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2416,8 +2962,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2425,20 +2969,22 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
 			// Checks and processes the previous page of paginated data.
 			paginationPrevious : function ()
 			{
+				// Update the last action performed.
+				this.status.lastAction = 'PaginationGoToPreviousPage';
+
 				let previousPage = this.rendering.pagination.currentPage - 1;
 
 				// Ensure not going beyond available pages.
 				if ( previousPage >= 1 )
 				{
-					// Update the last action performed.
-					this.status.lastAction = 'PaginationGoToPreviousPage';
-
 					// Increase the page.
 					this.rendering.pagination.currentPage--;
 
@@ -2446,8 +2992,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2455,6 +2999,8 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2473,8 +3019,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
@@ -2482,6 +3026,8 @@
 						// Re-render the view.
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2518,14 +3064,14 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// Update the view.
 					else
 					{
 						this.renderView();
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -2571,9 +3117,10 @@
 						{
 							if ( viewColumn.sort )
 							{
-								this.columns.activeSortIndex = viewIndex;
-								this.columns.activeSortName  = viewColumn.name;
-								hasBeenSorted                = true;
+								this.columns.activeSortIndex    = viewIndex;
+								this.columns.activeSortName     = viewColumn.name;
+								this.columns.activeSortSpecial  = viewColumn.sortSpecial;
+								hasBeenSorted                   = true;
 
 								if ( typeof( viewColumn.sortDirection ) === 'string' )
 								{
@@ -2589,16 +3136,15 @@
 
 						if ( !hasBeenSorted )
 						{
-							this.columns.activeSortIndex = 0;
-							this.columns.activeSortAsc   = true
-							this.columns.activeSortName  = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortIndex   = 0;
+							this.columns.activeSortAsc     = true
+							this.columns.activeSortName    = this.rendering.views.currentView.schema[0].name;
+							this.columns.activeSortSpecial = this.rendering.views.currentView.schema[0].sortSpecial;
 						}
 
 						if ( this.setting.dataProvider === 1 )
 						{
 							this.updateStatus( 'updatingPage', true );
-
-							this.$emit( 'event-from-jd-table', this.componentState );
 						}
 						else
 						{
@@ -2609,6 +3155,8 @@
 				}
 
 				this.rendering.views.changingViews = false;
+
+				this.emitState();
 			},
 
 			// Virtual Engine: Sets the next top and bottom re-rendering position points in pixels.
@@ -2730,10 +3278,17 @@
 				}, 220);
 			},
 
+			// Sets the row index that is currently being hovered over.
+			rowHover : function ( rowIndex, e )
+			{
+				this.row.activeHoverIndex   = rowIndex;
+				this.row.activeHoverElement = e.srcElement.closest('.jd-row');
+			},
+
 			// Sets the column that is currently being hovered over.
 			cellHover : function ( columnIndex )
 			{
-				this.columns.activeHover = columnIndex;
+				this.columns.activeHoverIndex = columnIndex;
 			},
 
 			// Checks if the body of the table has a scroll bar. This is important to align the head + body.
@@ -2759,7 +3314,7 @@
 					return;
 				}
 
-				this.columns.activeHover = null;
+				this.columns.activeHoverIndex = null;
 			},
 
 			// Triggers the start of a resize event. Records the column to be resized and the starting X position.
@@ -2855,7 +3410,7 @@
 			},
 
 			// Changes the sort column and/or direction.
-			changeSort : function ( columnIndex, columnName )
+			changeSort : function ( columnIndex, columnName, sortSpecial )
 			{
 				// Update the last action performed.
 				this.status.lastAction = 'ChangeSort';
@@ -2879,22 +3434,23 @@
 				// Sort the new column ascending.
 				else
 				{
-					this.columns.activeSortIndex = columnIndex;
-					this.columns.activeSortName  = columnName;
-					this.columns.activeSortAsc   = true;
+					this.columns.activeSortIndex   = columnIndex;
+					this.columns.activeSortName    = columnName;
+					this.columns.activeSortAsc     = true;
+					this.columns.activeSortSpecial = sortSpecial;
 				}
 
 				if ( this.setting.dataProvider === 1 )
 				{
 					this.updateStatus( 'updatingPage', true );
-
-					this.$emit( 'event-from-jd-table', this.componentState );
 				}
 				else
 				{
 					// Re-render the view.
 					this.renderView();
 				}
+
+				this.emitState();
 			},
 
 			// Sorts the original data.
@@ -2902,8 +3458,9 @@
 			{
 				if ( this.setting.dataProvider === 0 )
 				{
-					let columnName     = this.rendering.views.currentView.schema[this.columns.activeSortIndex].name;
-					let columnSortType = this.rendering.views.currentView.schema[this.columns.activeSortIndex].type;
+					let columnName        = this.rendering.views.currentView.schema[this.columns.activeSortIndex].name;
+					let columnSortType    = this.rendering.views.currentView.schema[this.columns.activeSortIndex].type;
+					let columnSortSpecial = this.rendering.views.currentView.schema[this.columns.activeSortIndex].sortSpecial;
 
 					if ( this.processedDataSize > 0 )
 					{
@@ -2912,31 +3469,72 @@
 							// Sort the data with null values.
 							const sortByNull = ( x, y ) =>
 							{
-								if ( !x[columnName] )
+								if ( columnSortType === 'Array' )
 								{
-									return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
-								}
+									if ( !x[columnName] || !x[columnName][0] )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 
-								if ( !y[columnName] )
+									if ( !y[columnName] || !y[columnName][0] )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+								}
+								else
 								{
-									return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									if ( !x[columnName] )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+
+									if ( !y[columnName] )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 								}
 							};
 
 							// Sort the data by string.
 							const sortByString = ( x, y ) =>
 							{
-								let stringX = x[columnName].toUpperCase();
-								let stringY = y[columnName].toUpperCase();
-
-								if ( stringX < stringY )
+								// Special Sorting
+								if ( columnSortSpecial )
 								{
-									return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									// IP
+									if ( columnSortSpecial.toLowerCase() === 'ip' )
+									{
+										x = x[columnName].split( '.' );
+										y = y[columnName].split( '.' );
+
+										for ( let i = 0; i < x.length; i++ )
+										{
+											if ( ( x[i] = parseInt( x[i] ) ) < ( y[i] = parseInt( y[i] ) ) )
+											{
+												return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+											else if ( x[i] > y[i] )
+											{
+												return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+										}
+									}
 								}
-
-								if ( stringX > stringY )
+								// Normal String Sort
+								else
 								{
-									return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									x = x[columnName].toUpperCase();
+									y = y[columnName].toUpperCase();
+
+									if ( x < y )
+									{
+										return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
+
+									if ( x > y )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 								}
 
 								// Strings are the same.
@@ -2952,17 +3550,43 @@
 							// Sort the data by array. Sorts the first string in the array.
 							const sortByArray = ( x, y ) =>
 							{
-								let stringX = x[columnName][0].toUpperCase();
-								let stringY = y[columnName][0].toUpperCase();
-
-								if ( stringX < stringY )
+								// Special IP Sort
+								if ( columnSortSpecial )
 								{
-									return -1;
+									// IP
+									if ( columnSortSpecial.toLowerCase() === 'ip' )
+									{
+										x = x[columnName][0].split( '.' );
+										y = y[columnName][0].split( '.' );
+
+										for ( let i = 0; i < x.length; i++ )
+										{
+											if ( ( x[i] = parseInt( x[i] ) ) < ( y[i] = parseInt( y[i] ) ) )
+											{
+												return -1 * ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+											else if ( x[i] > y[i] )
+											{
+												return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+											}
+										}
+									}
 								}
-
-								if ( stringX > stringY )
+								// Normal String Sort
+								else
 								{
-									return 1;
+									x = x[columnName][0].toUpperCase();
+									y = y[columnName][0].toUpperCase();
+
+									if ( x < y )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? 1 : -1 );
+									}
+
+									if ( x > y )
+									{
+										return ( ( !this.columns.activeSortAsc ) ? -1 : 1 );
+									}
 								}
 
 								// Strings are the same.
@@ -2970,9 +3594,19 @@
 							};
 
 							// Check for nulls.
-							if ( !a[columnName] || !b[columnName] )
+							if ( columnSortType === 'Array' )
 							{
-								return sortByNull ( a, b );
+								if ( !a[columnName] || !a[columnName][0] || !b[columnName] || !b[columnName][0] )
+								{
+									return sortByNull ( a, b );
+								}
+							}
+							else
+							{
+								if ( !a[columnName] || !b[columnName] )
+								{
+									return sortByNull ( a, b );
+								}
 							}
 
 							// If the column is a string, sort using string function.
@@ -3088,6 +3722,13 @@
 			// Adds the built filter to be applied to the table.
 			addFilter : function ()
 			{
+				// Manage Data Availability.
+				if ( this.setting.dataProvider === 0 && this.data.length === 0 )
+				{
+					this.filters.errorText = 'There is no data available to filter.';
+					this.filters.error = true;
+				}
+
 				// Manage column error.
 				if ( this.filters.beingBuilt.column === null || typeof( this.filters.beingBuilt.column ) !== 'object' )
 				{
@@ -3152,8 +3793,6 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 					else
@@ -3167,6 +3806,8 @@
 							this.renderView();
 						});
 					}
+
+					this.emitState();
 				}
 			},
 
@@ -3186,8 +3827,6 @@
 				if ( this.setting.dataProvider === 1 )
 				{
 					this.updateStatus( 'updatingPage', true );
-
-					this.$emit( 'event-from-jd-table', this.componentState );
 				}
 				// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 				else
@@ -3201,6 +3840,8 @@
 						this.renderView();
 					});
 				}
+
+				this.emitState();
 			},
 
 			// Clears all active filters and being built.
@@ -3225,8 +3866,6 @@
 				if ( this.setting.dataProvider === 1 )
 				{
 					this.updateStatus( 'updatingPage', true );
-
-					this.$emit( 'event-from-jd-table', this.componentState );
 				}
 				// dataProvider = 0 | Filtering is performed on the data that exists in the JD-Table component.
 				else
@@ -3238,6 +3877,8 @@
 						this.renderView();
 					});
 				}
+
+				this.emitState();
 			},
 
 			// Changes the column visibility. Adds/removes column from view.
@@ -3309,28 +3950,33 @@
 				}
 				else
 				{
-					this.updateStatus( 'searching', true );
-
 					// Emit search event.
 					if ( this.setting.dataProvider === 1 )
 					{
-						this.search.searching = true;
+						this.updateStatus( 'searching', true );
 
-						this.$emit( 'event-from-jd-table', this.componentState );
+						this.search.searching = true;
 					}
 					// Perform search using JD-Table.
 					else
 					{
-						this.resetScroll();
-
-						this.processData().then( () =>
+						if ( this.data.length > 0 )
 						{
-							this.updateStatus( 'searching', false );
+							this.updateStatus( 'searching', true );
 
-							this.renderView();
-						});
+							this.resetScroll();
+
+							this.processData().then( () =>
+							{
+								this.updateStatus( 'searching', false );
+
+								this.renderView();
+							});
+						}
 					}
 				}
+
+				this.emitState();
 			},
 
 			// Clears the search.
@@ -3351,30 +3997,154 @@
 					if ( this.setting.dataProvider === 1 )
 					{
 						this.updateStatus( 'updatingPage', true );
-
-						this.$emit( 'event-from-jd-table', this.componentState );
 					}
 					else
 					{
 						this.renderView();
 					}
+
+					this.emitState();
 				});
 			},
 
-			// Called when user clicks on a data row. Accepts the index of the data on the this.data.
-			rowAction : function ( rowIndex )
+			// Called when user selects the "Quick View" option from the left/right click context menu of a row.
+			contextQuickView : function ()
 			{
-				if ( this.setting.quickView )
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Show the quick view.
+				this.row.selectedIndex = this.row.activeContextIndex;
+			},
+
+			// Called when user selects the "View" option from the left/right click context menu of a row.
+			contextView : function ( newWindow )
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'ViewItem';
+
+				if ( newWindow )
 				{
-					// Clean up other potential menus.
-					this.columns.selecting = false;
-					this.filters.error     = false;
-					this.filters.errorText = '';
-					this.filters.show      = false;
+					// Update the last action performed.
+					this.status.lastAction = 'ViewItemNewWindow';
+				}
+
+				this.emitState();
+			},
+
+			// Called when user selects the "Edit" option from the left/right click context menu of a row.
+			contextEdit : function ( newWindow )
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'EditItem';
+
+				if ( newWindow )
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'EditItemNewWindow';
+				}
+
+				this.emitState();
+			},
+
+			// Called when user selects the "Delete" option from the left/right click context menu of a row.
+			contextDelete : function ()
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'DeleteItem';
+
+				this.emitState();
+			},
+
+			// Called when user selects the "Add" option from the left/right click context menu of a row.
+			contextAdd : function ( newWindow )
+			{
+				// Reset any visible feature options.
+				this.featureAction( null );
+
+				// Update the last action performed.
+				this.status.lastAction = 'AddItem';
+
+				if ( newWindow )
+				{
+					// Update the last action performed.
+					this.status.lastAction = 'AddItemNewWindow';
+				}
+
+				this.emitState();
+			},
+
+			// Called when user single (left) clicks on a data row. Accepts the index of the data on the this.data.
+			rowActionSingle : function ( rowIndex )
+			{
+				if ( this.setting.quickView === 1 && !this.setting.contextMenuLeft )
+				{
+					// If the menu is visible already ..
+					if ( this.status.contextMenu )
+					{
+						this.hideContextMenu();
+					}
+
+					this.featureAction( null );
+
+					// Add a highlight to the quick view row.
+					this.row.activeContextIndex   = this.row.activeHoverIndex;
+					this.row.activeContextElement = this.row.activeHoverElement;
+
+					// Make the row red.
+					this.row.activeContextElement.classList.add('jd-rowSelect');
 
 					// Show the quick view.
 					this.row.selectedIndex = rowIndex;
 				}
+			},
+
+			// Called when user double clicks on a data row. Accepts the index of the data on the this.data.
+			rowActionDouble : function ( rowIndex )
+			{
+				if ( this.setting.quickView === 2 && !this.setting.contextMenuLeft )
+				{
+					// If the menu is visible already ..
+					if ( this.status.contextMenu )
+					{
+						this.hideContextMenu();
+					}
+
+					this.featureAction( null );
+
+					// Add a highlight to the quick view row.
+					this.row.activeContextIndex   = this.row.activeHoverIndex;
+					this.row.activeContextElement = this.row.activeHoverElement;
+
+					// Make the row red.
+					this.row.activeContextElement.classList.add('jd-rowSelect');
+
+					// Show the quick view.
+					this.row.selectedIndex = rowIndex;
+				}
+			},
+
+			// Called when the quick view window is closed.
+			quickViewClose : function ()
+			{
+				// Remove the row red.
+				this.row.activeContextElement.classList.remove('jd-rowSelect');
+
+				// Update the index of the row right clicked on.
+				this.row.activeContextIndex   = null;
+				this.row.activeContextElement = null;
+
+				// Hide the quick view.
+				this.row.selectedIndex = null;
 			},
 
 			// Called when the NEXT button is pressed on the quick view.
@@ -3606,16 +4376,28 @@
 						refresh                      : true,
 						search                       : true,
 						columnSelect                 : true,
+						addNew                       : false,
+						editItem                     : false,
+						viewItem                     : false,
+						deleteItem                   : false,
 						resize                       : true,
 						filter                       : true,
 						export                       : true,
 						exportLimit                  : null,
 						columnSort                   : true,
-						quickView			         : true,
+						quickView			         : 1,
+						contextMenuRight             : false,
+						contextMenuLeft              : false,
+						contextMenuQuickView         : true,
+						contextMenuView              : true,
+						contextMenuEdit              : true,
+						contextMenuDelete            : true,
+						contextMenuAdd               : true,
 
 						// Rendering
 						renderEngine                   : 2,
 						responsiveFrame                : true,
+						responsiveFrameForceFullWidth  : false,
 						responsiveTable                : true,
 						virtualEngineRowStart          : 250,
 						frameWidth                     : null,
@@ -3683,12 +4465,12 @@
 			{
 				if ( this.feature.maximized )
 				{
-					return 'maximized';
+					return 'jd-maximized';
 				}
 
 				if ( !this.setting.dataHeight )
 				{
-					return 'fullBody';
+					return 'jd-fullBody';
 				}
 
 				return null;
@@ -3717,7 +4499,10 @@
 					// Ensures the frame does get larger then the sum of all the column width's in PX.
 					if ( this.setting.responsiveFrame && !this.setting.responsiveTable )
 					{
-						styles['max-width'] = this.tableWidth + 'px';
+						if ( !this.setting.responsiveFrameForceFullWidth )
+						{
+							styles['max-width'] = this.tableWidth + 'px';
+						}
 					}
 				}
 
@@ -3729,7 +4514,7 @@
 			{
 				if ( this.feature.searching )
 				{
-					return 'searching';
+					return 'jd-searching';
 				}
 
 				return null;
@@ -3742,12 +4527,12 @@
 
 				if ( this.filters.show )
 				{
-					classes = 'selected';
+					classes = 'jd-selected';
 				}
 
 				if ( this.filtering )
 				{
-					classes += ' active';
+					classes += ' jd-active';
 				}
 
 				return classes;
@@ -3760,22 +4545,22 @@
 
 				if ( this.setting.forceSearchOpen )
 				{
-					classes += ' noSelect';
+					classes += ' jd-noSelect';
 				}
 
 				if ( this.feature.searching )
 				{
-					classes += ' search selected';
+					classes += ' jd-search jd-selected';
 				}
 
 				if ( this.search.searching )
 				{
-					classes += ' active';
+					classes += ' jd-active';
 				}
 
 				if ( !this.feature.searching && !this.setting.forceSearchOpen )
 				{
-					classes += ' notActive'
+					classes += ' jd-notActive'
 				}
 
 				return classes;
@@ -3797,7 +4582,7 @@
 			{
 				if ( this.feature.searching )
 				{
-					return 'searching';
+					return 'jd-searching';
 				}
 
 				return null;
@@ -3890,12 +4675,12 @@
 
 				if ( this.setting.columnSort )
 				{
-					classes += ' sort';
+					classes += ' jd-sort';
 				}
 
 				if ( this.status.tableScroll )
 				{
-					classes += ' scrollBuffer';
+					classes += ' jd-scrollBuffer';
 				}
 
 				return classes;
@@ -3954,7 +4739,7 @@
 
 				if ( this.setting.rowZebra )
 				{
-					classes += ' zebra';
+					classes += ' jd-zebra';
 				}
 
 				return classes;
@@ -3983,7 +4768,7 @@
 
 				if ( this.setting.rowFlex )
 				{
-					classes = 'rowFlex';
+					classes = 'jd-rowFlex';
 				}
 
 				return classes;
@@ -4051,6 +4836,16 @@
 					}
 
 					return ['Equals To', 'Contains', 'Not Equals To', 'Begins With'];
+				}
+
+				if ( this.filters.beingBuilt.column.type === 'Array' )
+				{
+					if ( this.setting.dataProvider === 1 )
+					{
+						return ['Contains'];
+					}
+
+					return ['Contains'];
 				}
 
 				if ( this.filters.beingBuilt.column.type === 'Number' )
@@ -4173,23 +4968,6 @@
 				return styles;
 			},
 
-			// Returns the styles for the quickViewContent div.
-			quickViewContentStyles : function ()
-			{
-				let styles = {};
-
-				if ( this.feature.maximized )
-				{
-					styles['max-height'] = ( this.$refs.bodyData.clientHeight * 0.8 ) + 'px';
-				}
-				else
-				{
-					styles['max-height'] = this.setting.dataHeight + 'px';
-				}
-
-				return styles;
-			},
-
 			// Returns the status of the Getting Started message.
 			gettingStarted : function ()
 			{
@@ -4207,7 +4985,7 @@
 			// Returns the status for displaying the no data message.
 			noDataMessage : function ()
 			{
-				if ( !this.status.processingData && !this.loader && !this.isViewAvailable && !this.status.updatingPage && !this.status.searching)
+				if ( !this.status.processingData && !this.processedDataSize && !this.loader && !this.isViewAvailable && !this.status.updatingPage && !this.status.searching && this.tableReady )
 				{
 					if ( !this.gettingStarted )
 					{
@@ -4233,14 +5011,19 @@
 			componentState : function ()
 			{
 				return {
-					searchApplied     : this.search.searching,
-					searchText        : this.search.text,
-					filterApplied     : this.filters.active,
-					pageLimit         : this.rendering.pagination.currentSelectedPageRowOption,
-					currentPage       : this.rendering.pagination.currentPage,
-					lastAction        : this.status.lastAction,
-					sortColumn        : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
-					sortDirection     : this.columns.activeSortAsc ? 'ASC' : 'DESC'
+					searchApplied   : this.search.searching,
+					searchText      : this.search.text,
+					filterApplied   : this.filters.active,
+					pageLimit       : this.rendering.pagination.currentSelectedPageRowOption,
+					currentPage     : this.rendering.pagination.currentPage,
+					lastAction      : this.status.lastAction,
+					sortColumn      : this.columns.activeSortName ? this.columns.activeSortName : this.rendering.views.currentView.schema[0].name,
+					sortColumnIndex : this.columns.activeSortIndex ? this.columns.activeSortIndex : 0,
+					sortDirection   : this.columns.activeSortAsc ? 'ASC' : 'DESC',
+					sortSpecial     : this.columns.activeSortSpecial ? this.columns.activeSortSpecial : null,
+					selectedItem    : this.row.selectedIndex !== null ? this.data[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.data[ this.row.activeContextIndex ] : null,
+					selectedIndex   : this.row.selectedIndex !== null ? this.row.selectedIndex : this.row.activeContextIndex !== null  ? this.row.activeContextIndex : null,
+					currentView     : this.rendering.views.currentView
 				}
 			}
 		},

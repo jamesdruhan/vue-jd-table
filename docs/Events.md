@@ -4,6 +4,7 @@ This section explains how communication works between your app and the JD-Table 
 
 - [Your App to JD-Table Events](#Your-App-to-JD-Table-Events)
 - [JD-Table Events to Your App](#JD-Table-Events-to-Your-App)
+- [Component State](#Component State)
 
 ### Why not use an event bus?
 
@@ -16,14 +17,18 @@ So why didn't I use one? The simple answer is that I didn't want to create a com
 These are events triggered from your application (parent) to JD-Table (child). JD-Table accepts the following events:
 
 - **sendData**
-    - Used to display data in JD-Table. The payload on this event changes depending on the dataProvider option.
+    - Used to display data in JD-Table. The payload on this event changes depending on the dataProvider option (see below). You can optionally pass the component state which is useful if you are re-rendering the table to a users previous state. Learn about component state [here](#Component State).
     
     ##### dataProvider = 0 (Internal)
     ```javascript
     this.eventFromApp =
     {
-        name    : 'sendData',
-        payload : JSON.parse( data )
+        name           : 'sendData',
+        payload        : JSON.parse( data ),
+        componentState :
+        {
+      	   // ...
+        }
     };
     ```
     
@@ -39,6 +44,10 @@ These are events triggered from your application (parent) to JD-Table (child). J
             count         : 0,
             // The current index of the first row in the data being sent (used for pagination).
             firstRowIndex : 0
+        },
+        componentState :
+        {
+             // ...
         }
     }
     ```
@@ -79,6 +88,32 @@ These are events triggered from your application (parent) to JD-Table (child). J
     
     > This is typically used only when dataProvider = 1 (external).
 
+- **setState**
+    - Used to update JD-Table's state including search, filtering, pagination, and more. Check out [Component State](#Component State) to learn more.
+    
+    ##### Example:
+    ```javascript
+    this.eventFromApp =
+    {
+        name           : 'setState',
+        componentState :
+        {
+            searchApplied : true,
+            searchText    : 'My Search Text',
+            filterApplied : null,
+            pageLimit     : null,
+            currentPage   : null,
+            lastAction    : null,
+            sortColumn    : null,
+            sortDirection : null,
+            sortSpecial   : null,
+            selectedItem  : null,
+            selectedIndex : null,
+            currentView   : null
+        }
+    }
+    ```
+    
 ##### How to trigger App to JD-Table event
 
 Recall from the README the following template setup ...
@@ -151,9 +186,7 @@ These are events triggered from the JD-Table component using the VueJS [$emit](#
 
 The primary purpose for these events is to indicate an action that happens within JD-Table that requires external (parent) intervention. For example, if a 'Refresh' event is triggered, the user has clicked the "Refresh" data button. As such, this should trigger a update in the dataset - which nearly everytime will be a REST API call from the parent (followed by a sendData event).
 
-When the option for **dataProvider** is set to 1 (external) all data related functionality is done from the parent (your app). For example, if dataProvider is set to 0 and the user sorts a column, the data is processed by JD-Table and sorted accordingly. However if dataProvider is set to 1, JD-Table emit's a 'changeSort' event which allows you to implement your own REST API sort call and send the updated data set using a 'sendData' event.
-
-Below you will find a list of events emitted by JD-Table and some examples on how to implement your processing of these events with dataProvider set to 1.
+Another purpose is to take note of the JD-Table's component state. You can create a snapshot of this data to be used when a user migrates away from the table then uses "Back" in there browser. If this happens you can inject the old state to show them the table as they left it. You can also create user specific saved states.
 
 ##### Capture the Event
 ```javascript
@@ -173,11 +206,11 @@ Full Example:
 />
 ```
 
-> With the exception of the "Refresh" event, all other events are intended for external data processing (dataProvider = 1 option).
+> With the exception of the "Refresh" and "AddNew" event, all other events are intended for external data processing (dataProvider = 1 option).
 
 In the example above, whenever JD-Table emit's an event it will trigger the processEventFromApp() method with the event details in $event.
 
-#### Component State
+#### Component State (From JD-Table)
 
 When a event is triggered from JD-Table it is emitted with the current JD-Table component state. This provides you with a bunch of details as to what the current state is of the table and its features.
 
@@ -202,6 +235,14 @@ componentState =
     sortColumn,
     // String indicating the direction of the sorted column: 'asc' or 'desc'.
     sortDirection
+    // String indicating the special sort instructions for the column.
+    sortSpecial
+    // Object of the row data currently selected.
+    selectedItem
+    // Number indicating the selected row index value of the data.
+    selectedIndex
+    // Name of the current selected view.
+    currentView
 }
 ```
 
@@ -211,6 +252,13 @@ As all events are sent to a single callback function you must manage the
 
 #### JD-Table Events
 
+- [AddNew](#AddNew)
+- [AddItemNewWindow](#AddItemNewWindow)
+- [ViewItem](#ViewItem)
+- [ViewItemNewWindow](#ViewItemNewWindow)
+- [EditItem](#EditItem)
+- [EditItemNewWindow](#EditItemNewWindow)
+- [DeleteItem](#DeleteItem)
 - [Refresh](#Refresh)
 - [ExcelExport](#ExcelExport)
 - [PaginationGoToSpecificPage](#PaginationGoToSpecificPage)
@@ -228,6 +276,216 @@ As all events are sent to a single callback function you must manage the
 - [ClearSearch](#ClearSearch)
 
 > **REMINDER**: When performing any event, be sure to remember to modify your API calls for data based on the componentState values like search, filter and pagination.
+
+#### AddItem
+
+- **Trigger**: This event is emitted when the user clicks the 'Add New' button in JD-Table. The intention of this button is to redirect a user to a form/page in order to add a new record to the table.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form that allows them to insert a new record.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'AddItem' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### AddItemNewWindow
+
+- **Trigger**: This event is emitted when the user clicks the 'Add New' button in JD-Table. The intention of this button is to redirect a user to a form/page in order to add a new record to the table in a new tab/window.
+
+- **What You Should Do**: You should implement a function that redirects (in a new tab/window) the user to a new page or displays a form that allows them to insert a new record.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'AddItemNewWindow' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### ViewItem
+
+- **Trigger**: This event is emitted when the user clicks the 'View' button in the left/right context menu. The intention of this button is to redirect a user to a form/page in order to view the record in the table.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form that allows them to view the record. You can get the row details of the item to be viewed in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'ViewItem' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### ViewItemNewWindow
+
+- **Trigger**: This event is emitted when the user clicks the 'View (New Window)' button in the left/right context menu. The intention of this button is to redirect a user to a form/page in order to view the record in the table in a new tab/window.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form (in a new tab/window) that allows them to view the record. You can get the row details of the item to be viewed in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'ViewItemNewWindow' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### EditItem
+
+- **Trigger**: This event is emitted when the user clicks the 'Edit' button in Quick View. The intention of this button is to redirect a user to a form/page in order to edit the record in the table.
+
+- **What You Should Do**: You should implement a function that redirects the user to a new page or displays a form that allows them to edits the record. You can get the row details of the item to be edited in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'AddNew' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### EditItemNewWindow
+
+- **Trigger**: This event is emitted when the user clicks the 'Edit (New Window)' button in Quick View. The intention of this button is to redirect a user to a form/page in order to edit the record in the table in a new window/tab.
+
+- **What You Should Do**: You should implement a function that redirects (in a new tab or window) the user to a new page or displays a form that allows them to edits the record. You can get the row details of the item to be edited in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'EditItemNewWindow' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
+
+#### DeleteItem
+
+- **Trigger**: This event is emitted when the user clicks the 'Delete' button in Quick View. The intention of this button is process the deletion of a row record.
+
+- **What You Should Do**: You should implement a function deletes the row data (you should most likely confirm the action first). You can get the row details of the item to be deleted in the componentState using the selectedItem and selectedIndex keys.
+    
+##### Example
+
+```javascript
+export default
+{
+    // ...
+	
+    methods :
+    {
+        // Triggered when the JD-Table emits a "eventFromJDTable" event.
+        processEventFromApp : function ( componentState )
+        {
+            if ( componentState.lastAction === 'DeleteItem' )
+            {
+            	// Using Vue Router
+                router.push('addTableItem');
+            }
+        }
+    }
+    
+    // ...
+}
+```
 
 #### Refresh
 
@@ -1343,3 +1601,24 @@ export default
     // ...
 }
 ```
+
+### Component State
+
+Whenever a user performs an event in JD-Table that changes something (ie. search, filter, sort, pagination, etc.) the component will emit an event containing the current state of JD-Table (componentState).
+
+The primary use for this object is to provide information to the parent when dataProvider option is set to 1. This allows the parent to obtain the correct data according to the tables state (search, filter, etc.).
+
+However, another use for componentState is to save it and re-use it to put JD-Table into the saved state. This is perfect for single page applications when the user moves away from the table then clicks "Back". If you don't record the component state, then JD-Table will just revert to its defaults when the user goes back to the page. However, if you store the componentState (ie. in Vuex) you an send it along with the sendData event to provide a better user experience.
+
+When setting a new component state the following will be processed:
+
+- **searchText** [String]: The text in the search box.
+- **searchApplied** [Boolean]: Indicates if a search was being performed or not. 
+- **filterApplied** [Array]: An array of objects containing filter details.
+- **pageLimit** [Number]: The page limit value for the table.
+- **currentPage** [Number]: The current active page.
+- **sortColumnIndex** [Number]: The current column index being sorted.
+- **sortDirection** [String]: The sort direction of the column ('ASC' or 'DESC').
+- **currentView** [Object]: The current view details of the table.
+
+> **WARNING**: It is not recommended to modify any of the the component state values directly. When JD-Table emits the componentState object, store it as is and do not modify it. When updating the component state, send the same (stored) component state back to JD-Table. Any changes in the structure of this object can cause unknown behaviour. 

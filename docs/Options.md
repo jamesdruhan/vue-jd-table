@@ -48,11 +48,21 @@ data ()
 - [paginationRowLimits](#paginationRowLimits)
 - [paginationRowStart](#paginationRowStart)
 - [quickView](#quickView)
+- [contextMenu](#contextMenu)
+- [contextMenuView](#contextMenuView)
+- [contextMenuEdit](#contextMenuEdit)
+- [contextMenuDelete](#contextMenuDelete)
+- [contextMenuAdd](#contextMenuAdd)
+- [addNew](#addNew)
+- [viewItem](#viewItem)
+- [editItem](#editItem)
+- [deleteItem](#deleteItem)
 - [refresh](#refresh)
 - [renderEngine](#renderEngine)
 - [resize](#resize)
 - [resizeForceMinWidth](#resizeForceMinWidth)
 - [responsiveFrame](#responsiveFrame)
+- [responsiveFrameForceFullWidth](#responsiveFrameForceFullWidth)
 - [responsiveTable](#responsiveTable)
 - [rowFlex](#rowFlex)
 - [rowHeight](#rowHeight)
@@ -89,9 +99,14 @@ data ()
         - **order** [Number]: Indicates the order that the column will be displayed in from left to right, one (1) being the first (left-most) column. **Required**.
         - **sort** [Boolean]: Indicates if this is the column that should be initially sorted on when displaying results.
         - **sortDirection** [String]: Indicates the direction of the sort: '**asc**' or '**desc**'.
-        - **type** [String]: Indicates the type of data that is in this column: '**String**' or '**Number**'.
+        - **sortSpecial** [String]: Indicates special sort options.
+            - **Custom Sort Options**:
+                - **IP**: Sorts string and array types according to how a human would read sorted IP's. In the case of an array of IP's the first element of each item is sorted.
+        - **type** [String]: Indicates the type of data that is in this column: '**String**', '**Number**' or '**Array**'.
         - **filterable** [Boolean]: Determines if this column can be filterable. **Required**.
         - **enabled** [Boolean]: Determines if the column is initally visible in the table. Set to FALSE to hide the column. Users can later add the column into the view by enabling it in using the columns feature. **Required**.
+    <br><br>        
+        > **Note**: Columns of type **Array** can be a array of strings or numbers only ( numbers will be cast as strings for search ). Array columns will appear as a list in the row of data and be fully searchable. When sorting a column that is of type array, the data will be sorted by the first item of the array for each row.
     <br><br>
     - **Example**:
     
@@ -734,13 +749,16 @@ data ()
 
     - **Type**: [Boolean]
     <br><br>
-    -  **Default**: True
+    -  **Default**: 1
     <br><br>
-    - **Details**: Controls the ability to double click on a row and show a quick view of all its data. This is a good idea to enable when you may have many, many columns of data but only disable a handful in the actual table. Double clicking the row will allow the user to view all the row data (even on columns that are currently selected as hidden).
+    - **Details**: Controls the ability to click or double click a row to see the Quick View. This is a good idea to enable when you may have many, many columns of data but only disable a handful in the actual table. Configure this setting to 1 (single click) or 2 (double click) to the row and it will allow the user to view all the row data (even on columns that are currently selected as hidden).
     <br><br>
     - **Options**:
-        - True: Enables double clicking of a row to display the row data.
-        - False: Disables quick viewing of rows.
+        - 0: Diables quick view.
+        - 1: Quick view appears on single (left) click.
+        - 2: Quick view appears on double (left) click.
+    <br><br>
+    > **Note**: When contextMenuLeft is enabled, it will superseed this setting.
     <br><br>
     - **Example**:
     
@@ -760,6 +778,338 @@ data ()
       <img src="./assets/quickViewExample.gif" alt="Example of quickView">
       <br>
     </p>
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuLeft
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the ability to show a left click (context menu) when the user right clicks on a row. Available options for the context menu include View and Edit controllable with their own options contextMenuView and contextMenuEdit.
+    <br><br>
+    - **Options**:
+        - True: Enables the left click context menu.
+        - False: Disables the left click context menu.
+    <br><br>
+    > **Note**: When this setting is enabled, it will superseed the quickMenu setting.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenu : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuRight
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the ability to show a right click (context menu) when the user right clicks on a row. Available options for the context menu include View and Edit controllable with their own options contextMenuView and contextMenuEdit.
+    <br><br>
+    - **Options**:
+        - True: Enables the right click context menu.
+        - False: Disables the right click context menu.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenu : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuQuickView
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Quick View" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. Users clicking "Quick View" in the context menu will be shown the Quick View data for that row.
+    <br><br>
+    - **Options**:
+        - True: Enables the "Quick View" option in the context menu for a row.
+        - False: Disables the "Quick View" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuQuickView : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuView
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "View" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "View" option of a row context menu the event "ViewItem" will be sent to the parent ("ViewItemNewWindow" will be triggered if they click the View in New Window option). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "View" option in the context menu for a row.
+        - False: Disables the "View" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuView : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuEdit
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Edit" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Edit" option of a row context menu the event "EditItem" will be sent to the parent ("EditItemNewWindow" will be triggered if they click the View in New Window option). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "Edit" option in the context menu for a row.
+        - False: Disables the "Edit" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuEdit : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuDelete
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Delete" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Delete" option of a row context menu the event "DeleteItem" will be sent to the parent. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "Delete" option in the context menu for a row.
+        - False: Disables the "Delete" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuDelete : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### contextMenuAdd
+
+    - **Type**: [Boolean]
+    <br><br>
+    -  **Default**: True
+    <br><br>
+    - **Details**: Controls the ability to show the option "Add" in the left/right click context menu of a row. The option "contextMenuLeft" or "contextMenuRight" must be set to TRUE for this to be work. When users click the "Add" option of a row context menu the event "AddItem" will be sent to the parent ("AddItemNewWindow" will be triggered if they click the View in New Window option). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex".
+    <br><br>
+    - **Options**:
+        - True: Enables the "Add" option in the context menu for a row.
+        - False: Disables the "Add" option in the context menu for a row.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              contextMenuAdd : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### addNew
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the add new feature button. Clicking this button causes a $emit to the parent. Enable this button if you want to be able to redirect the user to a form in order to insert a new record to a table. Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the add new button in the control bar.
+        - False: Disables the add new button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              addNew : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### viewItem
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the view item feature button in the quick view. Clicking this button causes a $emit to the parent. Enable this button if you want to be able to redirect the user to a form in order to view a the record in the table. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex". Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the add new button in the control bar.
+        - False: Disables the add new button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              viewItem : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### editItem
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the edit item feature button in the quick view. Clicking this button causes a $emit to the parent. Enable this button if you want to be able to redirect the user to a form in order to edit a the record in the table. The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex". Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the add new button in the control bar.
+        - False: Disables the add new button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              addNew : true
+            }
+        }
+    }
+    ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### deleteItem
+
+    - **Type**: [TYPEHERE]
+    <br><br>
+    -  **Default**: False
+    <br><br>
+    - **Details**: Controls the edit item feature button in the quick view. Clicking this button causes a $emit to the parent. Enable this button if you want to delete a record from the table (you will need to implement your own confirmation). The active item row details will be in the componentState event object as "selectedItem" or "selectedIndex". Read more about events from JD-Table here.
+    <br><br>
+    - **Options**:
+        - True: Enables the delete button in the control bar.
+        - False: Disables the delete button in the control bar.
+    <br><br>
+    - **Example**:
+    
+    ```javascript
+    data ()
+    {
+        return {
+            tableOptions :
+            {
+              deleteItem : true
+            }
+        }
+    }
+    ```
 
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>
@@ -905,7 +1255,7 @@ data ()
    <br><br>
    -  **Default**: True
    <br><br>
-   - **Details**: Renders the entire JD-Table frame responsively or not. When set to false you must also configure the frameWidth option.
+   - **Details**: Renders the entire JD-Table frame responsively or not. When set to false you must also configure the frameWidth option. When set to True, JD-Table frame will fit it parent unless the number of visible columns have a total width less then the parents full width. In this case, the entire table will shrink to perfectly match the column widths.
    <br><br>
    - **Related Options**: frameWidth
    <br><br>
@@ -923,6 +1273,38 @@ data ()
            {
              responsiveFrame : false,
              frameWidth : 1000,
+           }
+       }
+   }
+   ```
+
+<p align="right">
+    <a href="#table-of-contents">Back to Table of Contents</a>
+</p>
+
+- ##### responsiveFrameForceFullWidth
+
+   - **Type**: [Boolean]
+   <br><br>
+   -  **Default**: False
+   <br><br>
+   - **Details**: Forces JD-Table to stay 100% width of its parent when responsiveFrame is set to true AND the number of columns shrink to a total width smaller than the parent.
+   <br><br>
+   - **Related Options**: frameWidth
+   <br><br>
+   - **Options**:
+       - True: Frame will always fit parent.
+       - False: Frame will fit parent until the total visible column widths are smaller than parent width.
+   <br><br>
+   - **Example**:
+   
+   ```javascript
+   data ()
+   {
+       return {
+           tableOptions :
+           {
+             responsiveFrameForceFullWidth : true
            }
        }
    }
@@ -1402,6 +1784,7 @@ data ()
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>
 </p>
+
 - ##### virtualEngineRowStart
 
     - **Type**: [Number]

@@ -1,4 +1,4 @@
-.JD-Table {
+.jd-table {
   position: relative;
   min-width: 320px;
   width: 100%;
@@ -18,7 +18,7 @@
   box-sizing: content-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
-  .JD-Table.maximized {
+  .jd-table.jd-maximized {
     height: 100%;
     min-height: 100%;
     max-height: 100%;
@@ -29,46 +29,48 @@
     z-index: 9998;
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.6); }
-    .JD-Table.maximized .layerHighlight {
+    .jd-table.jd-maximized .jd-layerHighlight {
       min-width: 320px; }
-    .JD-Table.maximized .layerControl {
+    .jd-table.jd-maximized .jd-layerControl {
       min-width: 320px; }
-    .JD-Table.maximized .layerOption {
+    .jd-table.jd-maximized .jd-layerOption {
       min-width: 320px; }
-    .JD-Table.maximized .layerContent {
+    .jd-table.jd-maximized .jd-layerContent {
       display: flex;
       overflow-x: auto;
       min-width: 320px;
       flex-grow: 0;
       flex-shrink: 1; }
-      .JD-Table.maximized .layerContent .table .body {
+      .jd-table.jd-maximized .jd-layerContent .table .body {
         height: 100%;
         flex-grow: 0;
         flex-shrink: 1; }
-    .JD-Table.maximized .layerFooter {
+      .jd-table.jd-maximized .jd-layerContent .jd-contentTable .jd-body {
+        height: 100%; }
+    .jd-table.jd-maximized .jd-layerFooter {
       min-width: 320px; }
-    .JD-Table.maximized .layerPopup {
+    .jd-table.jd-maximized .jd-layerPopup {
       border-radius: 0; }
-      .JD-Table.maximized .layerPopup.fullFrameZone {
+      .jd-table.jd-maximized .jd-layerPopup.jd-fullFrameZone {
         padding: 3rem; }
-      .JD-Table.maximized .layerPopup .searchArrow {
+      .jd-table.jd-maximized .jd-layerPopup .jd-searchArrow {
         top: 5.15rem; }
-      .JD-Table.maximized .layerPopup .filterArrow {
+      .jd-table.jd-maximized .jd-layerPopup .jd-filterArrow {
         top: 5.15rem;
         right: 1.2rem; }
-    .JD-Table.maximized .layerTitle {
+    .jd-table.jd-maximized .jd-layerTitle {
       padding-top: 0;
       min-width: 320px; }
-  .JD-Table.fullBody {
+  .jd-table.jd-fullBody {
     height: 100%;
     min-height: 100%;
     max-height: 100%; }
-    .JD-Table.fullBody .layerContent {
+    .jd-table.jd-fullBody .jd-layerContent {
       display: flex;
       overflow-x: auto; }
-      .JD-Table.fullBody .layerContent .table .body {
+      .jd-table.jd-fullBody .jd-layerContent .jd-contentTable .jd-body {
         height: 100%; }
-  .JD-Table .layerTitle {
+  .jd-table .jd-layerTitle {
     font-size: 1.8rem;
     padding-top: 1.2rem;
     padding-bottom: 1.2rem;
@@ -76,7 +78,7 @@
     width: 100%;
     display: flex;
     justify-content: center; }
-  .JD-Table .layerHighlight {
+  .jd-table .jd-layerHighlight {
     position: relative;
     width: 100%;
     height: 0.45rem;
@@ -85,7 +87,7 @@
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
     z-index: 99; }
-  .JD-Table .layerControl {
+  .jd-table .jd-layerControl {
     position: relative;
     width: 100%;
     height: 2.5rem;
@@ -100,7 +102,7 @@
     align-items: center;
     justify-content: space-between;
     z-index: 99; }
-    .JD-Table .layerControl .controlSearch {
+    .jd-table .jd-layerControl .jd-controlSearch {
       position: relative;
       height: 100%;
       width: 2rem;
@@ -113,7 +115,7 @@
       -webkit-transition: all 0.5s ease;
       -moz-transition: all 0.5s ease;
       -o-transition: all 0.5s ease; }
-      .JD-Table .layerControl .controlSearch input {
+      .jd-table .jd-layerControl .jd-controlSearch input {
         width: 100%;
         max-width: 10rem;
         height: 100%;
@@ -122,20 +124,20 @@
         background: transparent;
         flex-grow: 0;
         flex-shrink: 1; }
-        .JD-Table .layerControl .controlSearch input:focus {
+        .jd-table .jd-layerControl .jd-controlSearch input:focus {
           outline: none; }
-        .JD-Table .layerControl .controlSearch input::-ms-clear {
+        .jd-table .jd-layerControl .jd-controlSearch input::-ms-clear {
           display: none; }
-        .JD-Table .layerControl .controlSearch input::-webkit-search-decoration, .JD-Table .layerControl .controlSearch input::-webkit-search-cancel-button, .JD-Table .layerControl .controlSearch input::-webkit-search-results-button, .JD-Table .layerControl .controlSearch input::-webkit-search-results-decoration {
+        .jd-table .jd-layerControl .jd-controlSearch input::-webkit-search-decoration, .jd-table .jd-layerControl .jd-controlSearch input::-webkit-search-cancel-button, .jd-table .jd-layerControl .jd-controlSearch input::-webkit-search-results-button, .jd-table .jd-layerControl .jd-controlSearch input::-webkit-search-results-decoration {
           display: none; }
-      .JD-Table .layerControl .controlSearch.searching {
+      .jd-table .jd-layerControl .jd-controlSearch.jd-searching {
         width: 14rem;
         color: #494949;
         background-color: #E0E0E0; }
         @media only screen and (max-width: 375px) {
-          .JD-Table .layerControl .controlSearch.searching {
+          .jd-table .jd-layerControl .jd-controlSearch.jd-searching {
             width: 100%; } }
-    .JD-Table .layerControl .controlFeature {
+    .jd-table .jd-layerControl .jd-controlFeature {
       position: relative;
       height: 100%;
       display: flex;
@@ -144,9 +146,9 @@
       flex-wrap: nowrap;
       flex-direction: row; }
       @media only screen and (max-width: 375px) {
-        .JD-Table .layerControl .controlFeature.searching {
+        .jd-table .jd-layerControl .jd-controlFeature.jd-searching {
           display: none; } }
-    .JD-Table .layerControl .controlItem {
+    .jd-table .jd-layerControl .jd-controlItem {
       height: 100%;
       position: relative;
       cursor: pointer;
@@ -159,14 +161,14 @@
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none; }
-      .JD-Table .layerControl .controlItem i {
+      .jd-table .jd-layerControl .jd-controlItem i {
         width: 2rem;
         min-width: 2rem;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center; }
-      .JD-Table .layerControl .controlItem.active i {
+      .jd-table .jd-layerControl .jd-controlItem.jd-active i {
         animation: activeFeature 1.5s infinite; }
 
 @keyframes activeFeature {
@@ -174,25 +176,25 @@
     color: #FFFFFF; }
   100% {
     color: #ff1a1a; } }
-      .JD-Table .layerControl .controlItem:hover {
+      .jd-table .jd-layerControl .jd-controlItem:hover {
         color: #494949;
         background-color: #E0E0E0; }
-        .JD-Table .layerControl .controlItem:hover:active {
+        .jd-table .jd-layerControl .jd-controlItem:hover:active {
           color: #C00; }
-      .JD-Table .layerControl .controlItem.selected {
+      .jd-table .jd-layerControl .jd-controlItem.jd-selected {
         color: #C00;
         background-color: #E0E0E0; }
-        .JD-Table .layerControl .controlItem.selected:active {
+        .jd-table .jd-layerControl .jd-controlItem.jd-selected:active {
           color: #FFFFFF; }
-      .JD-Table .layerControl .controlItem.clearSearch {
+      .jd-table .jd-layerControl .jd-controlItem.jd-clearSearch {
         color: #E53935; }
-      .JD-Table .layerControl .controlItem.search {
+      .jd-table .jd-layerControl .jd-controlItem.jd-search {
         color: #757575; }
-      .JD-Table .layerControl .controlItem.noSelect {
+      .jd-table .jd-layerControl .jd-controlItem.jd-noSelect {
         cursor: default; }
-        .JD-Table .layerControl .controlItem.noSelect:hover:active {
+        .jd-table .jd-layerControl .jd-controlItem.jd-noSelect:hover:active {
           color: #757575; }
-      .JD-Table .layerControl .controlItem .filterArrow {
+      .jd-table .jd-layerControl .jd-controlItem .jd-filterArrow {
         position: absolute;
         top: 2.95rem;
         right: -0.5rem;
@@ -203,7 +205,7 @@
         animation: bounce 2s infinite;
         border-radius: 6px;
         white-space: nowrap; }
-        .JD-Table .layerControl .controlItem .filterArrow:after, .JD-Table .layerControl .controlItem .filterArrow:before {
+        .jd-table .jd-layerControl .jd-controlItem .jd-filterArrow:after, .jd-table .jd-layerControl .jd-controlItem .jd-filterArrow:before {
           bottom: 100%;
           right: 1.5rem;
           border: solid transparent;
@@ -212,17 +214,17 @@
           width: 0;
           position: absolute;
           pointer-events: none; }
-        .JD-Table .layerControl .controlItem .filterArrow:after {
+        .jd-table .jd-layerControl .jd-controlItem .jd-filterArrow:after {
           border-color: rgba(224, 224, 224, 0);
           border-bottom-color: #c9c9c9;
           border-width: 12px;
           margin-right: -12px; }
-        .JD-Table .layerControl .controlItem .filterArrow:before {
+        .jd-table .jd-layerControl .jd-controlItem .jd-filterArrow:before {
           border-color: rgba(73, 73, 73, 0);
           border-bottom-color: #494949;
           border-width: 18px;
           margin-right: -18px; }
-      .JD-Table .layerControl .controlItem .searchArrow {
+      .jd-table .jd-layerControl .jd-controlItem .jd-searchArrow {
         position: absolute;
         top: 2.95rem;
         left: 3.5rem;
@@ -233,7 +235,7 @@
         animation: bounce 2s infinite;
         border-radius: 6px;
         white-space: nowrap; }
-        .JD-Table .layerControl .controlItem .searchArrow:after, .JD-Table .layerControl .controlItem .searchArrow:before {
+        .jd-table .jd-layerControl .jd-controlItem .jd-searchArrow:after, .jd-table .jd-layerControl .jd-controlItem .jd-searchArrow:before {
           bottom: 100%;
           left: 50%;
           border: solid transparent;
@@ -242,20 +244,20 @@
           width: 0;
           position: absolute;
           pointer-events: none; }
-        .JD-Table .layerControl .controlItem .searchArrow:after {
+        .jd-table .jd-layerControl .jd-controlItem .jd-searchArrow:after {
           border-color: rgba(224, 224, 224, 0);
           border-bottom-color: #c9c9c9;
           border-width: 12px;
           margin-left: -12px; }
-        .JD-Table .layerControl .controlItem .searchArrow:before {
+        .jd-table .jd-layerControl .jd-controlItem .jd-searchArrow:before {
           border-color: rgba(73, 73, 73, 0);
           border-bottom-color: #494949;
           border-width: 18px;
           margin-left: -18px; }
-  .JD-Table .layerOption {
+  .jd-table .jd-layerOption {
     width: 100%;
     position: relative; }
-    .JD-Table .layerOption .optionDropdown {
+    .jd-table .jd-layerOption .jd-optionDropdown {
       background-color: #E0E0E0;
       width: 310px;
       right: 5px;
@@ -274,7 +276,7 @@
       box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.54);
       border-bottom-right-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem; }
-      .JD-Table .layerOption .optionDropdown .dropdownHeader {
+      .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownHeader {
         align-items: center;
         padding-top: 0.5rem;
         padding-bottom: 1rem;
@@ -283,16 +285,16 @@
         color: #252627;
         font-weight: 600;
         align-self: center; }
-        .JD-Table .layerOption .optionDropdown .dropdownHeader.subHeader {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownHeader.jd-subHeader {
           padding-top: 1rem;
           font-size: 1.17rem; }
-        .JD-Table .layerOption .optionDropdown .dropdownHeader.smallHeader {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownHeader.jd-smallHeader {
           font-size: 0.81rem;
           font-weight: 400;
           font-style: italic;
           text-transform: none;
           padding-top: 0rem; }
-      .JD-Table .layerOption .optionDropdown .dropdownItem {
+      .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownItem {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -300,26 +302,26 @@
         height: 2rem;
         min-height: 2rem;
         width: 100%; }
-        .JD-Table .layerOption .optionDropdown .dropdownItem .columnVisibility {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownItem .jd-columnVisibility {
           padding-left: 1rem;
           padding-right: 1rem;
           color: #357e37; }
-          .JD-Table .layerOption .optionDropdown .dropdownItem .columnVisibility .notVisible {
+          .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownItem .jd-columnVisibility .jd-notVisible {
             color: #E53935; }
-        .JD-Table .layerOption .optionDropdown .dropdownItem .columnTitle {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownItem .jd-columnTitle {
           padding-right: 1rem;
           width: 100%;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap; }
-        .JD-Table .layerOption .optionDropdown .dropdownItem:hover {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownItem:hover {
           background-color: #FFFFFF; }
-        .JD-Table .layerOption .optionDropdown .dropdownItem.selected {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownItem.jd-selected {
           background-color: #757575;
           color: #FFFFFF; }
-          .JD-Table .layerOption .optionDropdown .dropdownItem.selected:hover {
+          .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownItem.jd-selected:hover {
             background-color: #757575; }
-      .JD-Table .layerOption .optionDropdown .dropdownInput {
+      .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput {
         position: relative;
         height: 2rem;
         min-height: 2rem;
@@ -334,7 +336,7 @@
         font-weight: 500;
         background-color: #FFFFFF;
         align-items: center; }
-        .JD-Table .layerOption .optionDropdown .dropdownInput .label {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput .jd-label {
           width: 100%;
           height: 100%;
           display: flex;
@@ -344,13 +346,13 @@
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none; }
-          .JD-Table .layerOption .optionDropdown .dropdownInput .label span {
+          .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput .jd-label span {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             margin-left: 0.5rem;
             margin-right: 2rem; }
-        .JD-Table .layerOption .optionDropdown .dropdownInput ul {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput ul {
           position: absolute;
           max-height: 12rem;
           overflow-x: hidden;
@@ -365,7 +367,7 @@
           background-color: #FFFFFF;
           box-sizing: border-box;
           z-index: 9998; }
-          .JD-Table .layerOption .optionDropdown .dropdownInput ul li {
+          .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput ul li {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -376,10 +378,10 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none; }
-            .JD-Table .layerOption .optionDropdown .dropdownInput ul li:hover {
+            .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput ul li:hover {
               background-color: #ff4d4d;
               color: #FFFFFF; }
-        .JD-Table .layerOption .optionDropdown .dropdownInput input {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput input {
           width: 100%;
           font-family: inherit;
           border: none;
@@ -388,18 +390,18 @@
           background-color: #FFFFFF;
           outline: none;
           box-sizing: border-box; }
-        .JD-Table .layerOption .optionDropdown .dropdownInput.addPadding {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput.jd-addPadding {
           padding: 0rem 0.5rem; }
-        .JD-Table .layerOption .optionDropdown .dropdownInput .removeIcon {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput .jd-removeIcon {
           position: absolute;
           right: 0.5rem;
           top: 0.35rem;
           color: #E53935;
           font-size: 1.35rem; }
-        .JD-Table .layerOption .optionDropdown .dropdownInput.disabled {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput.jd-disabled {
           border: 1px solid #949494;
           border-left: 5px solid #949494; }
-        .JD-Table .layerOption .optionDropdown .dropdownInput.carrot:after {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownInput.jd-carrot:after {
           content: "";
           width: 0;
           height: 0;
@@ -410,7 +412,7 @@
           border-width: 6px 6px 0 6px;
           border-style: solid;
           border-color: #C00 transparent; }
-      .JD-Table .layerOption .optionDropdown .dropdownRow {
+      .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownRow {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -419,17 +421,17 @@
         min-height: 2rem;
         padding: 0rem 1rem;
         align-items: center; }
-        .JD-Table .layerOption .optionDropdown .dropdownRow.separate {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownRow.jd-separate {
           justify-content: space-between; }
-        .JD-Table .layerOption .optionDropdown .dropdownRow button {
+        .jd-table .jd-layerOption .jd-optionDropdown .jd-dropdownRow button {
           width: 5rem; }
-      .JD-Table .layerOption .optionDropdown .errorMessage {
+      .jd-table .jd-layerOption .jd-optionDropdown .jd-errorMessage {
         color: #E53935;
         font-size: 0.765rem;
         margin-bottom: 0.5rem;
         text-align: center;
         font-weight: 500; }
-  .JD-Table .layerContent {
+  .jd-table .jd-layerContent {
     position: relative;
     width: 100%;
     height: 100%;
@@ -439,7 +441,7 @@
     box-sizing: border-box;
     overflow-y: hidden;
     z-index: 50; }
-    .JD-Table .layerContent .rowView {
+    .jd-table .jd-layerContent .jd-rowView {
       position: absolute;
       top: 0px;
       left: 0px;
@@ -452,14 +454,14 @@
       z-index: 99;
       padding: 1rem;
       box-sizing: border-box; }
-    .JD-Table .layerContent .table {
+    .jd-table .jd-layerContent .jd-contentTable {
       position: relative;
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
       flex-wrap: nowrap; }
-      .JD-Table .layerContent .table .head {
+      .jd-table .jd-layerContent .jd-contentTable .jd-head {
         position: relative;
         width: 100%;
         overflow: hidden;
@@ -467,7 +469,7 @@
         display: flex;
         flex-direction: row;
         background-color: #757575; }
-        .JD-Table .layerContent .table .head .cell {
+        .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell {
           position: relative;
           display: flex;
           flex-direction: row;
@@ -487,31 +489,31 @@
           background-color: #C00;
           color: #FFFFFF;
           border-right: 1px solid #990000; }
-          .JD-Table .layerContent .table .head .cell .cellText {
+          .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell .jd-cellText {
             display: flex;
             flex-direction: row;
             width: 100%;
             align-items: center;
             justify-content: space-between; }
-          .JD-Table .layerContent .table .head .cell .hoverSort {
+          .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell .jd-hoverSort {
             display: none; }
-          .JD-Table .layerContent .table .head .cell.hoverAssist {
+          .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell.jd-hoverAssist {
             background-color: #ff4d4d; }
-          .JD-Table .layerContent .table .head .cell:first-child {
+          .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell:first-child {
             border-top-left-radius: 0px; }
-          .JD-Table .layerContent .table .head .cell.scrollBuffer:last-child {
+          .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell.jd-scrollBuffer:last-child {
             margin-right: 17px; }
-          .JD-Table .layerContent .table .head .cell.sort {
+          .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell.jd-sort {
             cursor: pointer; }
-            .JD-Table .layerContent .table .head .cell.sort:hover {
+            .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell.jd-sort:hover {
               border-top: 4px solid #999999;
               background-color: #FFFFFF;
               color: #252627;
               font-weight: 500; }
-              .JD-Table .layerContent .table .head .cell.sort:hover .hoverSort {
+              .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-cell.jd-sort:hover .jd-hoverSort {
                 display: block;
                 color: #252627; }
-        .JD-Table .layerContent .table .head .scrollFix {
+        .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-scrollFix {
           width: 19px;
           min-width: 19px;
           max-width: 19px;
@@ -523,7 +525,7 @@
           display: flex;
           background-color: #C00;
           border-left: none; }
-        .JD-Table .layerContent .table .head .resize {
+        .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-resize {
           position: absolute;
           height: 100%;
           width: 8px;
@@ -533,10 +535,10 @@
           top: 0;
           z-index: 10;
           overflow: hidden; }
-          .JD-Table .layerContent .table .head .resize.selected {
+          .jd-table .jd-layerContent .jd-contentTable .jd-head .jd-resize.jd-selected {
             width: 500px;
             right: -250px; }
-      .JD-Table .layerContent .table .body {
+      .jd-table .jd-layerContent .jd-contentTable .jd-body {
         position: relative;
         width: 100%;
         display: block;
@@ -544,48 +546,54 @@
         background-color: #F7F7F7;
         z-index: 50;
         background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px); }
-        .JD-Table .layerContent .table .body .row {
+        .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row {
           position: relative;
           z-index: 50;
           background-color: #FFFFFF; }
-          .JD-Table .layerContent .table .body .row:hover {
+          .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row:hover {
             background-color: #ff4d4d !important;
             color: #FFFFFF; }
-          .JD-Table .layerContent .table .body .row.zebra:nth-child(even) {
+          .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row.jd-zebra:nth-child(even) {
             background-color: #f2f2f2; }
-          .JD-Table .layerContent .table .body .row .cell {
+          .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row.jd-rowSelect {
+            background-color: #e60000 !important;
+            color: #FFFFFF; }
+          .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row .jd-cell {
             position: relative;
             font-size: 0.81rem;
             display: block;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden; }
-            .JD-Table .layerContent .table .body .row .cell.rowFlex {
+            .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row .jd-cell.jd-rowFlex {
               display: flex;
               height: 100%;
               align-items: center;
               white-space: inherit;
               min-height: inherit; }
-            .JD-Table .layerContent .table .body .row .cell:after {
+            .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row .jd-cell:after {
               display: block;
               content: '';
               min-height: inherit;
               font-size: 0; }
-        .JD-Table .layerContent .table .body .virtualBody {
+            .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-row .jd-cell .jd-list {
+              list-style-type: circle;
+              padding-left: 1rem; }
+        .jd-table .jd-layerContent .jd-contentTable .jd-body .jd-virtualBody {
           position: absolute;
           opacity: 0;
           top: 0;
           left: 0;
           width: 1px;
           background: transparent; }
-      .JD-Table .layerContent .table .row {
+      .jd-table .jd-layerContent .jd-contentTable .jd-row {
         width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
         flex-direction: row;
         cursor: pointer; }
-        .JD-Table .layerContent .table .row .cell {
+        .jd-table .jd-layerContent .jd-contentTable .jd-row .jd-cell {
           width: 100%;
           box-sizing: border-box;
           display: flex;
@@ -601,7 +609,7 @@
           -ms-hyphens: auto;
           -moz-hyphens: auto;
           -webkit-hyphens: auto; }
-  .JD-Table .layerFooter {
+  .jd-table .jd-layerFooter {
     position: relative;
     width: 100%;
     height: 2rem;
@@ -622,9 +630,9 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none; }
-    .JD-Table .layerFooter .resultRows {
+    .jd-table .jd-layerFooter .jd-resultRows {
       font-size: 0.765rem; }
-    .JD-Table .layerFooter .pagination {
+    .jd-table .jd-layerFooter .jd-pagination {
       width: 100%;
       display: flex;
       flex-wrap: nowrap;
@@ -632,45 +640,45 @@
       align-items: center;
       justify-content: space-between;
       height: 100%; }
-      .JD-Table .layerFooter .pagination .paginationDirection {
+      .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection {
         display: flex;
         justify-content: center;
         cursor: pointer;
         height: 100%;
         align-items: center; }
-        .JD-Table .layerFooter .pagination .paginationDirection.left {
+        .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection.jd-left {
           position: absolute;
           top: 0;
           left: 0;
           background-color: #494949;
           border-bottom-left-radius: 0.5rem; }
-        .JD-Table .layerFooter .pagination .paginationDirection.right {
+        .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection.jd-right {
           position: absolute;
           top: 0;
           right: 0;
           background-color: #494949;
           border-bottom-right-radius: 0.5rem; }
-        .JD-Table .layerFooter .pagination .paginationDirection.disabled {
+        .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection.jd-disabled {
           cursor: no-drop; }
-          .JD-Table .layerFooter .pagination .paginationDirection.disabled i:hover {
+          .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection.jd-disabled i:hover {
             background-color: #494949; }
-          .JD-Table .layerFooter .pagination .paginationDirection.disabled i:active {
+          .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection.jd-disabled i:active {
             background-color: #494949; }
-        .JD-Table .layerFooter .pagination .paginationDirection i {
+        .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection i {
           display: flex;
           align-items: center;
           width: 3rem;
           height: 100%;
           justify-content: center; }
-          .JD-Table .layerFooter .pagination .paginationDirection i:hover {
+          .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection i:hover {
             background-color: #6f6f6f; }
-          .JD-Table .layerFooter .pagination .paginationDirection i:active {
+          .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection i:active {
             background-color: #898989; }
-          .JD-Table .layerFooter .pagination .paginationDirection i.start {
+          .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection i.jd-start {
             border-bottom-left-radius: 0.5rem; }
-          .JD-Table .layerFooter .pagination .paginationDirection i.end {
+          .jd-table .jd-layerFooter .jd-pagination .jd-paginationDirection i.jd-end {
             border-bottom-right-radius: 0.5rem; }
-      .JD-Table .layerFooter .pagination .paginationRows {
+      .jd-table .jd-layerFooter .jd-pagination .jd-paginationRows {
         position: absolute;
         background-color: #494949;
         height: 100%;
@@ -684,19 +692,19 @@
         top: 0;
         left: 50%;
         transform: translateX(-50%); }
-      .JD-Table .layerFooter .pagination .paginationArea {
+      .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea {
         width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-around; }
-        .JD-Table .layerFooter .pagination .paginationArea .paginationList {
+        .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList {
           display: flex;
           flex-direction: row;
           align-items: center;
           justify-content: center;
           height: 100%; }
-          .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage {
+          .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList .jd-paginationPage {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -704,25 +712,25 @@
             height: 100%;
             box-sizing: border-box;
             font-size: 0.72rem; }
-            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage span {
+            .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList .jd-paginationPage span {
               border: 1px solid #6f6f6f;
               padding: 0.2rem 0.4rem;
               min-width: 1.5rem;
               text-align: center;
               box-sizing: border-box; }
-            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.addHover:hover {
+            .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList .jd-paginationPage.jd-addHover:hover {
               cursor: pointer; }
-              .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.addHover:hover span {
+              .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList .jd-paginationPage.jd-addHover:hover span {
                 background-color: #6f6f6f;
                 color: #FFFFFF; }
-            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.selected span {
+            .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList .jd-paginationPage.jd-selected span {
               background-color: #6f6f6f; }
-            .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.selected:hover {
+            .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList .jd-paginationPage.jd-selected:hover {
               cursor: default !important; }
-              .JD-Table .layerFooter .pagination .paginationArea .paginationList .paginationPage.selected:hover span {
+              .jd-table .jd-layerFooter .jd-pagination .jd-paginationArea .jd-paginationList .jd-paginationPage.jd-selected:hover span {
                 background-color: #6f6f6f !important;
                 color: #FFFFFF !important; }
-  .JD-Table .layerPopup {
+  .jd-table .jd-layerPopup {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -733,17 +741,19 @@
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 0.5rem; }
-    .JD-Table .layerPopup.fullFrame {
+    .jd-table .jd-layerPopup.jd-fullBrowser {
+      position: fixed; }
+    .jd-table .jd-layerPopup.jd-fullFrame {
       z-index: 9998; }
-    .JD-Table .layerPopup.contentFrame {
+    .jd-table .jd-layerPopup.jd-contentFrame {
       z-index: 50;
       padding-top: 2.95rem;
       padding-bottom: 2rem; }
-    .JD-Table .layerPopup.fullFrameZone {
+    .jd-table .jd-layerPopup.jd-fullFrameZone {
       width: 100%;
       box-sizing: border-box;
       padding: 1rem; }
-    .JD-Table .layerPopup .errorMessage {
+    .jd-table .jd-layerPopup .jd-errorMessage {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -752,25 +762,27 @@
       background-color: #FFFFFF;
       color: #E53935;
       font-size: 1.17rem; }
-    .JD-Table .layerPopup.filterOverride {
+    .jd-table .jd-layerPopup.jd-filterOverride {
       z-index: 85; }
-    .JD-Table .layerPopup.fullOverride {
+    .jd-table .jd-layerPopup.jd-fullOverride {
       z-index: 999; }
-    .JD-Table .layerPopup .noDataFrame {
+    .jd-table .jd-layerPopup .jd-noDataFrame {
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 1rem; }
-      .JD-Table .layerPopup .noDataFrame .title {
+      .jd-table .jd-layerPopup .jd-noDataFrame .jd-title {
         font-size: 1.17rem;
         font-weight: 500;
         text-transform: uppercase; }
-      .JD-Table .layerPopup .noDataFrame .filters {
+      .jd-table .jd-layerPopup .jd-noDataFrame .jd-filters {
         margin-top: 1rem; }
-    .JD-Table .layerPopup .quickView {
+    .jd-table .jd-layerPopup .jd-quickView {
       position: relative;
       min-width: 314px;
-      max-width: 600px;
+      max-width: 95%;
+      max-height: 95%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -779,20 +791,24 @@
       box-sizing: border-box;
       overflow: hidden;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
-      .JD-Table .layerPopup .quickView .quickViewHighlight_1 {
+      .jd-table .jd-layerPopup .jd-quickView .jd-quickViewHighlight_1 {
         width: 100%;
         height: 0.3375rem;
+        min-height: 0.3375rem;
         background-color: #494949;
         border-top-right-radius: 0.5rem;
         border-top-left-radius: 0.5rem; }
-      .JD-Table .layerPopup .quickView .quickViewHighlight_2 {
+      .jd-table .jd-layerPopup .jd-quickView .jd-quickViewHighlight_2 {
         width: 100%;
-        height: 0.675rem;
+        height: 0.225rem;
+        min-height: 0.225rem;
         background-color: #C00; }
-      .JD-Table .layerPopup .quickView .quickViewControl {
+      .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl {
         width: 100%;
         height: 2.5rem;
+        min-height: 2.5rem;
         background-color: #757575;
+        position: relative;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -803,30 +819,40 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none; }
-        .JD-Table .layerPopup .quickView .quickViewControl .controlAction {
-          font-size: 0.9rem;
-          display: flex;
-          justify-content: center;
-          width: 2rem;
-          cursor: pointer;
+        .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction {
           height: 100%;
-          align-items: center; }
-          .JD-Table .layerPopup .quickView .quickViewControl .controlAction:hover {
-            background-color: #9b9b9b; }
-        .JD-Table .layerPopup .quickView .quickViewControl .controlTitle {
-          text-transform: uppercase;
-          font-size: 1.17rem; }
-      .JD-Table .layerPopup .quickView .quickViewContent {
+          display: flex;
+          flex-direction: row; }
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction span {
+            width: 2rem;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            cursor: pointer; }
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlAction span:hover {
+              background-color: #9b9b9b; }
+        .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlTitle {
+          font-size: 0.9rem;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%); }
+          @media only screen and (max-width: 350px) {
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewControl .jd-controlTitle {
+              display: none; } }
+      .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent {
         width: 100%;
-        max-height: 320px;
+        height: 100%;
         overflow: auto;
-        background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.1) 5px, rgba(0, 0, 0, 0.1) 10px); }
-        .JD-Table .layerPopup .quickView .quickViewContent .contentRow {
+        background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09) 5px, rgba(255, 255, 255, 0.09) 5px, rgba(0, 0, 0, 0.1) 10px); }
+        .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent .jd-contentRow {
           display: flex;
           flex-direction: column;
           width: 100%;
           background-color: #FFFFFF; }
-          .JD-Table .layerPopup .quickView .quickViewContent .contentRow .rowTitle {
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent .jd-contentRow .jd-rowTitle {
             display: flex;
             align-items: center;
             font-size: 0.99rem;
@@ -834,19 +860,23 @@
             word-break: break-all;
             padding: 0.5rem 1rem;
             background-color: #e6e6e6; }
-          .JD-Table .layerPopup .quickView .quickViewContent .contentRow .rowData {
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent .jd-contentRow .jd-rowData {
             display: flex;
             align-items: center;
             min-height: 2rem;
             padding: 0.5rem 1rem;
             word-break: break-all; }
-      .JD-Table .layerPopup .quickView .quickViewFooter {
+            .jd-table .jd-layerPopup .jd-quickView .jd-quickViewContent .jd-contentRow .jd-rowData ul {
+              list-style-type: circle;
+              padding-left: 1rem; }
+      .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter {
         width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         height: 2rem;
+        min-height: 2rem;
         background-color: #494949;
         color: #FFFFFF;
         border-bottom-right-radius: 0.5rem;
@@ -857,24 +887,24 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none; }
-        .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection {
+        .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter .jd-footerDirection {
           display: flex;
           justify-content: center;
           width: 5rem;
           cursor: pointer;
           height: 100%;
           align-items: center; }
-          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection:hover {
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter .jd-footerDirection:hover {
             background-color: #6f6f6f; }
-          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection:active {
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter .jd-footerDirection:active {
             background-color: #898989; }
-          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection.previous {
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter .jd-footerDirection.jd-previous {
             border-bottom-left-radius: 0.5rem; }
-          .JD-Table .layerPopup .quickView .quickViewFooter .footerDirection.next {
+          .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter .jd-footerDirection.jd-next {
             border-bottom-right-radius: 0.5rem; }
-        .JD-Table .layerPopup .quickView .quickViewFooter .footerItem {
+        .jd-table .jd-layerPopup .jd-quickView .jd-quickViewFooter .jd-footerItem {
           font-size: 0.765rem; }
-    .JD-Table .layerPopup .tableMessage {
+    .jd-table .jd-layerPopup .jd-tableMessage {
       font-size: 1.5rem;
       text-align: center; }
 
@@ -885,14 +915,62 @@
     transform: translateY(30px); }
   60% {
     transform: translateY(15px); } }
+  .jd-table .jd-contextMenu {
+    width: auto;
+    min-width: 10rem;
+    box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    z-index: 9998;
+    background: #FFF;
+    border-radius: 0.5rem; }
+    .jd-table .jd-contextMenu .jd-contextMenuOptions {
+      list-style: none;
+      z-index: 1; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption {
+        width: 100%;
+        height: 100%;
+        font-weight: 500;
+        z-index: 1;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex; }
+        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span {
+          display: block;
+          height: 100%;
+          padding: 8px 12px 8px 12px;
+          white-space: nowrap; }
+          .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span:hover {
+            background: rgba(0, 0, 0, 0.2); }
+          .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuOption span:first-child {
+            width: 100%; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuHeader {
+        width: 100%;
+        height: 100%;
+        font-weight: 500;
+        z-index: 1;
+        font-size: 14px;
+        display: flex;
+        background: #494949;
+        color: #FFFFFF; }
+        .jd-table .jd-contextMenu .jd-contextMenuOptions .jd-contextMenuHeader span {
+          display: block;
+          height: 100%;
+          width: 100%;
+          padding: 10px;
+          white-space: nowrap;
+          text-align: center; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions li:last-child span:first-child {
+        border-bottom-left-radius: 0.5rem; }
+      .jd-table .jd-contextMenu .jd-contextMenuOptions li:last-child span:last-child {
+        border-bottom-right-radius: 0.5rem; }
 
-.JD-Reset * {
+.jd-reset * {
   box-sizing: border-box; }
 
-.JD-Reset ::before, .JD-Reset ::after {
+.jd-reset ::before, .jd-reset ::after {
   box-sizing: inherit; }
 
-.JD-Reset html {
+.jd-reset html {
   line-height: 1.15;
   /* 1 */
   -webkit-text-size-adjust: 100%;
@@ -900,47 +978,47 @@
   -webkit-tap-highlight-color: transparent;
   /* 3*/ }
 
-.JD-Reset body {
+.jd-reset body {
   margin: 0; }
 
-.JD-Reset main {
+.jd-reset main {
   display: block; }
 
-.JD-Reset p,
-.JD-Reset table,
-.JD-Reset blockquote,
-.JD-Reset address,
-.JD-Reset pre,
-.JD-Reset iframe,
-.JD-Reset form,
-.JD-Reset figure,
-.JD-Reset dl {
+.jd-reset p,
+.jd-reset table,
+.jd-reset blockquote,
+.jd-reset address,
+.jd-reset pre,
+.jd-reset iframe,
+.jd-reset form,
+.jd-reset figure,
+.jd-reset dl {
   margin: 0; }
 
-.JD-Reset h1,
-.JD-Reset h2,
-.JD-Reset h3,
-.JD-Reset h4,
-.JD-Reset h5,
-.JD-Reset h6 {
+.jd-reset h1,
+.jd-reset h2,
+.jd-reset h3,
+.jd-reset h4,
+.jd-reset h5,
+.jd-reset h6 {
   font-size: inherit;
   line-height: inherit;
   font-weight: inherit;
   margin: 0; }
 
-.JD-Reset ul,
-.JD-Reset ol {
+.jd-reset ul,
+.jd-reset ol {
   margin: 0;
   padding: 0;
   list-style: none; }
 
-.JD-Reset dt {
+.jd-reset dt {
   font-weight: bold; }
 
-.JD-Reset dd {
+.jd-reset dd {
   margin-left: 0; }
 
-.JD-Reset hr {
+.jd-reset hr {
   box-sizing: content-box;
   /* 1 */
   height: 0;
@@ -952,21 +1030,21 @@
   margin: 0;
   clear: both; }
 
-.JD-Reset pre {
+.jd-reset pre {
   font-family: monospace, monospace;
   /* 1 */
   font-size: inherit;
   /* 2 */ }
 
-.JD-Reset address {
+.jd-reset address {
   font-style: inherit; }
 
-.JD-Reset a {
+.jd-reset a {
   background-color: transparent;
   text-decoration: none;
   color: inherit; }
 
-.JD-Reset abb
+.jd-reset abb
 [title] {
   border-bottom: none;
   /* 1 */
@@ -975,48 +1053,48 @@
   text-decoration: underline dotted;
   /* 2 */ }
 
-.JD-Reset b, .JD-Resetstrong {
+.jd-reset b, .jd-resetstrong {
   font-weight: bolder; }
 
-.JD-Reset code,
-.JD-Reset kbd,
-.JD-Reset samp {
+.jd-reset code,
+.jd-reset kbd,
+.jd-reset samp {
   font-family: monospace, monospace;
   /* 1 */
   font-size: inherit;
   /* 2 */ }
 
-.JD-Reset small {
+.jd-reset small {
   font-size: 80%; }
 
-.JD-Reset sub,
-.JD-Reset sup {
+.jd-reset sub,
+.jd-reset sup {
   ont-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline; }
 
-.JD-Reset sub {
+.jd-reset sub {
   bottom: -0.25em; }
 
-.JD-Reset sup {
+.jd-reset sup {
   top: -0.5em; }
 
-.JD-Reset img {
+.jd-reset img {
   border-style: none;
   vertical-align: bottom; }
 
-.JD-Reset embed,
-.JD-Reset object,
-.JD-Reset iframe {
+.jd-reset embed,
+.jd-reset object,
+.jd-reset iframe {
   border: 0;
   vertical-align: bottom; }
 
-.JD-Reset button,
-.JD-Reset input,
-.JD-Reset optgroup,
-.JD-Reset select,
-.JD-Reset textarea {
+.jd-reset button,
+.jd-reset input,
+.jd-reset optgroup,
+.jd-reset select,
+.jd-reset textarea {
   vertical-align: middle;
   color: inherit;
   font: inherit;
@@ -1026,53 +1104,53 @@
   margin: 0;
   outline: 0; }
 
-.JD-Reset select {
+.jd-reset select {
   -webkit-appearance: none;
   appearance: none;
   border-radius: 0; }
 
-.JD-Reset button,
-.JD-Reset input {
+.jd-reset button,
+.jd-reset input {
   overflow: visible; }
 
-.JD-Reset button,
-.JD-Reset select {
+.jd-reset button,
+.jd-reset select {
   text-transform: none; }
 
-.JD-Reset button,
-.JD-Reset [type='button'],
-.JD-Reset [type='reset'],
-.JD-Reset [type='submit'] {
+.jd-reset button,
+.jd-reset [type='button'],
+.jd-reset [type='reset'],
+.jd-reset [type='submit'] {
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none; }
 
-.JD-Reset button[disabled],
-.JD-Reset [type='button'][disabled],
-.JD-Reset [type='reset'][disabled],
-.JD-Reset [type='submit'][disabled] {
+.jd-reset button[disabled],
+.jd-reset [type='button'][disabled],
+.jd-reset [type='reset'][disabled],
+.jd-reset [type='submit'][disabled] {
   cursor: default; }
 
-.JD-Reset button::-moz-focus-inner,
-.JD-Reset [type='button']::-moz-focus-inner,
-.JD-Reset [type='reset']::-moz-focus-inner,
-.JD-Reset [type='submit']::-moz-focus-inner {
+.jd-reset button::-moz-focus-inner,
+.jd-reset [type='button']::-moz-focus-inner,
+.jd-reset [type='reset']::-moz-focus-inner,
+.jd-reset [type='submit']::-moz-focus-inner {
   border-style: none;
   padding: 0; }
 
-.JD-Reset button:-moz-focusring,
-.JD-Reset [type='button']:-moz-focusring,
-.JD-Reset [type='reset']:-moz-focusring,
-.JD-Reset [type='submit']:-moz-focusring {
+.jd-reset button:-moz-focusring,
+.jd-reset [type='button']:-moz-focusring,
+.jd-reset [type='reset']:-moz-focusring,
+.jd-reset [type='submit']:-moz-focusring {
   outline: 1px dotted ButtonText; }
 
-.JD-Reset fieldset {
+.jd-reset fieldset {
   margin: 0;
   padding: 0;
   border: 0;
   min-width: 0; }
 
-.JD-Reset legend {
+.jd-reset legend {
   color: inherit;
   /* 2 */
   display: table;
@@ -1084,109 +1162,109 @@
   white-space: normal;
   /* 1 */ }
 
-.JD-Reset progress {
+.jd-reset progress {
   vertical-align: baseline; }
 
-.JD-Reset textarea {
+.jd-reset textarea {
   overflow: auto; }
 
-.JD-Reset [type='checkbox'],
-.JD-Reset [type='radio'] {
+.jd-reset [type='checkbox'],
+.jd-reset [type='radio'] {
   box-sizing: border-box;
   /* 1 */
   padding: 0;
   /* 2 */ }
 
-.JD-Reset [type='number']::-webkit-inner-spin-button,
-.JD-Reset [type='number']::-webkit-outer-spin-button {
+.jd-reset [type='number']::-webkit-inner-spin-button,
+.jd-reset [type='number']::-webkit-outer-spin-button {
   height: auto; }
 
-.JD-Reset [type='search'] {
+.jd-reset [type='search'] {
   -webkit-appearance: textfield;
   /* 1 */
   outline-offset: -2px;
   /* 2 */ }
 
-.JD-Reset [type='search']::-webkit-search-decoration {
+.jd-reset [type='search']::-webkit-search-decoration {
   -webkit-appearance: none; }
 
-.JD-Reset ::-webkit-file-upload-button {
+.jd-reset ::-webkit-file-upload-button {
   -webkit-appearance: button;
   /* 1 */
   font: inherit;
   /* 2 */ }
 
-.JD-Reset ::-webkit-input-placeholder {
+.jd-reset ::-webkit-input-placeholder {
   font: inherit; }
 
-.JD-Reset :-ms-input-placeholder {
+.jd-reset :-ms-input-placeholder {
   font: inherit; }
 
-.JD-Reset ::-ms-input-placeholder {
+.jd-reset ::-ms-input-placeholder {
   font: inherit; }
 
-.JD-Reset ::placeholder {
+.jd-reset ::placeholder {
   font: inherit; }
 
-.JD-Reset label[for] {
+.jd-reset label[for] {
   cursor: pointer; }
 
-.JD-Reset details {
+.jd-reset details {
   display: block; }
 
-.JD-Reset summary {
+.jd-reset summary {
   display: list-item; }
 
-.JD-Reset table {
+.jd-reset table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-.JD-Reset caption {
+.jd-reset caption {
   text-align: left; }
 
-.JD-Reset td,
-.JD-Reset th {
+.jd-reset td,
+.jd-reset th {
   vertical-align: top; }
 
-.JD-Reset th {
+.jd-reset th {
   text-align: left;
   font-weight: bold; }
 
-.JD-Reset template {
+.jd-reset template {
   display: none; }
 
-.JD-Reset [hidden] {
+.jd-reset [hidden] {
   display: none; }
 
-.JD-Clickable {
+.jd-clickable {
   cursor: pointer; }
 
-.JD-NoneSelectable {
+.jd-noneSelectable {
   user-select: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none; }
 
-.JD-Loader {
+.jd-loader {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem;
   padding-top: 1.5rem;
   border-radius: 0.5rem; }
-  .JD-Loader .loadingText {
+  .jd-loader .jd-loadingText {
     margin-top: 0.6rem;
     font-weight: 500; }
-  .JD-Loader .fulfilling-square-spinner, .JD-Loader .fulfilling-square-spinner * {
+  .jd-loader .fulfilling-square-spinner, .jd-loader .fulfilling-square-spinner * {
     box-sizing: border-box; }
-  .JD-Loader .fulfilling-square-spinner {
+  .jd-loader .fulfilling-square-spinner {
     height: 50px;
     width: 50px;
     position: relative;
     border: 4px solid #C00;
     animation: fulfilling-square-spinner-animation 4s infinite ease; }
-  .JD-Loader .fulfilling-square-spinner .spinner-inner {
+  .jd-loader .fulfilling-square-spinner .spinner-inner {
     vertical-align: top;
     display: inline-block;
     background-color: #C00;
@@ -1217,13 +1295,13 @@
     height: 100%; }
   100% {
     height: 0%; } }
-  .JD-Loader .self-building-square-spinner, .JD-Loader .self-building-square-spinner * {
+  .jd-loader .self-building-square-spinner, .jd-loader .self-building-square-spinner * {
     box-sizing: border-box; }
-  .JD-Loader .self-building-square-spinner {
+  .jd-loader .self-building-square-spinner {
     height: 40px;
     width: 40px;
     top: calc( -10px * 2 / 3); }
-  .JD-Loader .self-building-square-spinner .square {
+  .jd-loader .self-building-square-spinner .square {
     height: 10px;
     width: 10px;
     top: calc( -10px * 2 / 3);
@@ -1234,25 +1312,25 @@
     position: relative;
     opacity: 0;
     animation: self-building-square-spinner 6s infinite; }
-  .JD-Loader .self-building-square-spinner .square:nth-child(1) {
+  .jd-loader .self-building-square-spinner .square:nth-child(1) {
     animation-delay: calc( 300ms * 6); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(2) {
+  .jd-loader .self-building-square-spinner .square:nth-child(2) {
     animation-delay: calc( 300ms * 7); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(3) {
+  .jd-loader .self-building-square-spinner .square:nth-child(3) {
     animation-delay: calc( 300ms * 8); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(4) {
+  .jd-loader .self-building-square-spinner .square:nth-child(4) {
     animation-delay: calc( 300ms * 3); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(5) {
+  .jd-loader .self-building-square-spinner .square:nth-child(5) {
     animation-delay: calc( 300ms * 4); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(6) {
+  .jd-loader .self-building-square-spinner .square:nth-child(6) {
     animation-delay: calc( 300ms * 5); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(7) {
+  .jd-loader .self-building-square-spinner .square:nth-child(7) {
     animation-delay: calc( 300ms * 0); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(8) {
+  .jd-loader .self-building-square-spinner .square:nth-child(8) {
     animation-delay: calc( 300ms * 1); }
-  .JD-Loader .self-building-square-spinner .square:nth-child(9) {
+  .jd-loader .self-building-square-spinner .square:nth-child(9) {
     animation-delay: calc( 300ms * 2); }
-  .JD-Loader .self-building-square-spinner .clear {
+  .jd-loader .self-building-square-spinner .clear {
     clear: both; }
 
 @keyframes self-building-square-spinner {
@@ -1267,13 +1345,13 @@
   55.9% {
     opacity: 0;
     top: inherit; } }
-  .JD-Loader .looping-rhombuses-spinner, .JD-Loader .looping-rhombuses-spinner * {
+  .jd-loader .looping-rhombuses-spinner, .jd-loader .looping-rhombuses-spinner * {
     box-sizing: border-box; }
-  .JD-Loader .looping-rhombuses-spinner {
+  .jd-loader .looping-rhombuses-spinner {
     width: calc(15px * 4);
     height: 15px;
     position: relative; }
-  .JD-Loader .looping-rhombuses-spinner .rhombus {
+  .jd-loader .looping-rhombuses-spinner .rhombus {
     height: 15px;
     width: 15px;
     background-color: #C00;
@@ -1283,11 +1361,11 @@
     border-radius: 2px;
     transform: translateY(0) rotate(45deg) scale(0);
     animation: looping-rhombuses-spinner-animation 2500ms linear infinite; }
-  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(1) {
+  .jd-loader .looping-rhombuses-spinner .rhombus:nth-child(1) {
     animation-delay: calc(2500ms * 1 / -1.5); }
-  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(2) {
+  .jd-loader .looping-rhombuses-spinner .rhombus:nth-child(2) {
     animation-delay: calc(2500ms * 2 / -1.5); }
-  .JD-Loader .looping-rhombuses-spinner .rhombus:nth-child(3) {
+  .jd-loader .looping-rhombuses-spinner .rhombus:nth-child(3) {
     animation-delay: calc(2500ms * 3 / -1.5); }
 
 @keyframes looping-rhombuses-spinner-animation {
@@ -1298,7 +1376,7 @@
   100% {
     transform: translateX(-466%) rotate(45deg) scale(0); } }
 
-.JD-Button {
+.jd-button {
   position: relative;
   margin: 0.5rem 0rem !important;
   width: auto;
@@ -1320,13 +1398,13 @@
   -webkit-transition: background-color .3s;
   -moz-transition: background-color .3s;
   -o-transition: background-color .3s; }
-  .JD-Button:hover {
+  .jd-button:hover {
     background-color: red; }
-  .JD-Button:focus {
+  .jd-button:focus {
     background-color: #990000; }
-  .JD-Button:focus:hover {
+  .jd-button:focus:hover {
     background-color: red; }
-  .JD-Button:before {
+  .jd-button:before {
     content: "";
     position: absolute;
     top: 50%;
@@ -1342,7 +1420,7 @@
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%); }
-  .JD-Button:active:before {
+  .jd-button:active:before {
     width: 120%;
     padding-top: 120%;
     opacity: 0.32;
@@ -1351,39 +1429,39 @@
     -moz-transition: width .2s ease-out, padding-top .2s ease-out;
     -ms-transition: width .2s ease-out, padding-top .2s ease-out;
     -o-transition: width .2s ease-out, padding-top .2s ease-out; }
-  .JD-Button:disabled {
+  .jd-button:disabled {
     background-color: #660000;
     cursor: not-allowed;
     color: #cccccc; }
-  .JD-Button.small {
+  .jd-button.jd-small {
     min-width: 3rem !important; }
-  .JD-Button.medium {
+  .jd-button.jd-medium {
     min-width: 5rem !important; }
-  .JD-Button.large {
+  .jd-button.jd-large {
     min-width: 7rem !important; }
-  .JD-Button.danger {
+  .jd-button.jd-danger {
     background-color: #E53935;
     color: #FFFFFF; }
-    .JD-Button.danger:hover {
+    .jd-button.jd-danger:hover {
       background-color: #cd1e1a; }
-    .JD-Button.danger:focus {
+    .jd-button.jd-danger:focus {
       background-color: #eb6562; }
-    .JD-Button.danger:focus:hover {
+    .jd-button.jd-danger:focus:hover {
       background-color: #cd1e1a; }
-    .JD-Button.danger:disabled {
+    .jd-button.jd-danger:disabled {
       background-color: #9f1815;
       color: #cccccc;
       cursor: not-allowed; }
-  .JD-Button.success {
+  .jd-button.jd-success {
     background-color: #3C903F;
     color: #FFFFFF; }
-    .JD-Button.success:hover {
+    .jd-button.jd-success:hover {
       background-color: #2d6c2f; }
-    .JD-Button.success:focus {
+    .jd-button.jd-success:focus {
       background-color: #4bb44f; }
-    .JD-Button.success:focus:hover {
+    .jd-button.jd-success:focus:hover {
       background-color: #2d6c2f; }
-    .JD-Button.success:disabled {
+    .jd-button.jd-success:disabled {
       background-color: #1e4820;
       color: #cccccc;
       cursor: not-allowed; }

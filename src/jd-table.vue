@@ -3722,6 +3722,13 @@
 			// Adds the built filter to be applied to the table.
 			addFilter : function ()
 			{
+				// Manage Data Availability.
+				if ( this.setting.dataProvider === 0 && this.data.length === 0 )
+				{
+					this.filters.errorText = 'There is no data available to filter.';
+					this.filters.error = true;
+				}
+
 				// Manage column error.
 				if ( this.filters.beingBuilt.column === null || typeof( this.filters.beingBuilt.column ) !== 'object' )
 				{
@@ -3943,24 +3950,29 @@
 				}
 				else
 				{
-					this.updateStatus( 'searching', true );
-
 					// Emit search event.
 					if ( this.setting.dataProvider === 1 )
 					{
+						this.updateStatus( 'searching', true );
+
 						this.search.searching = true;
 					}
 					// Perform search using JD-Table.
 					else
 					{
-						this.resetScroll();
-
-						this.processData().then( () =>
+						if ( this.data.length > 0 )
 						{
-							this.updateStatus( 'searching', false );
+							this.updateStatus( 'searching', true );
 
-							this.renderView();
-						});
+							this.resetScroll();
+
+							this.processData().then( () =>
+							{
+								this.updateStatus( 'searching', false );
+
+								this.renderView();
+							});
+						}
 					}
 				}
 

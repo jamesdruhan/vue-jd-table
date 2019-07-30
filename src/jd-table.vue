@@ -1559,8 +1559,8 @@
 					// Get the location of the right click.
 					const clickLocation =
 					{
-						left : e.pageX,
-						top  : e.pageY
+						left : e.clientX,
+						top  : e.clientY
 					};
 
 					// Show the menu at the click location.
@@ -1589,8 +1589,8 @@
 					// Get the location of the right click.
 					const clickLocation =
 					{
-						left : e.x,
-						top  : e.y
+						left : e.clientX,
+						top  : e.clientY
 					};
 
 					// Show the menu at the click location.
@@ -1649,20 +1649,14 @@
 
 					if ( ( windowWidth - left ) < contextWidth )
 					{
-						this.$refs.jd_contextMenu.style.left = windowWidth - contextWidth + "px";
-					}
-					else
-					{
-						this.$refs.jd_contextMenu.style.left = left + "px";
+						// 21 is subtracted to compensate for a scrollbar.
+						this.$refs.jd_contextMenu.style.left = ( windowWidth - contextWidth ) - 21 + "px";
 					}
 
 					if ( (windowHeight - top ) < contextHeight )
 					{
-						this.$refs.jd_contextMenu.style.top = windowHeight - contextHeight + "px";
-					}
-					else
-					{
-						this.$refs.jd_contextMenu.style.top = top + "px";
+						// 21 is subtracted to compensate for a scrollbar.
+						this.$refs.jd_contextMenu.style.top = ( windowHeight - contextHeight ) - 21 + "px";
 					}
 
 				}, 50, { top, left } );

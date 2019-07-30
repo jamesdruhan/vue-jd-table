@@ -56,6 +56,7 @@
 - Column views
 - Column sorting
 - Column resizing
+- Left/Right click context menusgit 
 - Excel exportation
 - Full screen/minimize
 - Row 'Quick View'

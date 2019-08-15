@@ -2,6 +2,11 @@
 
 ### Change Log
 
+#### v1.1.1
+- Fixed issue with quick view showing wrong item when filter applied.
+- Fixed test data in public/index.html file for dev.
+- Fixed spelling mistake in scss file.
+
 #### v1.1.0
 - Added prefix "jd-" to all table classes.
 - Added "Add New" button feature to control bar.

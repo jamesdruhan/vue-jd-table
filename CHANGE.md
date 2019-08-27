@@ -2,6 +2,9 @@
 
 ### Change Log
 
+#### v1.1.2
+- Fixed bug where if only 1 search result was returned, the selected item was wrong.
+
 #### v1.1.1
 - Fixed issue with quick view showing wrong item when filter applied.
 - Fixed test data in public/index.html file for dev.

@@ -27,20 +27,20 @@
         - [SFC](#sfc)
         - [Global](#global)
         - [Script](#script)
-    - [Configure Options](Options.md)
+    - [Configure Options](docs/Options.md)
     - [Display Data](Data.md)
 - [Properties](#properties)
 - [Browser Support](#browser-support)
 - [Polyfill](#polyfill)
 - Documentation
-    - [Options](Options.md)
-    - [Data](Data.md)
-    - [Status](Status.md)
-    - [Events](Events.md)
+    - [Options](docs/Options.md)
+    - [Data](docs/Data.md)
+    - [Status](docs/Status.md)
+    - [Events](docs/Events.md)
         - [From Table](Events.md#JD-Table-Events-to-Your-App)
         - [From App](Events.md#Your-App-to-JD-Table-Events)
-    - [Listeners](Listeners.md)
-    - [Theming](Theming.md)
+    - [Listeners](docs/Listeners.md)
+    - [Theming](docs/Theming.md)
 
 ---
 
@@ -99,8 +99,8 @@ npm install --save-dev @fortawesome/fontawesome-free
 Follow all 3 steps below to begin using JD-Table.
 
 1. [Initialize](#initialize)
-2. [Configure Options](Options.md)
-3. [Display Data](Data.md)
+2. [Configure Options](docs/Options.md)
+3. [Display Data](docs/Data.md)
 
 #### Initialize
 

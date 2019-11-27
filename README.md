@@ -268,7 +268,7 @@ JD-Table accepts the following props/properties:
 - **event-from-app-trigger** [Boolean]
     - A true/false setting which tells JD-Table to execute a event-from-app event. Learn more about triggering events [here](docs/Events.md).
 - **event-from-jd-table** [Event/Function/Callback]
-    - An event that that is triggered using a Vue $emit call. Learn more about how to process these events [here](docs/Events.md).
+    - An event that is triggered using a Vue $emit call. Learn more about how to process these events [here](docs/Events.md).
 
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>

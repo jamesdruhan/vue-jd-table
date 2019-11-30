@@ -259,18 +259,28 @@
 					<div v-if="rendering.engine === 0" class="jd-virtualBody" :style="bodyVirtualStyles"></div>
 
 					<div ref="viewData" :style="bodyViewStyles">
-						<div v-if="isViewAvailable" v-for="row in currentTableData" @click="rowActionSingle( row.index )" @dblclick="rowActionDouble( row.index )" @mouseover="rowHover( row.index, $event )" class="jd-row" :class="viewRowClasses" :style="viewRowStyles">
+						<div v-if="isViewAvailable" v-for="(row, pageRowIndex) in currentTableData" @click="rowActionSingle( row.index )" @dblclick="rowActionDouble( row.index )" @mouseover="rowHover( row.index, $event )" class="jd-row" :class="viewRowClasses" :style="viewRowStyles">
 							<div v-for="( column, columnIndex ) in rendering.views.currentView.schema" v-if="column.enabled" class="jd-cell" :class="rowDataClasses" @mouseover="cellHover( columnIndex )" :style="column.dataStyles">
-								<!-- List Items -->
-								<span v-if="column.type === 'Array'">
-									<ul class="jd-list">
-										<li v-for="item in row.data[column.name]">
-											{{ item }}
-										</li>
-									</ul>
-								</span>
-								<!-- String Items -->
-								<span v-else>{{ row.data[column.name] }}</span>
+              <slot
+                v-bind:name="column.name"
+                v-bind:pagination="rendering.pagination"
+                v-bind:allRows="processedData"
+                v-bind:pageRows="currentTableData"
+                v-bind:pageRowStartIndex="rendering.pagination.currentStartIndex"
+                v-bind:pageRowIndex="pageRowIndex"
+                v-bind:rowIndex="row.index" 
+                v-bind:rowData="row.data" 
+                v-bind:value="row.data[column.name]"
+              >
+                <!-- List Items -->
+                <div v-if="column.type === 'Array'">
+                  <ul class="jd-list">
+                    <li v-for="item in row.data[column.name]">{{ item }}</li>
+                  </ul>
+                </div>
+                <!-- String Items -->
+                <div v-else>{{ row.data[column.name] }}</div>
+              </slot>
 							</div>
 						</div>
 					</div>
@@ -443,17 +453,28 @@
 						<div v-for="column in columns.list" class="jd-contentRow">
 							<div class="jd-rowTitle">{{ column.title.replace(/(<([^>]+)>)/ig,"") }}</div>
 
-							<!-- List Items -->
-							<div v-if="column.type === 'Array'" class="jd-rowData">
-								<ul>
-									<li v-for="item in currentTableData[row.selectedIndex].data[column.name]">
-										{{ item }}
-									</li>
-								</ul>
-							</div>
-							<!-- String Items -->
-							<div v-else class="jd-rowData">{{ currentTableData[row.selectedIndex].data[column.name] }}</div>
-
+              <slot
+                v-bind:name="column.name"
+                v-bind:pagination="rendering.pagination"
+                v-bind:allRows="processedData"
+                v-bind:pageRows="currentTableData"
+                v-bind:pageRowStartIndex="rendering.pagination.currentStartIndex"
+                v-bind:pageRowIndex="row.selectedIndex"
+                v-bind:rowIndex="currentTableData[row.selectedIndex].index"
+                v-bind:rowData="currentTableData[row.selectedIndex].data"
+                v-bind:value="currentTableData[row.selectedIndex].data[column.name]"
+              >
+                <!-- List Items -->
+                <div v-if="column.type === 'Array'" class="jd-rowData">
+                  <ul>
+                    <li v-for="item in currentTableData[row.selectedIndex].data[column.name]">
+                      {{ item }}
+                    </li>
+                  </ul>
+                </div>
+                <!-- String Items -->
+                <div v-else class="jd-rowData">{{ currentTableData[row.selectedIndex].data[column.name] }}</div>
+              </slot>
 						</div>
 					</div>
 

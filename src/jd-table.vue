@@ -147,7 +147,7 @@
 						</div>
 
 						<transition name="jdTableFade">
-							<ul v-if="filters.activeDropdown === 0">
+							<ul v-if="filters.activeDropdown === 0" id="filterDropDownMenu">
 								<li v-for="( column, index ) in filterableColumns" @click="buildFilter( 0, index )">
 									{{ column.title.replace(/(<([^>]+)>)/ig,"") }}
 								</li>
@@ -3673,13 +3673,16 @@
 			},
 
 			// Clears the dropdown as well as the window listener.
-			clearFilterDropdown : function ()
+			clearFilterDropdown : function ( e )
 			{
-				// Clear the selected filter dropdown.
-				this.filters.activeDropdown = null;
+				if ( e.target.id !== 'filterDropDownMenu' )
+				{
+					// Clear the selected filter dropdown.
+					this.filters.activeDropdown = null;
 
-				// Remove the listener.
-				window.removeEventListener( 'mouseup', this.clearFilterDropdown, false );
+					// Remove the listener.
+					window.removeEventListener( 'mouseup', this.clearFilterDropdown, false );
+				}
 			},
 
 			// Helps build a filter to be applied to the table. Executed when filter dropdown item is clicked.

@@ -4,6 +4,7 @@
 
 #### v1.1.3
 - Fixed scrolling issue when selecting columns in the filter feature.
+- Fixed issue with quick view pagination.
 
 #### v1.1.2
 - Fixed bug where if only 1 search result was returned, the selected item was wrong.

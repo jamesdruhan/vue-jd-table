@@ -446,13 +446,13 @@
 							<!-- List Items -->
 							<div v-if="column.type === 'Array'" class="jd-rowData">
 								<ul>
-									<li v-for="item in currentTableData[row.selectedIndex].data[column.name]">
+									<li v-for="item in data[row.selectedIndex][column.name]">
 										{{ item }}
 									</li>
 								</ul>
 							</div>
 							<!-- String Items -->
-							<div v-else class="jd-rowData">{{ currentTableData[row.selectedIndex].data[column.name] }}</div>
+							<div v-else class="jd-rowData">{{ data[row.selectedIndex][column.name] }}</div>
 
 						</div>
 					</div>

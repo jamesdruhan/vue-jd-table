@@ -5024,7 +5024,7 @@
 					sortColumnIndex : this.columns.activeSortIndex ? this.columns.activeSortIndex : 0,
 					sortDirection   : this.columns.activeSortAsc ? 'ASC' : 'DESC',
 					sortSpecial     : this.columns.activeSortSpecial ? this.columns.activeSortSpecial : null,
-					selectedItem    : this.row.selectedIndex !== null ? this.currentTableData[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.currentTableData[ this.row.activeContextIndex ] : null,
+					selectedItem	: this.rendering.pagination.currentPage > 1 ? this.row.selectedIndex !== null ? this.currentTableData[ (this.row.selectedIndex - (this.rendering.pagination.currentSelectedPageRowOption * (this.rendering.pagination.currentPage - 1))) ] : this.row.activeContextIndex !== null ? this.currentTableData[ (this.row.activeContextIndex - (this.rendering.pagination.currentSelectedPageRowOption * (this.rendering.pagination.currentPage - 1))) ] : 'ciao' : this.row.selectedIndex !== null ? this.currentTableData[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.currentTableData[ this.row.activeContextIndex ] : null,
 					selectedIndex   : this.row.selectedIndex !== null ? this.row.selectedIndex : this.row.activeContextIndex !== null  ? this.row.activeContextIndex : null,
 					currentView     : this.rendering.views.currentView
 				}

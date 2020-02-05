@@ -1,6 +1,6 @@
 # JD-Table
 
-> An advanced and flexible Vue.js 2.x component for displaying data tables. Feature rich and capable of handing big data, JD-Table was designed to integrate into applications with various needs.
+> An advanced and flexible Vue.js 2.x component for displaying data tables. Feature rich and capable of handling big data, JD-Table was designed to integrate into applications with various needs.
 
 <p align="center">
     <a href="https://www.npmjs.com/package/vue-jd-table"><img src="https://img.shields.io/npm/dt/vue-jd-table.svg?style=flat-square"></a>
@@ -27,20 +27,20 @@
         - [SFC](#sfc)
         - [Global](#global)
         - [Script](#script)
-    - [Configure Options](Options.md)
+    - [Configure Options](docs/Options.md)
     - [Display Data](Data.md)
 - [Properties](#properties)
 - [Browser Support](#browser-support)
 - [Polyfill](#polyfill)
 - Documentation
-    - [Options](Options.md)
-    - [Data](Data.md)
-    - [Status](Status.md)
-    - [Events](Events.md)
+    - [Options](docs/Options.md)
+    - [Data](docs/Data.md)
+    - [Status](docs/Status.md)
+    - [Events](docs/Events.md)
         - [From Table](Events.md#JD-Table-Events-to-Your-App)
         - [From App](Events.md#Your-App-to-JD-Table-Events)
-    - [Listeners](Listeners.md)
-    - [Theming](Theming.md)
+    - [Listeners](docs/Listeners.md)
+    - [Theming](docs/Theming.md)
 
 ---
 
@@ -56,7 +56,7 @@
 - Column views
 - Column sorting
 - Column resizing
-- Left/Right click context menusgit 
+- Left/Right click context menus
 - Excel exportation
 - Full screen/minimize
 - Row 'Quick View'
@@ -99,8 +99,8 @@ npm install --save-dev @fortawesome/fontawesome-free
 Follow all 3 steps below to begin using JD-Table.
 
 1. [Initialize](#initialize)
-2. [Configure Options](Options.md)
-3. [Display Data](Data.md)
+2. [Configure Options](docs/Options.md)
+3. [Display Data](docs/Data.md)
 
 #### Initialize
 
@@ -185,7 +185,7 @@ new Vue
 
 ###### Script
 
-The following shows an example of how to use JD-Table your HTML files directly. You will require a polyfill for JD-Table.
+The following shows an example of how to use JD-Table in your HTML files directly. You will require a polyfill for JD-Table.
 
 ```html
 <!-- Polyfill -->
@@ -268,7 +268,7 @@ JD-Table accepts the following props/properties:
 - **event-from-app-trigger** [Boolean]
     - A true/false setting which tells JD-Table to execute a event-from-app event. Learn more about triggering events [here](docs/Events.md).
 - **event-from-jd-table** [Event/Function/Callback]
-    - A event that that is triggered using a Vue $emit call. Learn more about how to process these events [here](docs/Events.md).
+    - An event that is triggered using a Vue $emit call. Learn more about how to process these events [here](docs/Events.md).
 
 <p align="right">
     <a href="#table-of-contents">Back to Table of Contents</a>
@@ -288,13 +288,14 @@ JD-Table runs in all modern browsers. IE11 is supported so long as a polyfill is
 
 ### Polyfill
 
-JD-Table is written with ES5/6 functionality. Take note that the build module for JDTable *does not include* a polyfill. If you need support for legacy browsers like IE 11 you will need to inject a polyfill service.
+JD-Table is written with ES5/6 functionality. Take note that the build module for JDTable *does not include* a polyfill. If you need support for legacy browsers like IE 11 you will need to inject a polyfill
+service.
 
 > **Reminder**: Typically build processes like Webpack & Vue-CLI do **NOT** add polyfill's to your imported **dependencies** (it will polyfill your app but not the JDTable dependency).
 
 ##### Polyfill Solution #1
 
-For build processes like Webpack/Vue-CLI, rather then importing the component normally, import the .VUE file directly. If your project already includes polyfill's it will be processed normally.
+For build processes like Webpack/Vue-CLI, rather than importing the component normally, import the .VUE file directly. If your project already includes polyfill's it will be processed normally.
 
 ```
 import JDTable from 'vue-jd-table/src/jd-table.vue';

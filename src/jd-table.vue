@@ -5042,7 +5042,7 @@
 					sortColumnIndex : this.columns.activeSortIndex ? this.columns.activeSortIndex : 0,
 					sortDirection   : this.columns.activeSortAsc ? 'ASC' : 'DESC',
 					sortSpecial     : this.columns.activeSortSpecial ? this.columns.activeSortSpecial : null,
-					selectedItem    : this.row.selectedIndex !== null ? this.data[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.data[ this.row.activeContextIndex ] : null,
+					selectedItem    : this.row.selectedIndex !== null ? this.currentTableData[ this.row.selectedIndex ] : this.row.activeContextIndex !== null ? this.currentTableData[ this.row.activeContextIndex ] : null,
 					selectedIndex   : this.row.selectedIndex !== null ? this.row.selectedIndex : this.row.activeContextIndex !== null  ? this.row.activeContextIndex : null,
 					currentView     : this.rendering.views.currentView
 				}

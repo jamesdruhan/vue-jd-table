@@ -1222,6 +1222,7 @@
 							// Sets the column as default sorted.
 							if ( viewColumn.sort )
 							{
+								hasBeenSorted = true;
 								this.columns.activeSortIndex    = viewIndex;
 								this.columns.activeSortName     = viewColumn.name;
 								this.columns.activeSortSpecial  = viewColumn.sortSpecial;

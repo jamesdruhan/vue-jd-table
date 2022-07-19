@@ -2043,7 +2043,18 @@
 				}
 				else
 				{
-					window.open( 'data:application/vnd.ms-excel,' + encodeURIComponent( renderTable() ) );
+					var blobData = new Blob( [ renderTable() ] , { type : 'application/vnd.ms-excel' } );
+					var url    = window.URL.createObjectURL( blobData );
+					var a      = document.createElement( "a" );
+
+					document.body.appendChild( a );
+
+					a.href     = url;
+					a.download = "Data_Export.xls";
+
+					a.click();
+
+					setTimeout( function() { window.URL.revokeObjectURL( url ); }, 0 );
 				}
 			},
 

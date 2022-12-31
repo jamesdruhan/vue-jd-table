@@ -46,7 +46,7 @@
     "rollup-plugin-scss": "^1.0.1",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^4.0.4",
-    "rollup-plugin-vue": "^4.6.2",
+    "rollup-plugin-vue": "^6.0.0",
     "vue": "^2.5.22",
     "vue-template-compiler": "^2.5.22"
   },
